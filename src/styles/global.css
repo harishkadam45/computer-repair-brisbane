@@ -97,6 +97,21 @@
   html {
     scroll-behavior: smooth;
     -webkit-text-size-adjust: 100%;
+    /*
+     * The Services mega menu is an absolutely-positioned panel wider than the
+     * nav item that owns it. While it is hidden (visibility:hidden) it still
+     * contributes to the document's scroll width, which gives every page a
+     * stray horizontal scrollbar at desktop widths. `clip` contains the stray
+     * overflow without creating a scroll container, so `position: sticky` on
+     * the header keeps working - `overflow-x: hidden` would risk breaking it.
+     */
+    overflow-x: clip;
+  }
+
+  @supports not (overflow: clip) {
+    html {
+      overflow-x: hidden;
+    }
   }
 
   @media (prefers-reduced-motion: reduce) {

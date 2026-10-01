@@ -16,7 +16,10 @@
     "posts:build": "node scripts/build-posts.mjs",
     "icons": "node scripts/build-icons.mjs",
     "suburbs": "node scripts/build-suburbs.mjs",
-    "release": "npm run build && npm run redirects && npm run verify"
+    "release": "npm run build && npm run redirects && npm run verify",
+    "audit:responsive": "node scripts/responsive-audit.mjs",
+    "audit:interaction": "node scripts/interaction-audit.mjs",
+    "audit:megamenu": "node scripts/mega-menu-travel.mjs"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.3.3",
@@ -28,6 +31,7 @@
   },
   "devDependencies": {
     "@astrojs/sitemap": "^3.7.4",
+    "playwright": "^1.63.0",
     "sharp": "^0.35.5"
   }
 }

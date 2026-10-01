@@ -116,13 +116,13 @@ const ctaTitle = `${family.title} in Brisbane - book ${site.technician.name}.`;
 
   <div class="container-page space-y-14 py-14 sm:space-y-16 sm:py-20">
     <div class="grid gap-12 lg:grid-cols-12 lg:gap-12">
-      <div class="space-y-12 lg:col-span-8">
+      <div class="space-y-12 lg:col-span-8 min-w-0">
         {family.sections.map((section, i) => (
           <CopySection section={{ ...section, h: fill(section.h, vars) }} id={`f-${i}`} />
         ))}
       </div>
 
-      <aside class="lg:col-span-4">
+      <aside class="lg:col-span-4 min-w-0">
         <div class="sticky top-24 space-y-4">
           <div class="rounded-card border border-ink-200 bg-white p-6">
             <h2 class="text-sm font-bold tracking-wide text-ink-500 uppercase">Nearby suburbs</h2>

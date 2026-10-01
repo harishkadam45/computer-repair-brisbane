@@ -146,7 +146,7 @@ const brands = ['HP', 'Dell', 'Lenovo', 'Apple', 'Asus', 'Acer', 'Toshiba', 'Son
   <section class="bg-brand-mesh border-b border-ink-100">
     <div class="container-page py-14 sm:py-20 lg:py-24">
       <div class="grid items-center gap-12 lg:grid-cols-12 lg:gap-14">
-        <div class="lg:col-span-7">
+        <div class="lg:col-span-7 min-w-0">
           <p
             class="inline-flex items-center gap-2 rounded-full bg-white px-3.5 py-1.5 text-xs font-bold tracking-wide text-brand-700 uppercase ring-1 ring-brand-200"
           >
@@ -208,7 +208,7 @@ const brands = ['HP', 'Dell', 'Lenovo', 'Apple', 'Asus', 'Acer', 'Toshiba', 'Son
         </div>
 
         <!-- Price card: the reason people are still here. -->
-        <div class="lg:col-span-5">
+        <div class="lg:col-span-5 min-w-0">
           <div class="rounded-hero border border-ink-200 bg-white p-7 shadow-lift sm:p-8">
             <h2 class="text-sm font-bold tracking-wide text-ink-500 uppercase">
               What a visit costs
@@ -374,7 +374,7 @@ const brands = ['HP', 'Dell', 'Lenovo', 'Apple', 'Asus', 'Acer', 'Toshiba', 'Son
   <section class="border-y border-ink-100 bg-ink-50" aria-labelledby="compare-heading">
     <div class="container-page py-16 sm:py-20">
       <div class="grid gap-12 lg:grid-cols-12 lg:gap-14">
-        <div class="lg:col-span-5">
+        <div class="lg:col-span-5 min-w-0">
           <h2 id="compare-heading" class="text-h2">
             ${site.pricing.flatRate} flat, versus paying by the hour
           </h2>
@@ -395,8 +395,8 @@ const brands = ['HP', 'Dell', 'Lenovo', 'Apple', 'Asus', 'Acer', 'Toshiba', 'Son
           </a>
         </div>
 
-        <div class="lg:col-span-7">
-          <div class="overflow-hidden rounded-card border border-ink-200 bg-white">
+        <div class="min-w-0 lg:col-span-7">
+          <div class="overflow-x-auto rounded-card border border-ink-200 bg-white">
             <table class="w-full text-sm">
               <caption class="sr-only">
                 What this business charges against published competitor rates
@@ -512,7 +512,7 @@ const brands = ['HP', 'Dell', 'Lenovo', 'Apple', 'Asus', 'Acer', 'Toshiba', 'Son
   <section class="border-t border-ink-100 bg-ink-50" aria-labelledby="about-heading">
     <div class="container-page py-16 sm:py-20">
       <div class="grid gap-12 lg:grid-cols-12 lg:gap-14">
-        <div class="lg:col-span-7">
+        <div class="lg:col-span-7 min-w-0">
           <h2 id="about-heading" class="text-h2">
             {site.technician.name}. One person. No call centre.
           </h2>
@@ -542,7 +542,7 @@ const brands = ['HP', 'Dell', 'Lenovo', 'Apple', 'Asus', 'Acer', 'Toshiba', 'Son
           </a>
         </div>
 
-        <div class="lg:col-span-5">
+        <div class="lg:col-span-5 min-w-0">
           <div class="rounded-card border border-ink-200 bg-white p-6">
             <h3 class="text-sm font-bold tracking-wide text-ink-500 uppercase">Brands serviced</h3>
             <ul class="mt-4 flex flex-wrap gap-2">

@@ -106,12 +106,12 @@ const others = services.filter((s) => s.slug !== service.slug).slice(0, 3);
 
   <div class="container-page space-y-14 py-14 sm:space-y-16 sm:py-20">
     <div class="grid gap-12 lg:grid-cols-12 lg:gap-12">
-      <div class="space-y-12 lg:col-span-8">
+      <div class="space-y-12 lg:col-span-8 min-w-0">
         {service.sections.map((section, i) => <CopySection section={section} id={`s-${i}`} />)}
       </div>
 
       <!-- Sidebar: the other service families, so every page is a hub. -->
-      <aside class="lg:col-span-4">
+      <aside class="lg:col-span-4 min-w-0">
         <div class="lg:sticky lg:top-28">
           <h2 class="text-sm font-bold tracking-wide text-ink-900 uppercase">
             We also repair

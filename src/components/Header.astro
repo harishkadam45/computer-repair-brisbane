@@ -115,7 +115,7 @@ const isActive = (href: string) =>
               clip-rule="evenodd"></path></svg>
         </a>
         <div
-          class="invisible absolute top-full left-0 w-[58rem] rounded-2xl border border-ink-100 bg-white p-5 opacity-0 shadow-lift transition group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100"
+          class="invisible fixed top-20 right-4 left-4 mx-auto w-auto max-w-[58rem] rounded-2xl border border-ink-100 bg-white p-5 opacity-0 shadow-lift transition group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100"
         >
 <div class="grid gap-6 lg:grid-cols-[minmax(0,1fr)_18rem]">
             <div>
@@ -279,7 +279,7 @@ const isActive = (href: string) =>
                 <li>
                   <a
                     href={`/${s.slug}/`}
-                    class="block rounded-lg px-3 py-2 text-sm text-ink-700 transition hover:bg-brand-50 hover:text-brand-700"
+                    class="flex min-h-11 items-center rounded-lg px-3 py-2.5 text-sm text-ink-700 transition hover:bg-brand-50 hover:text-brand-700"
                   >
                     {s.shortTitle}
                   </a>

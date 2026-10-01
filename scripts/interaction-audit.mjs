@@ -101,6 +101,55 @@ for (const { name, type } of engines) {
   }
 
   // --- mobile nav ---
+  // --- header row must not squeeze the phone number ---
+  // Adding the navbar search originally crushed this button from 146px to
+  // 85px at every desktop width, because flex-shrink took the space instead
+  // of the search input. Guard the natural width of the conversion CTA.
+  for (const width of [1024, 1280, 1440]) {
+    const ctx = await browser.newContext({ viewport: { width, height: 800 } });
+    const page = await ctx.newPage();
+    await page.goto(`${O}/`, { waitUntil: 'load' });
+    const phone = await page.evaluate(() => {
+      const row = document.querySelector('header .container-page.flex.h-16');
+      // Scope to the CTA group. A blanket tel: lookup also matches the hidden
+      // "Start here" link inside the mega-menu panel, which is visibility
+      // hidden but still has a bounding box.
+      const el = row.lastElementChild.querySelector('a[href^="tel:"]');
+      const r = el.getBoundingClientRect();
+      const rr = row.getBoundingClientRect();
+      // Natural width, measured off-layout so flex-shrink cannot mask it.
+      const host = document.createElement('div');
+      host.style.cssText =
+        'position:absolute;visibility:hidden;width:auto;left:-9999px;top:0;display:flex';
+      const clone = el.cloneNode(true);
+      clone.classList.remove('hidden');
+      host.appendChild(clone);
+      document.body.appendChild(host);
+      const natural = Math.round(clone.getBoundingClientRect().width);
+      host.remove();
+      return {
+        current: Math.round(r.width),
+        natural,
+        clipped: el.scrollWidth > el.clientWidth + 1,
+        wraps: r.height > 48,
+        // If everything is shrink-0 the row overflows instead of squeezing,
+        // so both failure modes have to be asserted.
+        rowOverflow: Math.round(row.scrollWidth) > Math.round(rr.width) + 1,
+        right: Math.round(r.right),
+        vw: document.documentElement.clientWidth,
+        text: el.textContent.trim().replace(/\s+/g, ' '),
+      };
+    });
+    record(name, `phone CTA keeps full width at ${width}px`,
+      phone.current >= phone.natural - 1 && !phone.clipped && !phone.wraps,
+      `natural=${phone.natural} got=${phone.current} ${phone.text}`);
+    record(name, `header row does not overflow at ${width}px`,
+      !phone.rowOverflow && phone.right <= phone.vw,
+      `scroll=${phone.rowOverflow} right=${phone.right} vw=${phone.vw}`);
+    await ctx.close();
+  }
+
+  // --- mobile nav ---
   {
     const ctx = await browser.newContext({
       viewport: { width: 375, height: 812 }, isMobile: true, hasTouch: true,

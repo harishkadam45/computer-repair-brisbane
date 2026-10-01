@@ -41,6 +41,53 @@ const isActive = (href: string) =>
         Flat <strong class="font-semibold text-ink-900">${site.pricing.flatRate}</strong> rate ·
         no call-out fee · 7 days a week
       </p>
+      <!-- Search. Real GET form to /search/, so it works with JS disabled.
+
+           It sits here rather than beside the logo because the main row needs
+           every pixel: logo (252) + nav (571) + phone CTA (146) + gaps (48) =
+           1017 against a 1152 container. Squeezing search in there left the
+           phone button 85px and it was crushed. This bar has ~670px idle, so
+           search costs no vertical space and cannot squeeze the number. -->
+      <form
+        action="/search/"
+        method="get"
+        role="search"
+        class="relative hidden w-64 lg:block"
+        data-search-form
+      >
+        <label for="nav-search" class="sr-only">Search services, suburbs and articles</label>
+        <div class="relative">
+          <svg
+            class="pointer-events-none absolute top-1/2 left-2.5 size-3.5 -translate-y-1/2 text-ink-400"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+            aria-hidden="true"><path
+              fill-rule="evenodd"
+              d="M9 3.5a5.5 5.5 0 1 0 3.4 9.84l3.63 3.63a1 1 0 1 0 1.41-1.41l-3.63-3.63A5.5 5.5 0 0 0 9 3.5ZM5 9a4 4 0 1 1 8 0 4 4 0 0 1-8 0Z"
+              clip-rule="evenodd"></path></svg>
+          <input
+            id="nav-search"
+            name="q"
+            type="search"
+            placeholder="Search services…"
+            autocomplete="off"
+            class="w-full rounded-lg border border-ink-200 bg-white py-1.5 pr-3 pl-8 text-sm text-ink-900 placeholder:text-ink-400 focus:border-brand-400 focus:outline-none"
+            aria-expanded="false"
+            aria-controls="nav-search-results"
+            aria-autocomplete="list"
+          />
+        </div>
+        <!-- Toggled via the hidden *attribute* by search.js, so no `hidden`
+             utility class here - it would force display:none and win. -->
+        <div
+          id="nav-search-results"
+          class="absolute top-full right-0 left-0 z-50 mt-2 max-h-[min(22rem,55vh)] overflow-y-auto overscroll-contain rounded-xl border border-ink-100 bg-white shadow-lift"
+          data-search-results
+          hidden
+        >
+        </div>
+      </form>
+
       <div class="flex items-center gap-4">
         <a
           href={site.phone.href}
@@ -77,47 +124,10 @@ const isActive = (href: string) =>
       </span>
     </a>
 
-    <!-- Search. Real GET form to /search/ so it works with JS disabled. -->
-    <form
-      action="/search/"
-      method="get"
-      role="search"
-      class="relative hidden w-full max-w-xs lg:block"
-      data-search-form
-    >
-      <label for="nav-search" class="sr-only">Search services, suburbs and articles</label>
-      <div class="relative">
-        <svg
-          class="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-ink-400"
-          viewBox="0 0 20 20"
-          fill="currentColor"
-          aria-hidden="true"><path
-            fill-rule="evenodd"
-            d="M9 3.5a5.5 5.5 0 1 0 3.4 9.84l3.63 3.63a1 1 0 1 0 1.41-1.41l-3.63-3.63A5.5 5.5 0 0 0 9 3.5ZM5 9a4 4 0 1 1 8 0 4 4 0 0 1-8 0Z"
-            clip-rule="evenodd"></path></svg>
-        <input
-          id="nav-search"
-          name="q"
-          type="search"
-          placeholder="Search services…"
-          autocomplete="off"
-          class="w-full rounded-xl border border-ink-200 bg-ink-50 py-2.5 pr-3 pl-9 text-sm text-ink-900 placeholder:text-ink-400 focus:border-brand-400 focus:bg-white focus:outline-none"
-          aria-expanded="false"
-          aria-controls="nav-search-results"
-          aria-autocomplete="list"
-        />
-      </div>
-      <!-- Toggled via the hidden *attribute* by search.js, so no `hidden`
-           utility class here - it would force display:none and win. -->
-      <div
-        id="nav-search-results"
-        class="absolute top-full right-0 left-0 z-50 mt-2 max-h-[min(22rem,55vh)] overflow-y-auto overscroll-contain rounded-xl border border-ink-100 bg-white shadow-lift"
-        data-search-results
-        hidden
-      >
-      </div>
-    </form>
-
+    <!-- Not shrink-0: at 1024px this row is ~41px wider than the container and the
+         nav is meant to absorb it. If the nav cannot shrink, the whole row
+         overflows past the viewport edge instead. The phone CTA below is the
+         one element that must never give up its width. -->
     <nav class="hidden items-center gap-1 lg:flex" aria-label="Main">
       <a
         href="/"
@@ -260,10 +270,10 @@ const isActive = (href: string) =>
       }
     </nav>
 
-    <div class="flex items-center gap-2">
+    <div class="flex shrink-0 items-center gap-2">
       <a
         href={site.phone.href}
-        class="hidden items-center gap-2 rounded-xl bg-brand-500 px-4 py-2.5 text-sm font-semibold text-white shadow-cta transition hover:bg-brand-600 sm:flex"
+        class="hidden shrink-0 items-center gap-2 whitespace-nowrap rounded-xl bg-brand-500 px-4 py-2.5 text-sm font-semibold text-white shadow-cta transition hover:bg-brand-600 sm:flex"
       >
         <svg class="size-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
           <path

@@ -1,0 +1,138 @@
+---
+/**
+ * Site search.
+ *
+ * The build is fully static, so `?q=` cannot be read here - Astro renders this
+ * page once, at build time, with no query. Results are therefore produced in the
+ * browser from /search-index.json (see public/scripts/search.js), and the
+ * browse list below is the fallback for anyone without JavaScript. `noindex`
+ * keeps thin, query-dependent pages out of the index.
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { site } from '../data/site';
+import { serviceBySlug, serviceGroups } from '../data/services';
+
+const path = '/search/';
+const title = `Search | ${site.name}`;
+const description =
+  'Search for computer repairs, data recovery, virus removal and more across our services, service areas and blog.';
+
+// Headline services, so the no-JS fallback is useful rather than a dead end.
+const featured = [
+  'virus-malware-and-spyware-removal-brisbane',
+  'data-recovery',
+  'pc-optimization-faster-overall-speed',
+  'removal-nagging-pop-windows',
+  'windows-reinstallation',
+  'network-setup',
+].map((slug) => serviceBySlug.get(slug))
+  .filter((s): s is NonNullable<typeof s> => Boolean(s));
+---
+
+<BaseLayout title={title} description={description} path={path} noindex={true}>
+  <section class="border-b border-ink-100 bg-brand-mesh">
+    <div class="container-page py-10 sm:py-14">
+      <h1 class="text-h1">Search</h1>
+      <p class="mt-2 max-w-2xl text-lead text-ink-600">
+        Search our services, suburbs and articles. Start typing and results appear as you go.
+      </p>
+    </div>
+  </section>
+
+  <!-- The search index and script are loaded by Header.astro, so the navbar
+       dropdown is live on this page too. -->
+  <section data-search-page>
+    <div class="container-page py-8 sm:py-10">
+      <form action="/search/" method="get" role="search">
+        <label for="search-page-input" class="sr-only">Search the site</label>
+        <div class="relative">
+          <input
+            id="search-page-input"
+            name="q"
+            type="search"
+            placeholder="Try virus, data recovery, brendale…"
+            autocomplete="off"
+            class="w-full rounded-xl border border-ink-200 bg-white py-3.5 pr-4 pl-4 text-lg text-ink-900 shadow-sm transition focus:border-brand-400 focus:outline-none"
+            aria-describedby="search-page-status"
+          />
+        </div>
+      </form>
+
+      <p id="search-page-status" class="mt-3 text-sm text-ink-600" data-search-status aria-live="polite">
+        Searching needs JavaScript. If it is off, browse the links below.
+      </p>
+
+      <ul data-search-list class="mt-6 grid gap-4 sm:grid-cols-2"></ul>
+    </div>
+  </section>
+
+  <!-- Static fallback: always useful, and the only content without JS. -->
+  <section class="border-t border-ink-100 bg-white">
+    <div class="container-page py-12 sm:py-16">
+      <h2 class="text-h2">Or browse by service</h2>
+      <p class="mt-2 max-w-2xl text-ink-600">
+        Every repair we do, grouped the way customers search for it.
+      </p>
+
+      <div class="mt-8 grid gap-10 lg:grid-cols-2">
+        {
+          serviceGroups.map((group) => (
+            <div>
+              <h3 class="text-h3">{group.heading}</h3>
+              <ul class="mt-4 space-y-2.5">
+                {group.slugs.map((slug) => {
+                  const s = serviceBySlug.get(slug);
+                  return s ? (
+                    <li>
+                      <a
+                        href={`/${s.slug}/`}
+                        class="inline-flex min-h-11 items-center py-1 text-brand-700 underline-offset-4 hover:underline"
+                      >
+                        {s.title}
+                      </a>
+                    </li>
+                  ) : null;
+                })}
+              </ul>
+            </div>
+          ))
+        }
+      </div>
+
+      <div class="mt-10 flex flex-wrap gap-4">
+        <a
+          href="/services/"
+          class="inline-flex min-h-11 items-center rounded-btn bg-brand-700 px-6 py-3 font-semibold text-white transition hover:bg-brand-800"
+        >
+          All services
+        </a>
+        <a
+          href="/service-area/"
+          class="inline-flex min-h-11 items-center rounded-btn border border-ink-300 px-6 py-3 font-semibold text-ink-900 transition hover:border-ink-400"
+        >
+          Find your suburb
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="border-t border-ink-100 bg-white">
+    <div class="container-page py-12 sm:py-16">
+      <h2 class="text-h2">Popular services</h2>
+      <ul class="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        {
+          featured.map((s) => (
+            <li>
+              <a
+                href={`/${s.slug}/`}
+                class="flex min-h-11 items-center rounded-card border border-ink-200 px-4 py-3 font-semibold text-ink-900 transition hover:border-brand-400 hover:text-brand-700"
+              >
+                {s.title}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+</BaseLayout>

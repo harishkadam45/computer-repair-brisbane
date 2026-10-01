@@ -29,6 +29,7 @@ const ROUTES = [
   '/blog/',
   '/about/',
   '/testimonials/',
+  '/search/',
 ];
 
 const VIEWPORTS = [

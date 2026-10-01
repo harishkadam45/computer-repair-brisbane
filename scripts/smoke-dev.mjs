@@ -19,6 +19,7 @@ const ROUTES = [
   '/blog/',
   '/about/',
   '/testimonials/',
+  '/search/',
 ];
 
 /**

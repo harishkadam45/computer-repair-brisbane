@@ -17,9 +17,11 @@
     "icons": "node scripts/build-icons.mjs",
     "suburbs": "node scripts/build-suburbs.mjs",
     "release": "npm run build && npm run redirects && npm run verify",
+    "smoke-dev": "node scripts/smoke-dev.mjs",
     "audit:responsive": "node scripts/responsive-audit.mjs",
     "audit:interaction": "node scripts/interaction-audit.mjs",
-    "audit:megamenu": "node scripts/mega-menu-travel.mjs"
+    "audit:megamenu": "node scripts/mega-menu-travel.mjs",
+    "audit:search": "node scripts/search-audit.mjs"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.3.3",
@@ -30,8 +32,10 @@
     "esbuild": true
   },
   "devDependencies": {
+    "@astrojs/check": "^0.9.10",
     "@astrojs/sitemap": "^3.7.4",
     "playwright": "^1.63.0",
-    "sharp": "^0.35.5"
+    "sharp": "^0.35.5",
+    "typescript": "^6.0.3"
   }
 }

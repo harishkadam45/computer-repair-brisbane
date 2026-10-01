@@ -89,11 +89,19 @@ const isActive = (href: string) =>
       </form>
 
       <div class="flex items-center gap-4">
+        <!-- The phone number, in the spot it has always held (immediately
+             before "Get a quote"). Same colour and icon as the navbar button
+             it replaces; padding is py-1.5 rather than py-2.5 so the 32px pill
+             fits this 36px bar instead of forcing the header taller. -->
         <a
           href={site.phone.href}
-          class="font-semibold text-brand-600 transition hover:text-brand-700"
+          class="flex items-center gap-1.5 rounded-xl bg-brand-500 px-3.5 py-1.5 text-sm font-semibold whitespace-nowrap text-white shadow-cta transition hover:bg-brand-600"
         >
-          <span aria-hidden="true">📞</span>
+          <svg class="size-3.5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+            <path
+              d="M2 3.5A1.5 1.5 0 0 1 3.5 2h2.1a.75.75 0 0 1 .74.64l.5 2.5a.75.75 0 0 1-.19.7L5.4 7.3a12 12 0 0 0 7.3 7.3l1.46-1.25a.75.75 0 0 1 .7-.19l2.5.5a.75.75 0 0 1 .64.74v2.1a1.5 1.5 0 0 1-1.5 1.5A15.5 15.5 0 0 1 2 5v-1.5Z"
+            ></path>
+          </svg>
           <span class="sr-only">Call </span>{site.phone.display}
         </a>
         <a href={site.quoteForm.url} class="text-ink-600 transition hover:text-brand-700">
@@ -124,10 +132,9 @@ const isActive = (href: string) =>
       </span>
     </a>
 
-    <!-- Not shrink-0: at 1024px this row is ~41px wider than the container and the
-         nav is meant to absorb it. If the nav cannot shrink, the whole row
-         overflows past the viewport edge instead. The phone CTA below is the
-         one element that must never give up its width. -->
+    <!-- Not shrink-0: this row is the one that can absorb a shortfall, which is
+         why search lives in the utility bar above. At 1024px the nav is already
+         at min-content and "Services" wraps, so nothing here can be pinned. -->
     <nav class="hidden items-center gap-1 lg:flex" aria-label="Main">
       <a
         href="/"
@@ -270,19 +277,9 @@ const isActive = (href: string) =>
       }
     </nav>
 
+    <!-- The phone number is no longer duplicated here; it lives in the utility
+         bar above, immediately before "Get a quote". -->
     <div class="flex shrink-0 items-center gap-2">
-      <a
-        href={site.phone.href}
-        class="hidden shrink-0 items-center gap-2 whitespace-nowrap rounded-xl bg-brand-500 px-4 py-2.5 text-sm font-semibold text-white shadow-cta transition hover:bg-brand-600 sm:flex"
-      >
-        <svg class="size-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-          <path
-            d="M2 3.5A1.5 1.5 0 0 1 3.5 2h2.1a.75.75 0 0 1 .74.64l.5 2.5a.75.75 0 0 1-.19.7L5.4 7.3a12 12 0 0 0 7.3 7.3l1.46-1.25a.75.75 0 0 1 .7-.19l2.5.5a.75.75 0 0 1 .64.74v2.1a1.5 1.5 0 0 1-1.5 1.5A15.5 15.5 0 0 1 2 5v-1.5Z"
-          ></path>
-        </svg>
-        {site.phone.display}
-      </a>
-
       <button
         type="button"
         class="flex size-11 items-center justify-center rounded-xl border border-ink-200 text-ink-700 transition hover:bg-ink-50 lg:hidden"

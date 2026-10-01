@@ -102,27 +102,34 @@ for (const { name, type } of engines) {
 
   // --- mobile nav ---
   // --- header row must not squeeze the phone number ---
-  // Adding the navbar search originally crushed this button from 146px to
-  // 85px at every desktop width, because flex-shrink took the space instead
-  // of the search input. Guard the natural width of the conversion CTA.
+  // The phone number moved from the navbar into the utility bar (immediately
+  // before "Get a quote"), keeping the brand pill it had as a navbar button.
+  // Guard the new location: the pill must exist, keep its natural width, not
+  // clip or wrap, stay inside the bar, and come before "Get a quote".
+  // It previously lived at 146px in the navbar row and was crushed to 85px by
+  // flex-shrink when search was introduced, so the width check stays.
   for (const width of [1024, 1280, 1440]) {
     const ctx = await browser.newContext({ viewport: { width, height: 800 } });
     const page = await ctx.newPage();
     await page.goto(`${O}/`, { waitUntil: 'load' });
     const phone = await page.evaluate(() => {
-      const row = document.querySelector('header .container-page.flex.h-16');
-      // Scope to the CTA group. A blanket tel: lookup also matches the hidden
-      // "Start here" link inside the mega-menu panel, which is visibility
-      // hidden but still has a bounding box.
-      const el = row.lastElementChild.querySelector('a[href^="tel:"]');
+      const bar = document.querySelector('header .container-page.flex.h-9');
+      // The pill is the brand-filled tel: link. "Get a quote" is a separate
+      // plain link in the same group.
+      const el = [...bar.querySelectorAll('a[href^="tel:"]')].find((a) =>
+        a.className.includes('bg-brand-500'),
+      );
+      const quote = [...bar.querySelectorAll('a')].find((a) =>
+        a.textContent.includes('Get a quote'),
+      );
       const r = el.getBoundingClientRect();
-      const rr = row.getBoundingClientRect();
+      const qr = quote.getBoundingClientRect();
+      const br = bar.getBoundingClientRect();
       // Natural width, measured off-layout so flex-shrink cannot mask it.
       const host = document.createElement('div');
       host.style.cssText =
         'position:absolute;visibility:hidden;width:auto;left:-9999px;top:0;display:flex';
       const clone = el.cloneNode(true);
-      clone.classList.remove('hidden');
       host.appendChild(clone);
       document.body.appendChild(host);
       const natural = Math.round(clone.getBoundingClientRect().width);
@@ -131,21 +138,53 @@ for (const { name, type } of engines) {
         current: Math.round(r.width),
         natural,
         clipped: el.scrollWidth > el.clientWidth + 1,
-        wraps: r.height > 48,
-        // If everything is shrink-0 the row overflows instead of squeezing,
+        wraps: r.height > 40,
+        beforeQuote: r.left < qr.left,
+        // If everything is shrink-0 the bar overflows instead of squeezing,
         // so both failure modes have to be asserted.
-        rowOverflow: Math.round(row.scrollWidth) > Math.round(rr.width) + 1,
+        barOverflow: Math.round(bar.scrollWidth) > Math.round(br.width) + 1,
+        insideBar: r.right <= br.right + 1 && r.top >= br.top - 1,
         right: Math.round(r.right),
         vw: document.documentElement.clientWidth,
         text: el.textContent.trim().replace(/\s+/g, ' '),
       };
     });
-    record(name, `phone CTA keeps full width at ${width}px`,
+    record(name, `phone pill keeps full width at ${width}px`,
       phone.current >= phone.natural - 1 && !phone.clipped && !phone.wraps,
       `natural=${phone.natural} got=${phone.current} ${phone.text}`);
-    record(name, `header row does not overflow at ${width}px`,
-      !phone.rowOverflow && phone.right <= phone.vw,
-      `scroll=${phone.rowOverflow} right=${phone.right} vw=${phone.vw}`);
+    record(name, `phone pill sits before Get a quote at ${width}px`,
+      phone.beforeQuote && !phone.barOverflow && phone.insideBar && phone.right <= phone.vw,
+      `before=${phone.beforeQuote} inBar=${phone.insideBar} scroll=${phone.barOverflow} right=${phone.right} vw=${phone.vw}`);
+    await ctx.close();
+  }
+
+  // The navbar row no longer carries the phone button; assert it stays that way
+  // so the number is not silently duplicated back into the nav.
+  {
+    const ctx = await browser.newContext({ viewport: { width: 1280, height: 800 } });
+    const page = await ctx.newPage();
+    await page.goto(`${O}/`, { waitUntil: 'load' });
+    const row = await page.evaluate(() => {
+      const el = document.querySelector('header .container-page.flex.h-16');
+      // Direct children only, so the mega-menu's hidden "Start here" tel: link
+      // nested inside the nav does not count as a navbar-row button.
+      const direct = [...el.children].some((c) => c.matches('a[href^="tel:"]'));
+      // Read the expected number off the utility-bar pill rather than
+      // hardcoding it, so this survives a number change.
+      const pill = document.querySelector(
+        'header .container-page.flex.h-9 a[href^="tel:"]',
+      );
+      const number = pill.textContent.match(/\(?0\d\)?\s?\d{4}\s?\d{4}/)?.[0] ?? '';
+      // Strip the nav before scanning for the text: the mega-menu panel is a
+      // descendant of the row and legitimately contains its own "Start here"
+      // call link, which is not a duplicate navbar button.
+      const copy = el.cloneNode(true);
+      copy.querySelector('nav')?.remove();
+      return { direct, number, duplicated: copy.textContent.includes(number) };
+    });
+    record(name, 'phone number is not duplicated in the navbar row',
+      !row.direct && !row.duplicated,
+      `directTelLink=${row.direct} numberText=${row.duplicated} (${row.number})`);
     await ctx.close();
   }
 

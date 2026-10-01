@@ -184,16 +184,15 @@ const jsonLd = schema.graph({
           <div class="rounded-card border border-ink-200 bg-white p-6">
             <h2 class="text-h3">Or send the form</h2>
             <p class="mt-2 text-[0.95rem] leading-relaxed text-ink-600">
-              Opens in a new tab. I read every one and come back with a cost and a time - usually
-              the same day.
+Opens right here, without leaving the page. I read every one and come back with a cost and a
+      time - usually the same day.
             </p>
-            <a
-              href={site.quoteForm.url}
-              target="_blank"
-              rel="noopener"
-              class="mt-4 flex items-center justify-center gap-2 rounded-xl border border-ink-300 px-5 py-3.5 text-base font-bold text-ink-900 transition hover:border-brand-400 hover:bg-brand-50"
-            >
-              Open the quote form
+<a
+      href={site.quoteForm.url}
+      data-quote-open
+      class="mt-4 flex items-center justify-center gap-2 rounded-xl border border-ink-300 px-5 py-3.5 text-base font-bold text-ink-900 transition hover:border-brand-400 hover:bg-brand-50"
+    >
+      Open the quote form
               <svg class="size-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                 <path
                   d="M12 3h5v5h-1.5V6.1l-6.4 6.4-1.1-1.1 6.4-6.4H12V3ZM4 5h5v1.5H5.5v9h9V11H16v5H4V5Z"

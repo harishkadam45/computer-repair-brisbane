@@ -133,6 +133,26 @@ export const site = {
     url: 'https://my.forms.app/form/63abe8b4a94b75117d3d47ad',
     /** The legacy self-hosted form, kept as a fallback during rollout. */
     legacyUrl: 'http://quote.zoorepairs.com.au/',
+    /**
+     * Where the in-page quote modal POSTs.
+     *
+     * Empty on purpose: there is no backend on this site yet, and a form that
+     * silently swallows enquiries is worse than a clear handoff. Until this is
+     * filled in, the modal collects the answers and then hands them to the
+     * visitor's email client pre-filled, so nothing is lost and the failure is
+     * visible rather than hidden. Set it to a URL that accepts POST (Formdata
+     * or JSON) and the same modal will submit directly instead, with no code
+     * change.
+     *
+     * TODO(robert): point this at the real inbox.
+     */
+    endpoint: '',
+    /**
+     * Shown in the modal when no endpoint is configured, so the visitor is
+     * told what is about to happen instead of discovering it silently.
+     */
+    endpointNote:
+      'Nothing is sent from this page yet, so pressing Send opens your email app with the answers filled in.',
   },
 
   social: {

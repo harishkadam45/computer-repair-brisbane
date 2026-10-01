@@ -1,0 +1,457 @@
+---
+/**
+ * Quote request modal.
+ *
+ * Mounted once per page from BaseLayout. Any link carrying `data-quote-open`
+ * opens it instead of navigating, but the links are still real hrefs pointing
+ * at the hosted form, so with JavaScript off - or before the script runs - the
+ * visitor gets a working form rather than a dead button.
+ *
+ * Built on the native <dialog> element and showModal(), which gives focus
+ * trapping, Escape-to-close, background inerting and the top layer for free.
+ * A hand-rolled modal has to reimplement all of that and usually gets the
+ * focus return wrong.
+ *
+ * The fields mirror the hosted Zoo Computer Repairs form, restated in this
+ * site's language. Deliberate differences:
+ * - Suburb is asked for. The hosted form has the question but has it switched
+ *   off, and suburb is how this site routes work.
+ * - There is no call-out or pickup fee question. The hosted form offers a $20
+ *   pickup, which contradicts the published no-call-out-fee rate.
+ * - No review-count claim and no third-party recommendation. This site does not
+ *   make claims it cannot substantiate.
+ *
+ * Where the answers go: site.quoteForm.endpoint. It is empty, because this site
+ * has no backend. Until it is filled in the modal hands the answers to the
+ * visitor's mail client rather than pretending to submit them.
+ */
+import { site } from '../data/site';
+
+const rate = site.pricing.flatRate;
+const endpoint = site.quoteForm.endpoint;
+const phoneDigits = site.phone.display.replace(/\D/g, '');
+---
+
+<dialog
+  id="quote-modal"
+  class="m-auto max-h-[100dvh] w-full max-w-none overflow-y-auto bg-transparent p-4 backdrop:bg-ink-900/60 sm:p-6"
+  aria-labelledby="quote-modal-title"
+>
+  <div
+    class="relative mx-auto my-2 w-full max-w-2xl rounded-card border border-ink-200 bg-white shadow-lift"
+  >
+    <button
+      type="button"
+      data-quote-close
+      class="absolute top-3 right-3 z-10 flex size-10 items-center justify-center rounded-xl text-ink-500 transition hover:bg-ink-100 hover:text-ink-900"
+    >
+      <span class="sr-only">Close the quote form</span>
+      <svg class="size-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+        <path
+          d="M5.3 5.3a1 1 0 0 1 1.4 0L10 8.6l3.3-3.3a1 1 0 1 1 1.4 1.4L11.4 10l3.3 3.3a1 1 0 0 1-1.4 1.4L10 11.4l-3.3 3.3a1 1 0 0 1-1.4-1.4L8.6 10 5.3 6.7a1 1 0 0 1 0-1.4Z"
+        ></path>
+      </svg>
+    </button>
+
+    <div data-quote-panel="form">
+      <div class="border-b border-ink-100 px-6 pt-6 pb-5 sm:px-8">
+        <p class="text-xs font-bold tracking-wide text-brand-600 uppercase">
+          Flat ${rate} first hour · No call-out fee
+        </p>
+        <h2 id="quote-modal-title" class="mt-2 pr-10 text-h2">Request a quote</h2>
+        <p class="mt-2 text-[0.95rem] leading-relaxed text-ink-600">
+          Only the phone number is required. If you are not sure what is wrong, say that instead -
+          working it out is part of the first hour and it is included in the rate.
+        </p>
+      </div>
+
+      <form data-quote-form novalidate class="px-6 py-6 sm:px-8">
+        <div class="grid gap-5 sm:grid-cols-2">
+          <div class="sm:col-span-1">
+            <label for="q-name" class="block text-sm font-semibold text-ink-900">Your name</label>
+            <input
+              id="q-name"
+              name="name"
+              type="text"
+              autocomplete="name"
+              class="mt-1.5 w-full rounded-xl border border-ink-200 bg-white px-3 py-2.5 text-sm text-ink-900 focus:border-brand-400 focus:outline-none"
+            />
+          </div>
+
+          <div class="sm:col-span-1">
+            <label for="q-phone" class="block text-sm font-semibold text-ink-900">
+              Mobile number <span class="text-brand-600">(required)</span>
+            </label>
+            <input
+              id="q-phone"
+              name="phone"
+              type="tel"
+              inputmode="numeric"
+              autocomplete="tel"
+              required
+              aria-describedby="q-phone-hint"
+              placeholder="04xx xxx xxx"
+              class="mt-1.5 w-full rounded-xl border border-ink-200 bg-white px-3 py-2.5 text-sm text-ink-900 focus:border-brand-400 focus:outline-none"
+            />
+            <p id="q-phone-hint" class="mt-1.5 text-xs text-ink-500">
+              Australian mobile, starting with 04.
+            </p>
+            <p data-error-for="phone" class="mt-1.5 hidden text-xs font-semibold text-red-700"></p>
+          </div>
+
+          <div class="sm:col-span-1">
+            <label for="q-email" class="block text-sm font-semibold text-ink-900">Email</label>
+            <input
+              id="q-email"
+              name="email"
+              type="email"
+              autocomplete="email"
+              class="mt-1.5 w-full rounded-xl border border-ink-200 bg-white px-3 py-2.5 text-sm text-ink-900 focus:border-brand-400 focus:outline-none"
+            />
+            <p data-error-for="email" class="mt-1.5 hidden text-xs font-semibold text-red-700"></p>
+          </div>
+
+          <div class="sm:col-span-1">
+            <label for="q-suburb" class="block text-sm font-semibold text-ink-900">Suburb</label>
+            <input
+              id="q-suburb"
+              name="suburb"
+              type="text"
+              autocomplete="address-level2"
+              placeholder="e.g. Brendale"
+              class="mt-1.5 w-full rounded-xl border border-ink-200 bg-white px-3 py-2.5 text-sm text-ink-900 focus:border-brand-400 focus:outline-none"
+            />
+            <p class="mt-1.5 text-xs text-ink-500">Town or suburb only, no street address needed.</p>
+          </div>
+
+          <div class="sm:col-span-1">
+            <label for="q-device" class="block text-sm font-semibold text-ink-900">Device</label>
+            <select
+              id="q-device"
+              name="device"
+              class="mt-1.5 w-full rounded-xl border border-ink-200 bg-white px-3 py-2.5 text-sm text-ink-900 focus:border-brand-400 focus:outline-none"
+            >
+              <option value="">Not sure</option>
+              <option value="Laptop">Laptop</option>
+              <option value="Desktop PC">Desktop PC</option>
+              <option value="Mac">Mac</option>
+              <option value="Other">Something else</option>
+            </select>
+          </div>
+
+          <div class="sm:col-span-1">
+            <label for="q-contact" class="block text-sm font-semibold text-ink-900">
+              Best way to reach you
+            </label>
+            <select
+              id="q-contact"
+              name="preferred_contact"
+              class="mt-1.5 w-full rounded-xl border border-ink-200 bg-white px-3 py-2.5 text-sm text-ink-900 focus:border-brand-400 focus:outline-none"
+            >
+              <option value="Phone call">Phone call</option>
+              <option value="Email">Email</option>
+              <option value="Either">Either</option>
+            </select>
+          </div>
+
+          <div class="sm:col-span-1">
+            <label for="q-brand" class="block text-sm font-semibold text-ink-900">Brand</label>
+            <input
+              id="q-brand"
+              name="brand"
+              type="text"
+              placeholder="e.g. HP, Dell, Lenovo, Apple"
+              class="mt-1.5 w-full rounded-xl border border-ink-200 bg-white px-3 py-2.5 text-sm text-ink-900 placeholder:text-ink-400 focus:border-brand-400 focus:outline-none"
+            />
+          </div>
+
+          <div class="sm:col-span-1">
+            <label for="q-model" class="block text-sm font-semibold text-ink-900">Model</label>
+            <input
+              id="q-model"
+              name="model"
+              type="text"
+              class="mt-1.5 w-full rounded-xl border border-ink-200 bg-white px-3 py-2.5 text-sm text-ink-900 focus:border-brand-400 focus:outline-none"
+            />
+          </div>
+
+          <div class="sm:col-span-2">
+            <label for="q-serial" class="block text-sm font-semibold text-ink-900">
+              Serial number <span class="font-normal text-ink-500">(if you can find it)</span>
+            </label>
+            <input
+              id="q-serial"
+              name="serial"
+              type="text"
+              class="mt-1.5 w-full rounded-xl border border-ink-200 bg-white px-3 py-2.5 text-sm text-ink-900 focus:border-brand-400 focus:outline-none"
+            />
+            <p class="mt-1.5 text-xs text-ink-500">
+              Apple and some other brands quote better with it. Skip it if you cannot find it quickly
+              - it will not delay anything.
+            </p>
+          </div>
+
+          <div class="sm:col-span-2">
+            <label for="q-problem" class="block text-sm font-semibold text-ink-900">
+              What is happening?
+            </label>
+            <textarea
+              id="q-problem"
+              name="problem"
+              rows="3"
+              placeholder="A sentence is enough, e.g. &quot;it will not turn on&quot; or &quot;pop-ups on every page&quot;."
+              class="mt-1.5 w-full rounded-xl border border-ink-200 bg-white px-3 py-2.5 text-sm text-ink-900 placeholder:text-ink-400 focus:border-brand-400 focus:outline-none"
+            ></textarea>
+          </div>
+
+          <div class="sm:col-span-2">
+            <label for="q-photos" class="block text-sm font-semibold text-ink-900">
+              Photos <span class="font-normal text-ink-500">(optional)</span>
+            </label>
+            <input
+              id="q-photos"
+              name="photos"
+              type="file"
+              multiple
+              accept="image/*"
+              class="mt-1.5 w-full rounded-xl border border-ink-200 bg-white px-3 py-2 text-sm text-ink-600 file:mr-3 file:rounded-lg file:border-0 file:bg-ink-100 file:px-3 file:py-1.5 file:text-sm file:font-semibold file:text-ink-900"
+            />
+            <p class="mt-1.5 text-xs text-ink-500">
+              Up to 5 photos. Handy for a cracked screen or a strange error message.
+            </p>
+          </div>
+        </div>
+
+        <div class="mt-6 flex flex-wrap items-center gap-3">
+          <button
+            type="submit"
+            class="inline-flex items-center justify-center gap-2 rounded-xl bg-brand-700 px-6 py-3.5 text-base font-bold text-white shadow-cta transition hover:bg-brand-800"
+          >
+            Send my details
+          </button>
+          <p class="text-sm text-ink-500">Or call <a
+              href={site.phone.href}
+              class="font-semibold text-brand-700 underline-offset-2 hover:underline"
+              >{site.phone.display}</a
+            ></p>
+        </div>
+
+        {
+          !endpoint && (
+            <p
+              data-quote-endpoint-note
+              class="mt-4 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900"
+            >
+              {site.quoteForm.endpointNote}
+            </p>
+          )
+        }
+      </form>
+    </div>
+
+    <div data-quote-panel="sent" hidden>
+      <div class="px-6 py-10 text-center sm:px-8">
+        <div
+          class="mx-auto flex size-14 items-center justify-center rounded-full bg-brand-50 text-brand-700"
+        >
+          <svg class="size-7" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+            <path
+              d="M16.7 5.3a1 1 0 0 1 0 1.4l-7.5 7.5a1 1 0 0 1-1.4 0L3.3 9.7a1 1 0 1 1 1.4-1.4l3.8 3.7 6.8-6.7a1 1 0 0 1 1.4 0Z"
+            ></path>
+          </svg>
+        </div>
+        <h2 class="mt-5 text-h2">That is everything I need</h2>
+        <p data-quote-sent-copy class="mx-auto mt-3 max-w-md text-[0.98rem] leading-relaxed text-ink-600">
+          Thanks - your details are with me. I will come back to you with a cost and a time, usually
+          the same day.
+        </p>
+        <div class="mt-7 flex flex-wrap justify-center gap-3">
+          <a
+            href={site.phone.href}
+            class="inline-flex items-center justify-center gap-2 rounded-xl bg-brand-700 px-5 py-3 text-base font-bold text-white transition hover:bg-brand-800"
+          >
+            Call {site.phone.display}
+          </a>
+          <button
+            type="button"
+            data-quote-close
+            class="inline-flex items-center justify-center rounded-xl border border-ink-300 px-5 py-3 text-base font-bold text-ink-900 transition hover:border-brand-400 hover:bg-brand-50"
+          >
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</dialog>
+
+<script is:inline define:vars={{ endpoint, emailHref: site.email.href, emailDisplay: site.email.display, phoneDisplay: site.phone.display, phoneDigits }}>
+  (function () {
+    var dialog = document.getElementById('quote-modal');
+    if (!dialog) return;
+
+    var form = dialog.querySelector('[data-quote-form]');
+    var formPanel = dialog.querySelector('[data-quote-panel="form"]');
+    var sentPanel = dialog.querySelector('[data-quote-panel="sent"]');
+    var lastTrigger = null;
+
+    // Any real link pointing at the hosted form becomes a modal trigger.
+    // It stays a real link, so with no JS it still goes somewhere useful.
+    document.addEventListener('click', function (e) {
+      var trigger = e.target.closest('[data-quote-open]');
+      if (!trigger) return;
+      // Let people open it in a new tab the normal way.
+      if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
+      e.preventDefault();
+      lastTrigger = trigger;
+      form.reset();
+      clearErrors();
+      formPanel.hidden = false;
+      sentPanel.hidden = true;
+      dialog.showModal();
+      // Reopening should start at the top, not wherever the last visit left it.
+      dialog.scrollTop = 0;
+    });
+
+    document.addEventListener('click', function (e) {
+      if (e.target.closest('[data-quote-close]')) dialog.close();
+    });
+
+    // Clicking the backdrop closes, but only past the edge of the panel.
+    dialog.addEventListener('click', function (e) {
+      if (e.target !== dialog) return;
+      var r = dialog.querySelector('div').getBoundingClientRect();
+      var inside =
+        e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom;
+      if (!inside) dialog.close();
+    });
+
+    dialog.addEventListener('close', function () {
+      // Return focus to whatever opened it, which showModal does not do.
+      if (lastTrigger && document.contains(lastTrigger)) lastTrigger.focus();
+    });
+
+    function clearErrors() {
+      var msgs = dialog.querySelectorAll('[data-error-for]');
+      for (var i = 0; i < msgs.length; i++) {
+        msgs[i].textContent = '';
+        msgs[i].classList.add('hidden');
+      }
+    }
+
+    function fail(field, message) {
+      var el = dialog.querySelector('[data-error-for="' + field + '"]');
+      if (!el) return;
+      el.textContent = message;
+      el.classList.remove('hidden');
+    }
+
+    // Ten digits starting 0, tolerating spaces, brackets and a +61 prefix.
+    function normalisePhone(v) {
+      var d = String(v).replace(/[^\d]/g, '');
+      if (d.indexOf('61') === 0 && d.length === 11) d = '0' + d.slice(2);
+      return d;
+    }
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      clearErrors();
+
+      var data = {};
+      new FormData(form).forEach(function (v, k) {
+        data[k] = v;
+      });
+
+      var digits = normalisePhone(data.phone || '');
+      var ok = true;
+
+      if (digits.length !== 10 || digits.charAt(0) !== '0') {
+        fail('phone', 'Enter an Australian mobile number - 10 digits starting with 0.');
+        ok = false;
+      }
+      if (data.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) {
+        fail('email', 'That email address does not look right.');
+        ok = false;
+      }
+
+      var phoneEl = form.querySelector('#q-phone');
+      phoneEl.value = digits.replace(/^(\d{4})(\d{3})(\d{3})$/, '$1 $2 $3');
+
+      if (!ok) {
+        var firstBad = dialog.querySelector('[data-error-for]:not(.hidden)');
+        if (firstBad) {
+          var input = form.querySelector('[name="' + firstBad.getAttribute('data-error-for') + '"]');
+          if (input) input.focus();
+        }
+        return;
+      }
+
+      var photos = form.querySelector('#q-photos').files;
+      var lines = [
+        'Quote request from the website',
+        '',
+        'Name: ' + (data.name || '-'),
+        'Phone: ' + phoneEl.value,
+        'Email: ' + (data.email || '-'),
+        'Suburb: ' + (data.suburb || '-'),
+        'Device: ' + (data.device || 'Not sure'),
+        'Brand: ' + (data.brand || '-'),
+        'Model: ' + (data.model || '-'),
+        'Serial: ' + (data.serial || '-'),
+        'Best contact: ' + (data.preferred_contact || '-'),
+        '',
+        'Problem:',
+        data.problem || '-',
+      ];
+      if (photos && photos.length) {
+        lines.push('', 'Photos: ' + photos.length + ' attached in the form (send them by email).');
+      }
+
+      function finish() {
+        formPanel.hidden = true;
+        sentPanel.hidden = false;
+        dialog.querySelector('[data-quote-panel="sent"] h2').focus();
+      }
+
+      if (!endpoint) {
+        // No backend configured, so be explicit: hand the answers to the
+        // visitor's mail client rather than pretending they were delivered.
+        var subject = 'Quote request - ' + (data.suburb || 'Brisbane');
+        var body = lines.join('\n');
+        window.location.href =
+          emailHref +
+          '?subject=' +
+          encodeURIComponent(subject) +
+          '&body=' +
+          encodeURIComponent(body);
+        var copy = dialog.querySelector('[data-quote-sent-copy]');
+        copy.textContent =
+          'Your email app should now be open with the answers filled in - press send there and I will come back to you, usually the same day.';
+        finish();
+        return;
+      }
+
+      var body = new FormData(form);
+      body.set('phone', digits);
+      body.set('page', window.location.pathname);
+      fetch(endpoint, { method: 'POST', body: body })
+        .then(function (r) {
+          if (!r.ok) throw new Error('HTTP ' + r.status);
+          finish();
+        })
+        .catch(function (err) {
+          // Fall back to email rather than lose the enquiry.
+          window.location.href =
+            emailHref +
+            '?subject=' +
+            encodeURIComponent('Quote request - ' + (data.suburb || 'Brisbane')) +
+            '&body=' +
+            encodeURIComponent(lines.join('\n') + '\n\n(The form could not be reached: ' + err.message + ')');
+          var copy = dialog.querySelector('[data-quote-sent-copy]');
+          copy.textContent =
+            'The form could not be reached, so your email app should now be open instead. Nothing is lost - send it there.';
+          finish();
+        });
+    });
+  })();
+</script>

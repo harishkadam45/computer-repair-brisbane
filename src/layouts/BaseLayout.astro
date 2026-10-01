@@ -16,6 +16,7 @@ import { site } from '../data/site';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import StickyCallBar from '../components/StickyCallBar.astro';
+  import QuoteModal from '../components/QuoteModal.astro';
 import { clampDescription, checkTitleLength, checkDescriptionLength } from '../lib/seo';
 
 export interface Props {
@@ -142,6 +143,7 @@ checkDescriptionLength(desc, path);
 
     <Footer />
     <StickyCallBar />
+    <QuoteModal />
 
     {schema && <script type="application/ld+json" set:html={schema} is:inline />}
   </body>

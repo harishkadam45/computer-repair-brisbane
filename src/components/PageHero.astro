@@ -57,12 +57,11 @@ const { eyebrow, title, intro, icon, facts, badges } = Astro.props;
             </svg>
             Call {site.phone.display}
           </a>
-          <a
-            href={site.quoteForm.url}
-            rel="noopener"
-            target="_blank"
-            class="inline-flex items-center justify-center rounded-xl border-2 border-brand-500 px-6 py-3.5 text-base font-bold text-brand-700 transition hover:bg-brand-50"
-          >
+<a
+    href={site.quoteForm.url}
+    data-quote-open
+    class="inline-flex items-center justify-center rounded-xl border-2 border-brand-500 px-6 py-3.5 text-base font-bold text-brand-700 transition hover:bg-brand-50"
+  >
             Get a free quote
           </a>
         </div>

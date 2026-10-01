@@ -60,9 +60,10 @@ const CONTACT_METHODS = [
   {
     label: 'Online quote',
     value: 'Request a quote',
-    href: site.quoteForm.url,
-    note: 'A short form. Useful if you are not ready to book yet, or if you want the call first thing.',
-    primary: false,
+href: site.quoteForm.url,
+      modal: true,
+      note: 'A short form. Useful if you are not ready to book yet, or if you want the call first thing.',
+      primary: false,
   },
 ];
 
@@ -134,10 +135,11 @@ const faqs = [
     <div class="mt-10 grid gap-4 sm:grid-cols-3">
       {
         CONTACT_METHODS.map((m) => (
-          <a
-            href={m.href}
-            rel={m.href.startsWith('http') ? 'noopener' : undefined}
-            target={m.href.startsWith('http') ? '_blank' : undefined}
+<a
+              href={m.href}
+              data-quote-open={m.modal ? '' : undefined}
+              rel={m.href.startsWith('http') ? 'noopener' : undefined}
+              target={m.href.startsWith('http') ? '_blank' : undefined}
             class:list={[
               'group flex min-w-0 flex-col rounded-card border p-6 transition',
               m.primary

@@ -79,7 +79,7 @@ const isActive = (href: string) =>
           </svg>
           <span class="sr-only">Call </span>{site.phone.display}
         </a>
-        <a href={site.quoteForm.url} class="text-ink-600 transition hover:text-brand-700">
+        <a href={site.quoteForm.url} data-quote-open class="text-ink-600 transition hover:text-brand-700">
           Get a quote
         </a>
       </div>
@@ -204,15 +204,16 @@ const isActive = (href: string) =>
                 {
                   [
                     { label: `Call ${site.phone.display}`, href: site.phone.href, note: 'Fastest way to get it fixed.' },
-                    { label: 'Request a quote', href: site.quoteForm.url, note: 'If you would rather not phone.' },
+                    { label: 'Request a quote', href: site.quoteForm.url, note: 'If you would rather not phone.', modal: true },
                     { label: 'See pricing', href: '/pricing/', note: `Flat $${site.pricing.flatRate}, no call-out fee.` },
                   ].map((t) => (
                     <li>
-                      <a
-                        href={t.href}
-                        rel={t.href.startsWith('http') ? 'noopener' : undefined}
-                        target={t.href.startsWith('http') ? '_blank' : undefined}
-                        class="block rounded-xl px-3 py-2.5 transition hover:bg-brand-50"
+<a
+                          href={t.href}
+                          data-quote-open={t.modal ? '' : undefined}
+                          rel={t.href.startsWith('http') ? 'noopener' : undefined}
+                          target={t.href.startsWith('http') ? '_blank' : undefined}
+                          class="block rounded-xl px-3 py-2.5 transition hover:bg-brand-50"
                       >
                         <span class="block text-sm font-semibold text-brand-700">{t.label}</span>
                         <span class="mt-0.5 block text-xs leading-snug text-ink-500">{t.note}</span>
@@ -354,12 +355,13 @@ const isActive = (href: string) =>
           ))
         }
       </ul>
-      <a
-        href={site.quoteForm.url}
-        class="mt-4 block rounded-xl bg-brand-500 px-4 py-3 text-center text-sm font-semibold text-white"
-      >
-        Get a free quote
-      </a>
+<a
+          href={site.quoteForm.url}
+          data-quote-open
+          class="mt-4 block rounded-xl bg-brand-500 px-4 py-3 text-center text-sm font-semibold text-white"
+        >
+          Get a free quote
+        </a>
       <a
         href={site.phone.href}
         class="mt-2 block rounded-xl border-2 border-brand-500 px-4 py-3 text-center text-sm font-bold text-brand-700"

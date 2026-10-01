@@ -219,6 +219,158 @@ for (const { name, type } of engines) {
     await ctx.close();
   }
 
+  // --- quote modal ---
+  {
+    const ctx = await browser.newContext({ viewport: { width: 1280, height: 900 } });
+    const page = await ctx.newPage();
+    await page.goto(`${O}/`, { waitUntil: 'load' });
+
+    const dialog = page.locator('#quote-modal');
+    const modalTriggers = await page.locator('a[data-quote-open]').count();
+    record(name, 'quote CTAs are wired to the modal', modalTriggers > 0, `${modalTriggers} triggers`);
+
+    // Triggers must stay real links, so no-JS visitors still get a working form.
+    const realHrefs = await page.evaluate(() =>
+      [...document.querySelectorAll('a[data-quote-open]')].every((a) => a.href.length > 0));
+    record(name, 'quote triggers keep a real href (no-JS fallback)', realHrefs);
+
+    record(name, 'modal starts closed', !(await dialog.evaluate((el) => el.open)));
+
+    const utility = page.locator('header a[data-quote-open]').first();
+    await utility.click();
+    await page.waitForTimeout(250);
+    record(name, 'clicking Get a quote opens the modal as a popup',
+      await dialog.evaluate((el) => el.open));
+    // showModal() puts the dialog in the top layer, which is what makes the
+    // rest of the page unreachable rather than merely covered.
+    record(name, 'modal is in the top layer, not just overlaid',
+      await dialog.evaluate((el) => el.matches(':modal')));
+
+    // Only one modal per page, or triggers would stack duplicates.
+    const modalCount = await page.locator('#quote-modal').count();
+    record(name, 'exactly one modal mounted per page', modalCount === 1, `${modalCount} found`);
+
+    // The dialog itself is the scroll container, so measure the dialog rather
+    // than the panel: a tall form is allowed to exceed the viewport as long as
+    // the overflow is reachable.
+    const state = await dialog.evaluate((el) => {
+      const r = el.getBoundingClientRect();
+      return {
+        left: Math.round(r.left),
+        right: Math.round(r.right),
+        top: Math.round(r.top),
+        vw: document.documentElement.clientWidth,
+        vh: document.documentElement.clientHeight,
+        height: Math.round(r.height),
+        scrollable: el.scrollHeight > el.clientHeight,
+      };
+    });
+    record(name, 'modal fits the viewport width and is fully reachable',
+      state.left >= 0 && state.right <= state.vw && state.height <= state.vh + 1,
+      `l=${state.left} r=${state.right} h=${state.height} vh=${state.vh}`);
+
+    // Every field must be reachable by scrolling, including the submit button.
+    const reachable = await dialog.evaluate((el) => {
+      const btn = el.querySelector('[data-quote-form] button[type="submit"]');
+      el.scrollTop = el.scrollHeight;
+      const r = btn.getBoundingClientRect();
+      const d = el.getBoundingClientRect();
+      return r.bottom <= d.bottom + 1 && r.top >= d.top - 1;
+    });
+    record(name, 'submit button is reachable by scrolling', reachable);
+
+    // Focus must land inside, not stay on the trigger behind the top layer.
+    const focusedInside = await page.evaluate(() =>
+      document.querySelector('#quote-modal').contains(document.activeElement));
+    record(name, 'focus moves into the modal on open', focusedInside);
+
+    const labelled = await dialog.evaluate((el) => {
+      const id = el.getAttribute('aria-labelledby');
+      return !!(id && document.getElementById(id));
+    });
+    record(name, 'modal is labelled for screen readers', labelled);
+
+    // Escape closes, and focus goes back where it came from.
+    await page.keyboard.press('Escape');
+    await page.waitForTimeout(250);
+    record(name, 'Escape closes the modal', !(await dialog.evaluate((el) => el.open)));
+    const returned = await page.evaluate(() =>
+      document.activeElement?.hasAttribute('data-quote-open') ?? false);
+    record(name, 'focus returns to the trigger after close', returned);
+
+    // Phone validation: a bad number must block submission and say why.
+    await utility.click();
+    await page.waitForTimeout(250);
+    await page.fill('#q-phone', '12345');
+    await page.click('[data-quote-form] button[type="submit"]');
+    await page.waitForTimeout(200);
+    const err = await page.locator('[data-error-for="phone"]');
+    record(name, 'invalid phone is rejected with a visible message',
+      (await err.isVisible()) && (await err.textContent()).trim().length > 5,
+      (await err.textContent())?.trim());
+    record(name, 'modal stays open after a validation failure',
+      await dialog.evaluate((el) => el.open));
+
+    // Suburb must be asked for: the hosted form switched it off, and suburb is
+    // how this site routes work.
+    record(name, 'modal asks for suburb', await page.locator('#q-suburb').isVisible());
+
+    // Close button and backdrop both dismiss.
+    await page.click('#quote-modal [data-quote-close]');
+    await page.waitForTimeout(250);
+    record(name, 'close button dismisses the modal', !(await dialog.evaluate((el) => el.open)));
+
+    await utility.click();
+    await page.waitForTimeout(250);
+    await page.mouse.click(4, 4);
+    await page.waitForTimeout(250);
+    record(name, 'backdrop click dismisses the modal', !(await dialog.evaluate((el) => el.open)));
+
+    // Every page must carry the modal, since the header CTA is global.
+    let missing = [];
+    // Covers the home page, a service page, contact, the quote page, a family hub,
+    // a suburb page and a blog post, so every layout that wraps BaseLayout is hit.
+    const routes = [
+      '/', '/pricing/', '/contact/', '/quote/', '/laptop-repairs/',
+      '/virus-malware-and-spyware-removal-brisbane/',
+      '/laptop-repairs-tallai/',
+      '/what-is-seo-search-engine-optimisation/',
+    ];
+    for (const route of routes) {
+      await page.goto(`${O}${route}`, { waitUntil: 'load' });
+      if (!(await page.locator('#quote-modal').count())) missing.push(route);
+    }
+    record(name, 'modal present on every sampled route', missing.length === 0, missing.join(' '));
+
+    await ctx.close();
+  }
+
+  // --- quote modal on mobile ---
+  {
+    const ctx = await browser.newContext({
+      viewport: { width: 375, height: 812 }, isMobile: true, hasTouch: true,
+    });
+    const page = await ctx.newPage();
+    await page.goto(`${O}/`, { waitUntil: 'load' });
+    await page.click('[aria-controls="mobile-nav"]');
+    await page.waitForTimeout(350);
+    await page.locator('#mobile-nav a[data-quote-open]').first().click();
+    await page.waitForTimeout(300);
+    const dialog = page.locator('#quote-modal');
+    const state = await dialog.evaluate((el) => {
+      const r = el.querySelector('div').getBoundingClientRect();
+      return {
+        open: el.open, left: Math.round(r.left), right: Math.round(r.right),
+        vw: document.documentElement.clientWidth, scrollable: el.scrollHeight > el.clientHeight,
+      };
+    });
+    record(name, 'mobile nav quote CTA opens the modal', state.open);
+    record(name, 'modal fits the mobile viewport and scrolls',
+      state.left >= 0 && state.right <= state.vw && state.scrollable,
+      `l=${state.left} r=${state.right} vw=${state.vw} scrollable=${state.scrollable}`);
+    await ctx.close();
+  }
+
   await browser.close();
 }
 

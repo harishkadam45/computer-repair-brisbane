@@ -177,12 +177,11 @@ const brands = ['HP', 'Dell', 'Lenovo', 'Apple', 'Asus', 'Acer', 'Toshiba', 'Son
               </svg>
               Call {site.phone.display}
             </a>
-            <a
-              href={site.quoteForm.url}
-              rel="noopener"
-              target="_blank"
-              class="inline-flex items-center justify-center rounded-xl border-2 border-brand-500 px-7 py-4 text-lg font-bold text-brand-700 transition hover:bg-brand-50"
-            >
+<a
+    href={site.quoteForm.url}
+    data-quote-open
+    class="inline-flex items-center justify-center rounded-xl border-2 border-brand-500 px-7 py-4 text-lg font-bold text-brand-700 transition hover:bg-brand-50"
+  >
               Get a free quote
             </a>
           </div>

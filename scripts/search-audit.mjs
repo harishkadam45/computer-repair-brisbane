@@ -74,12 +74,34 @@ for (const { name, type } of engines) {
   console.log(`\n=== ${name} ===`);
 
   // --- desktop navbar search ---
+  // There are two desktop fields: #nav-search in the utility bar, visible only
+  // from 1024 to 1119px, and #navbar-search in the main nav from 1120px up.
+  // Exactly one is on screen at any width, so resolve whichever is live instead
+  // of hardcoding one id - at 1440px #nav-search is hidden and its bounding box
+  // collapses to x=-1 w=0.
+  const desktopSearchId = async (page) =>
+    page.evaluate(() => {
+      const nav = document.getElementById('navbar-search');
+      return nav && nav.offsetParent ? 'navbar-search' : 'nav-search';
+    });
+
   {
     const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 } });
     const page = await ctx.newPage();
     await page.goto(`${O}/`, { waitUntil: 'load' });
 
-    const input = page.locator('#nav-search');
+    const id = await desktopSearchId(page);
+    record(name, 'desktop search is in the main nav at 1440',
+      id === 'navbar-search', `#${id}`);
+
+    // Only one desktop field may be on screen at a time.
+    record(name, 'exactly one desktop search field is visible',
+      await page.evaluate(() =>
+        ['navbar-search', 'nav-search']
+          .filter((x) => document.getElementById(x)?.offsetParent).length === 1),
+      'no duplicated search inputs');
+
+    const input = page.locator(`#${id}`);
     record(name, 'desktop search input visible', await input.isVisible());
 
     const box = await input.boundingBox();
@@ -90,11 +112,19 @@ for (const { name, type } of engines) {
       await input.evaluate((el) => el.form?.getAttribute('method') === 'get' && el.form?.getAttribute('action') === '/search/'),
       'works without JS');
 
+    // It must sit before Contact, which is where it was asked to go.
+    record(name, 'nav search is placed before Contact',
+      await page.evaluate(() => {
+        const f = document.getElementById('navbar-search');
+        const c = [...document.querySelectorAll('header a')].find((a) => a.textContent.trim() === 'Contact');
+        return !!f && !!c && !!(f.compareDocumentPosition(c) & Node.DOCUMENT_POSITION_FOLLOWING);
+      }), 'DOM order');
+
     await input.click();
     await input.fill('virus');
     await page.waitForTimeout(350);
 
-    const panel = page.locator('#nav-search-results');
+    const panel = page.locator(`#${id}-results`);
     const open = await panel.isVisible();
     record(name, 'dropdown opens while typing', open);
 
@@ -133,18 +163,37 @@ for (const { name, type } of engines) {
     await ctx.close();
   }
 
-  // --- desktop at 1024: the tightest desktop layout ---
+  // --- desktop at 1024: the tightest desktop layout, where the main nav has no
+  // room for a field and the utility-bar copy is the one on screen ---
   {
     const ctx = await browser.newContext({ viewport: { width: 1024, height: 800 } });
     const page = await ctx.newPage();
     await page.goto(`${O}/`, { waitUntil: 'load' });
+    record(name, 'desktop search is in the utility bar at 1024',
+      (await desktopSearchId(page)) === 'nav-search');
     const overflow = await page.evaluate(() => {
-      const el = document.querySelector('#nav-search');
-      const r = el.getBoundingClientRect();
-      return { right: Math.round(r.right), vw: document.documentElement.clientWidth };
+      const id = document.getElementById('navbar-search')?.offsetParent ? 'navbar-search' : 'nav-search';
+      const r = document.getElementById(id).getBoundingClientRect();
+      const bar = document.querySelector('header .container-page.flex.h-9');
+      return {
+        right: Math.round(r.right),
+        vw: document.documentElement.clientWidth,
+        barFits: Math.round(bar.scrollWidth) <= Math.round(bar.getBoundingClientRect().width) + 1,
+      };
     });
     record(name, 'search fits beside the nav at 1024',
-      overflow.right <= overflow.vw, `right=${overflow.right} vw=${overflow.vw}`);
+      overflow.right <= overflow.vw && overflow.barFits,
+      `right=${overflow.right} vw=${overflow.vw} barFits=${overflow.barFits}`);
+    await ctx.close();
+  }
+
+  // --- the handover window: exactly one field either side of 1120px ---
+  for (const [w, expect] of [[1119, 'nav-search'], [1120, 'navbar-search']]) {
+    const ctx = await browser.newContext({ viewport: { width: w, height: 800 } });
+    const page = await ctx.newPage();
+    await page.goto(`${O}/`, { waitUntil: 'load' });
+    const got = await desktopSearchId(page);
+    record(name, `desktop search handover at ${w}px`, got === expect, `#${got} (want #${expect})`);
     await ctx.close();
   }
 

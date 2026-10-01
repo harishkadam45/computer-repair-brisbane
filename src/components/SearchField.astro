@@ -1,0 +1,56 @@
+---
+// One search field definition, reused in three places: the utility bar, the
+// main nav, and the mobile panel. search.js binds every [data-search-form] and
+// scopes each input to the results panel inside its own form, so multiple
+// copies are safe as long as the ids stay unique - the panel id is derived as
+// `${id}-results`, matching the existing nav-search / mobile-search pair.
+interface Props {
+  /** Unique input id. The results panel becomes `${id}-results`. */
+  id: string;
+  /** Classes for the <form>, which controls the responsive visibility. */
+  formClass: string;
+  /** Classes for the input, so each placement can match its own row. */
+  inputClass: string;
+  /** Classes for the results panel. Desktop drops are absolute, mobile is not. */
+  resultsClass?: string;
+  /** Screen-reader label. */
+  label?: string;
+}
+
+const {
+  id,
+  formClass,
+  inputClass,
+  resultsClass = 'absolute top-full right-0 left-0 z-50 mt-2 max-h-[min(22rem,55vh)] overflow-y-auto overscroll-contain rounded-xl border border-ink-100 bg-white shadow-lift',
+  label = 'Search services, suburbs and articles',
+} = Astro.props;
+---
+
+<form action="/search/" method="get" role="search" class={formClass} data-search-form>
+  <label for={id} class="sr-only">{label}</label>
+  <div class="relative">
+    <svg
+      class="pointer-events-none absolute top-1/2 left-2.5 size-3.5 -translate-y-1/2 text-ink-400"
+      viewBox="0 0 20 20"
+      fill="currentColor"
+      aria-hidden="true"><path
+        fill-rule="evenodd"
+        d="M9 3.5a5.5 5.5 0 1 0 3.4 9.84l3.63 3.63a1 1 0 1 0 1.41-1.41l-3.63-3.63A5.5 5.5 0 0 0 9 3.5ZM5 9a4 4 0 1 1 8 0 4 4 0 0 1-8 0Z"
+        clip-rule="evenodd"></path></svg>
+    <input
+      id={id}
+      name="q"
+      type="search"
+      placeholder="Search services…"
+      autocomplete="off"
+      class={inputClass}
+      aria-expanded="false"
+      aria-controls={`${id}-results`}
+      aria-autocomplete="list"
+    />
+  </div>
+  <!-- Toggled via the hidden *attribute* by search.js, so no `hidden`
+       utility class here - it would force display:none and win. -->
+  <div id={`${id}-results`} class={resultsClass} data-search-results hidden>
+  </div>
+</form>

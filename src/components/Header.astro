@@ -9,6 +9,7 @@
  */
 import { site } from '../data/site';
 import { families, serviceBySlug, serviceGroups } from '../data/services';
+import SearchField from './SearchField.astro';
 
 const nav = [
   { href: '/', label: 'Home' },
@@ -43,50 +44,24 @@ const isActive = (href: string) =>
       </p>
       <!-- Search. Real GET form to /search/, so it works with JS disabled.
 
-           It sits here rather than beside the logo because the main row needs
-           every pixel: logo (252) + nav (571) + phone CTA (146) + gaps (48) =
-           1017 against a 1152 container. Squeezing search in there left the
-           phone button 85px and it was crushed. This bar has ~670px idle, so
-           search costs no vertical space and cannot squeeze the number. -->
-      <form
-        action="/search/"
-        method="get"
-        role="search"
-        class="relative hidden w-64 lg:block"
-        data-search-form
-      >
-        <label for="nav-search" class="sr-only">Search services, suburbs and articles</label>
-        <div class="relative">
-          <svg
-            class="pointer-events-none absolute top-1/2 left-2.5 size-3.5 -translate-y-1/2 text-ink-400"
-            viewBox="0 0 20 20"
-            fill="currentColor"
-            aria-hidden="true"><path
-              fill-rule="evenodd"
-              d="M9 3.5a5.5 5.5 0 1 0 3.4 9.84l3.63 3.63a1 1 0 1 0 1.41-1.41l-3.63-3.63A5.5 5.5 0 0 0 9 3.5ZM5 9a4 4 0 1 1 8 0 4 4 0 0 1-8 0Z"
-              clip-rule="evenodd"></path></svg>
-          <input
-            id="nav-search"
-            name="q"
-            type="search"
-            placeholder="Search services…"
-            autocomplete="off"
-            class="w-full rounded-lg border border-ink-200 bg-white py-1.5 pr-3 pl-8 text-sm text-ink-900 placeholder:text-ink-400 focus:border-brand-400 focus:outline-none"
-            aria-expanded="false"
-            aria-controls="nav-search-results"
-            aria-autocomplete="list"
-          />
-        </div>
-        <!-- Toggled via the hidden *attribute* by search.js, so no `hidden`
-             utility class here - it would force display:none and win. -->
-        <div
-          id="nav-search-results"
-          class="absolute top-full right-0 left-0 z-50 mt-2 max-h-[min(22rem,55vh)] overflow-y-auto overscroll-contain rounded-xl border border-ink-100 bg-white shadow-lift"
-          data-search-results
-          hidden
-        >
-        </div>
-      </form>
+           Two desktop placements exist and exactly one is visible at any width,
+           because the main nav cannot hold a field at 1024px: usable space is
+           logo (252) + nav (571) + gaps (32) against a 960px column, and the
+           nav is already at min-content with "Services" wrapping. So the
+           utility bar covers 1024-1119px and the nav takes over from 1120px,
+           where the remaining slack grows past the field.
+
+           The window is one arbitrary range query rather than lg plus
+           min-[1120px]:hidden. Two show rules cannot express "and": each sets
+           display:block on its own, so min+max left the field visible at
+           1120px and up. A min-width hide also lost the cascade, because
+           Tailwind emits the arbitrary variant ahead of `lg`, so the later
+           `lg:block` rule won. A single range query has no such conflict. -->
+      <SearchField
+        id="nav-search"
+        formClass="relative hidden w-64 shrink-0 [@media(min-width:1024px)_and_(max-width:1119px)]:block"
+        inputClass="w-full rounded-lg border border-ink-200 bg-white py-1.5 pr-3 pl-8 text-sm text-ink-900 placeholder:text-ink-400 focus:border-brand-400 focus:outline-none"
+      />
 
       <div class="flex items-center gap-4">
         <!-- The phone number, in the spot it has always held (immediately
@@ -261,19 +236,33 @@ const isActive = (href: string) =>
         nav
           .filter((item) => !['/', '/services/'].includes(item.href))
           .map((item) => (
-          <a
-            href={item.href}
-            class:list={[
-              'rounded-lg px-3 py-2 text-[0.95rem] font-semibold transition',
-              isActive(item.href)
-                ? 'text-brand-700'
-                : 'text-ink-700 hover:bg-ink-50 hover:text-ink-900',
-            ]}
-            aria-current={isActive(item.href) ? 'page' : undefined}
-          >
-            {item.label}
-          </a>
-        ))
+            <>
+              {/* Search sits immediately before Contact, from 1120px up. The
+                  width is capped by the nav's real slack: 217px at 1120 and
+                  249px from 1280, so w-48 then w-56 - a wider field pushes
+                  "Services" into a second line. The utility bar owns
+                  1024-1119px, where this one is hidden. */}
+              {item.href === '/contact/' && (
+                <SearchField
+                  id="navbar-search"
+                  formClass="relative hidden w-48 shrink-0 min-[1120px]:block xl:w-56"
+                  inputClass="w-full rounded-lg border border-ink-200 bg-ink-50 py-2 pr-3 pl-8 text-[0.95rem] text-ink-900 placeholder:text-ink-400 focus:border-brand-400 focus:bg-white focus:outline-none"
+                />
+              )}
+              <a
+                href={item.href}
+                class:list={[
+                  'rounded-lg px-3 py-2 text-[0.95rem] font-semibold transition',
+                  isActive(item.href)
+                    ? 'text-brand-700'
+                    : 'text-ink-700 hover:bg-ink-50 hover:text-ink-900',
+                ]}
+                aria-current={isActive(item.href) ? 'page' : undefined}
+              >
+                {item.label}
+              </a>
+            </>
+          ))
       }
     </nav>
 
@@ -297,44 +286,13 @@ const isActive = (href: string) =>
 
   <!-- Mobile search. Same form/action as desktop so it degrades identically. -->
   <div class="border-b border-ink-100 bg-white lg:hidden">
-    <form
-      action="/search/"
-      method="get"
-      role="search"
-      class="container-page py-3"
-      data-search-form
-    >
-      <label for="mobile-search" class="sr-only">Search services</label>
-      <div class="relative">
-        <svg
-          class="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-ink-400"
-          viewBox="0 0 20 20"
-          fill="currentColor"
-          aria-hidden="true"><path
-            fill-rule="evenodd"
-            d="M9 3.5a5.5 5.5 0 1 0 3.4 9.84l3.63 3.63a1 1 0 1 0 1.41-1.41l-3.63-3.63A5.5 5.5 0 0 0 9 3.5ZM5 9a4 4 0 1 1 8 0 4 4 0 0 1-8 0Z"
-            clip-rule="evenodd"></path></svg>
-        <input
-          id="mobile-search"
-          name="q"
-          type="search"
-          placeholder="Search services…"
-          autocomplete="off"
-          class="w-full rounded-xl border border-ink-200 bg-ink-50 py-2.5 pr-3 pl-9 text-sm text-ink-900 placeholder:text-ink-400 focus:border-brand-400 focus:bg-white focus:outline-none"
-          aria-expanded="false"
-          aria-controls="mobile-search-results"
-          aria-autocomplete="list"
-        />
-      </div>
-      <!-- Same as above: hidden attribute only, no `hidden` utility class. -->
-      <div
-        id="mobile-search-results"
-        class="mt-2 max-h-[min(22rem,50vh)] overflow-y-auto overscroll-contain rounded-xl border border-ink-100 bg-white shadow-lift"
-        data-search-results
-        hidden
-      >
-      </div>
-    </form>
+    <SearchField
+      id="mobile-search"
+      formClass="container-page py-3"
+      inputClass="w-full rounded-xl border border-ink-200 bg-ink-50 py-2.5 pr-3 pl-8 text-sm text-ink-900 placeholder:text-ink-400 focus:border-brand-400 focus:bg-white focus:outline-none"
+      resultsClass="mt-2 max-h-[min(22rem,50vh)] overflow-y-auto overscroll-contain rounded-xl border border-ink-100 bg-white shadow-lift"
+      label="Search services"
+    />
   </div>
 
   <!-- Mobile nav. Hidden with [hidden] so it is genuinely absent from the a11y tree. -->

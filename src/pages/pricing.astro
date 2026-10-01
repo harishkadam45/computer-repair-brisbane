@@ -1,0 +1,298 @@
+---
+/**
+ * Pricing page.
+ *
+ * This is the page that wins or loses the job. People who have already decided
+ * they need a repair and are now comparing costs land here, and the single most
+ * common reaction to the legacy site was that the price was not on it.
+ *
+ * The rate is flat, so the page leads with the number rather than a table of
+ * hypotheticals. The comparison against Geek Squad and Gizmo is included
+ * because it is the fastest way to make "no call-out fee" concrete, but it is
+ * placed *below* our own pricing - leading with a competitor's number invites
+ * the reader to treat them as the benchmark.
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
+import PageHero from '../components/PageHero.astro';
+import FaqList from '../components/FaqList.astro';
+import CallToAction from '../components/CallToAction.astro';
+import { site } from '../data/site';
+import * as schema from '../lib/schema';
+
+const path = '/pricing/';
+const rate = site.pricing.flatRate;
+const title = `Computer Repair Prices Brisbane | Flat $${rate} Rate`;
+const description =
+  `What a computer repair costs in Brisbane: a flat $${rate} for the first hour, then 15-minute ` +
+  `blocks. No call-out fee, no weekend surcharge, parts at cost. Call ${site.phone.display}.`;
+
+const trail = [
+  { name: 'Home', path: '/' },
+  { name: 'Pricing', path },
+];
+
+/**
+ * Indicative job costs, for the jobs where people want a number before they
+ * call. These are what a straightforward job usually comes to at the flat rate
+ * - not a separate price list, because there is no separate price list.
+ */
+const TYPICAL = [
+  { job: 'A quick fix - a frozen app, a bad setting, a stuck update', time: '15–30 min', cost: `$${rate}` },
+  { job: 'Virus, malware or spyware removal', time: '45–90 min', cost: `$${rate}` },
+  { job: 'Speed up a slow computer', time: '1–2 hrs', cost: `$${rate}–$${rate * 2}` },
+  { job: 'Data recovery from a failed drive', time: 'Depends', cost: 'Quoted first' },
+  { job: 'Install a new SSD and transfer everything', time: '1–2 hrs', cost: `$${rate}–$${rate * 2} + part` },
+  { job: 'Set up a new computer from the box', time: '2–3 hrs', cost: `$${rate * 2}–$${rate * 3}` },
+  { job: 'Full network and Wi-Fi setup', time: '1–2 hrs', cost: `$${rate}–$${rate * 2}` },
+  { job: 'Screen or battery replacement', time: 'Same-day', cost: `$${rate} + part` },
+];
+
+/** Published competitor rates, used in the comparison further down. */
+const COMPARE = [
+  ['Basic computer training', 150, 160, 160],
+  ['Data migration / backup', 129, 229, 229],
+  ['Virus & spyware removal', 129, 149, 149],
+  ['Software installation', 89, 129, 129],
+  ['Add computer to network', 79, 89, 89],
+  ['Wireless network + router setup', 150, 149, 149],
+  ['Complete system clean', 99, 129, 129],
+  ['Hard drive replacement', 150, 189, 189],
+];
+
+const FAQs = [
+  {
+    q: `Why is there one price when other companies have a list?`,
+    a: `Because a list rewards the technician for the machine, not for the customer. A flat $${rate} means I have no reason to rush the diagnosis, no reason to talk you into the more expensive option, and no reason to bill you for the time it takes me to learn your particular setup.`,
+  },
+  {
+    q: 'What does the $150 actually cover?',
+    a: 'The first hour of labour, including diagnosis, travel to your address in the Brisbane, Logan and Ipswich areas, and the time to explain what was wrong and what I did about it. Parts are separate and charged at cost.',
+  },
+  {
+    q: 'How do you charge for time over an hour?',
+    a: 'In 15-minute blocks at the same hourly rate. If I have been working on your machine for an hour and ten minutes, that is one hour and fifteen minutes. You get told when you are approaching the end of the hour.',
+  },
+  {
+    q: 'Is there a call-out fee?',
+    a: 'No. Travel within the service area is included in the rate, so the cost of getting to you is not a separate line item. That is also why a job two suburbs over costs exactly the same as one next door.',
+  },
+  {
+    q: 'Do you charge more at weekends or on public holidays?',
+    a: 'No. The rate is the rate at 8am on a Tuesday and at 8pm on a public holiday.',
+  },
+  {
+    q: 'What if a part is needed - how much is that?',
+    a: `Parts are at cost, and you are told the part and the price before anything is ordered. Typical examples: a 500GB SSD is roughly $70–$95, a laptop screen for common models $180–$350. If a part is not worth it on a machine of that age, I will say so rather than fit it.`,
+  },
+  {
+    q: 'What if my computer cannot be fixed?',
+    a: 'You do not pay. If it is beyond repair or beyond what is economically sensible, I will tell you and there is no charge for the diagnosis.',
+  },
+  {
+    q: 'Do you offer discounts for regular or business work?',
+    a: `For ongoing work in a home office or small business, the rate is still $${rate} - the discount is that I already know your setup, so the job takes less time. Call and mention it.`,
+  },
+];
+
+const jsonLd = schema.graph({
+  path,
+  name: title,
+  description,
+  extra: [
+    schema.breadcrumbList(trail),
+    // The one number people are actually searching for, as a priced Service.
+    schema.service({
+      name: 'Computer repair',
+      description,
+      path,
+      price: rate,
+    }),
+    schema.faqPage(FAQs),
+  ],
+});
+---
+
+<BaseLayout title={title} description={description} path={path} schema={jsonLd} brandInTitle={false}>
+  <div class="container-page pt-5 sm:pt-6">
+    <Breadcrumb trail={trail} />
+  </div>
+
+  <PageHero
+    eyebrow="Published rates · no hidden extras"
+    title={`Computer repairs in Brisbane for $${rate} an hour`}
+    intro={[
+      `One rate for every job. It covers the diagnosis, the work, and the drive to your address. ` +
+        `There is no call-out fee, no weekend surcharge, and no charge for the diagnosis if the machine cannot be fixed.`,
+    ]}
+    icon="gauge"
+    badges={[
+      `Flat $${rate} rate`,
+      '$0 call-out fee',
+      'No weekend surcharge',
+      '15-minute billing',
+    ]}
+    facts={[
+      { label: 'First hour', value: `$${rate}` },
+      { label: 'After that', value: '15-minute blocks' },
+      { label: 'Parts', value: 'At cost' },
+      { label: 'Minimum charge', value: `$${rate}` },
+    ]}
+  />
+
+  <div class="container-page space-y-14 py-14 sm:space-y-16 sm:py-20">
+    <!-- The headline rate, stated three ways so it cannot be misread. -->
+    <section aria-labelledby="rate-heading" class="rounded-hero border border-ink-200 bg-white p-7 shadow-lift sm:p-10">
+      <h2 id="rate-heading" class="text-h2">The rate</h2>
+      <p class="mt-5 text-5xl font-extrabold tracking-tight text-ink-900 sm:text-6xl">
+        ${rate}
+        <span class="ml-3 text-lg font-semibold text-ink-500 sm:text-xl">per hour, flat</span>
+      </p>
+      <dl class="mt-9 grid gap-x-8 gap-y-5 border-t border-ink-100 pt-8 sm:grid-cols-2 lg:grid-cols-4">
+        {
+          [
+            ['Call-out fee', '$0', 'Travel in the service area is included.'],
+            ['Weekend / holiday', 'No surcharge', 'Same rate, seven days a week.'],
+            ['Billing', '15-minute blocks', 'You are told before you pass an hour.'],
+            ['If it cannot be fixed', 'No charge', 'No fee for a diagnosis that finds nothing fixable.'],
+          ].map(([term, value, note]) => (
+            <div>
+              <dt class="text-sm font-semibold text-ink-500">{term}</dt>
+              <dd class="mt-1.5 text-2xl font-extrabold text-ink-900">{value}</dd>
+              <p class="mt-1.5 text-sm leading-relaxed text-ink-600">{note}</p>
+            </div>
+          ))
+        }
+      </dl>
+      <p class="mt-8 text-sm text-ink-500">{site.pricing.gstNote}</p>
+    </section>
+
+    <!-- What things usually cost, so people can self-select. -->
+    <section aria-labelledby="typical-heading">
+      <h2 id="typical-heading" class="text-h2">What jobs usually cost</h2>
+      <p class="mt-3 max-w-2xl text-lead text-ink-600">
+        These are what a straightforward job comes to at the flat rate. They are not a separate
+        price list - there is no separate price list. Anything unusual gets quoted before I start.
+      </p>
+      <div class="mt-8 overflow-hidden rounded-card border border-ink-200 bg-white">
+        <table class="w-full text-sm">
+          <caption class="sr-only">Indicative cost and duration for common computer repair jobs</caption>
+          <thead>
+            <tr class="border-b border-ink-200 bg-ink-50">
+              <th scope="col" class="px-4 py-3.5 text-left font-bold text-ink-900 sm:px-6">
+                Job
+              </th>
+              <th scope="col" class="px-3 py-3.5 text-left font-semibold text-ink-600 sm:px-6">
+                Time on site
+              </th>
+              <th scope="col" class="px-4 py-3.5 text-right font-bold text-ink-900 sm:px-6">
+                Typical cost
+              </th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-ink-100">
+            {
+              TYPICAL.map((row) => (
+                <tr>
+                  <th scope="row" class="px-4 py-3.5 text-left font-medium text-ink-800 sm:px-6">
+                    {row.job}
+                  </th>
+                  <td class="px-3 py-3.5 text-ink-600 sm:px-6">{row.time}</td>
+                  <td class="px-4 py-3.5 text-right font-bold text-brand-700 sm:px-6">{row.cost}</td>
+                </tr>
+              ))
+            }
+          </tbody>
+        </table>
+      </div>
+      <p class="mt-3 text-sm text-ink-500">
+        Figures are indicative for a typical job at the flat rate and exclude parts. A job that
+        turns out to be more involved is discussed before the extra time is spent, not after.
+      </p>
+    </section>
+
+    <!-- Parts, at cost. -->
+    <section aria-labelledby="parts-heading">
+      <h2 id="parts-heading" class="text-h2">Parts are at cost</h2>
+      <div class="prose-copy mt-5 max-w-2xl">
+        <p>
+          If a job needs a part, you are told which part, what it costs, and what happens next
+          before anything is ordered. Parts are charged at what I pay, with no mark-up and no
+          "handling fee".
+        </p>
+        <p>
+          There is a limit to how much sense it makes to spend on an old machine. On a ten-year-old
+          desktop, a $90 SSD is usually a good call because it is the single biggest improvement
+          available. A $300 motherboard is usually not. You will get an honest answer either way,
+          including when the answer is that you should not spend the money.
+        </p>
+      </div>
+    </section>
+
+    <!-- Comparison, placed after our own numbers. -->
+    <section aria-labelledby="compare-heading" class="border-t border-ink-100 pt-14">
+      <h2 id="compare-heading" class="text-h2">How this compares</h2>
+      <p class="mt-3 max-w-2xl text-lead text-ink-600">
+        The competitors publish their rates, so here they are next to ours. The difference is not
+        the quality of the work - it is that a franchise rate has to cover an office, insurance,
+        dispatch and a technician learning your machine, and all of that lands in the number you
+        are quoted.
+      </p>
+
+      <div class="mt-8 overflow-x-auto">
+        <div class="min-w-full overflow-hidden rounded-card border border-ink-200 bg-white sm:min-w-0">
+          <table class="w-full text-sm">
+            <caption class="sr-only">
+              This business's charges against published rates from Geek Squad and Gizmo
+            </caption>
+            <thead>
+              <tr class="border-b border-ink-200 bg-ink-50">
+                <th scope="col" class="px-4 py-3.5 text-left font-bold text-ink-900 sm:px-6">
+                  Service
+                </th>
+                <th scope="col" class="px-3 py-3.5 text-right font-extrabold text-brand-700 sm:px-4">
+                  Here
+                </th>
+                <th scope="col" class="px-3 py-3.5 text-right font-semibold text-ink-600 sm:px-6">
+                  Geek&nbsp;Squad
+                </th>
+                <th scope="col" class="px-3 py-3.5 text-right font-semibold text-ink-600 sm:px-6">
+                  Gizmo
+                </th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-ink-100">
+              {
+                COMPARE.map(([label, ours, geek, gizmo]) => (
+                  <tr>
+                    <th scope="row" class="px-4 py-3 text-left font-medium text-ink-800 sm:px-6">
+                      {label}
+                    </th>
+                    <td class="px-3 py-3 text-right font-extrabold text-brand-700 sm:px-4">
+                      ${ours}
+                    </td>
+                    <td class="px-3 py-3 text-right text-ink-500 sm:px-6">${geek}</td>
+                    <td class="px-3 py-3 text-right text-ink-500 sm:px-6">${gizmo}</td>
+                  </tr>
+                ))
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <p class="mt-3 text-sm text-ink-500">
+        Competitor rates as published at the time of writing and may since have changed. The
+        point is the call-out and the rate, not the individual line items.
+      </p>
+    </section>
+
+    <FaqList faqs={FAQs} title="Pricing questions" />
+  </div>
+
+  <div class="container-page pb-16 sm:pb-20">
+    <CallToAction
+      title="Still not sure what yours will cost?"
+      body="Describe the problem on the phone and you will get a straight answer before anyone books anything. If it is not a job I take, I will tell you that too."
+    />
+  </div>
+</BaseLayout>

@@ -1,0 +1,287 @@
+---
+/**
+ * Contact page.
+ *
+ * The legacy /contact/ URL rendered the WordPress theme's camping placeholder
+ * - the single worst page on the old site, and one people were actively
+ * clicking. This is the replacement.
+ *
+ * There is no in-page form. The quote form is a hosted form on another
+ * provider, so the page's job is to get the visitor to the phone or to that
+ * form, and to answer the questions people ask while deciding: how fast, how
+ * much, what areas, what to do while waiting.
+ *
+ * No street address is shown, because site.address is deliberately blank. A
+ * service-only business with no premises should not publish a residential
+ * address, and inventing one to fill the layout would be the wrong fix.
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
+import { site } from '../data/site';
+import { suburbs } from '../lib/suburbs';
+import { openingHoursSpec } from '../data/site';
+import * as schema from '../lib/schema';
+
+const path = '/contact/';
+const title = `Contact | Computer Repairs Brisbane | ${site.phone.display}`;
+const description =
+  `Book a computer repair in ${site.serviceAreas.join(', ')}. Call ${site.phone.display} or ` +
+  `request a quote online. Flat $${site.pricing.flatRate} first hour, no call-out fee, ` +
+  `seven days a week.`;
+
+const trail = [
+  { name: 'Home', path: '/' },
+  { name: 'Contact', path },
+];
+
+const jsonLd = schema.graph({
+  path,
+  name: title,
+  description,
+  extra: [schema.breadcrumbList(trail), schema.contactPoint()],
+});
+
+/** Ordered by how urgently someone needs them, not by convenience. */
+const CONTACT_METHODS = [
+  {
+    label: 'Call',
+    value: site.phone.display,
+    href: site.phone.href,
+    note: 'Fastest. Describe the problem and you will get an answer on whether it is fixable and what it costs.',
+    primary: true,
+  },
+  {
+    label: 'Email',
+    value: site.email.display,
+    href: `mailto:${site.email.display}`,
+    note: 'Good for photos of an error message, or for a question that is easier to type than say.',
+    primary: false,
+  },
+  {
+    label: 'Online quote',
+    value: 'Request a quote',
+    href: site.quoteForm.url,
+    note: 'A short form. Useful if you are not ready to book yet, or if you want the call first thing.',
+    primary: false,
+  },
+];
+
+const BEFORE = [
+  {
+    title: 'What it is doing',
+    note: 'The message on screen, or what you were doing when it stopped. A photo of an error is worth a lot.',
+  },
+  {
+    title: 'What it did before',
+    note: 'A machine that worked last week and does not now is usually a very different problem to one that never worked.',
+  },
+  {
+    title: 'Desktop or laptop, and which one',
+    note: 'Make and model if you know it, otherwise the sticker underneath or the label on the box.',
+  },
+  {
+    title: 'Windows or Mac, and which version',
+    note: 'If it will start up, look in Settings → About. If it will not, whatever you remember.',
+  },
+  {
+    title: 'Whether there is important data on it',
+    note: 'This changes the order things are done in. Nothing is wiped before you know what is on the drive.',
+  },
+];
+
+const faqs = [
+  {
+    q: 'How soon can you come?',
+    a: 'Most jobs are same-day or next-day, and evenings and weekends are normal booking times with no surcharge. Call and describe what is happening and you will get a straight answer about what is possible that day.',
+  },
+  {
+    q: 'Do I need to be home?',
+    a: 'For a desktop, yes, or someone who can let me in and knows any passwords. For a laptop I can often work on it at the door or take it away, agreed with you first.',
+  },
+  {
+    q: 'Can you fix it over the phone?',
+    a: 'Sometimes. A surprising amount comes down to a setting, an update, or a cable. I will talk you through what I can, and if it needs hands on the machine I will tell you that on the call rather than after.',
+  },
+  {
+    q: 'What if it is urgent and I am working from home?',
+    a: `Say so on the call. Same-day is usually possible in the Brisbane, Logan and Ipswich areas, and if there is genuinely nothing available I will tell you rather than take the booking and cancel later.`,
+  },
+];
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  path={path}
+  schema={jsonLd}
+  noindex={false}
+  brandInTitle={false}
+>
+  <div class="container-page pt-5 sm:pt-6">
+    <Breadcrumb trail={trail} />
+  </div>
+
+  <div class="container-page py-14 sm:py-20">
+    <div class="max-w-3xl">
+      <h1 class="text-h1">Book a repair</h1>
+      <p class="mt-5 text-lead text-ink-700">
+        Call is quickest and gets you a straight answer on whether it is fixable and what it will
+        cost. If you would rather not phone, the online form is below - and the phone number is on
+        every page of this site, including yours right now.
+      </p>
+    </div>
+
+    <div class="mt-10 grid gap-4 sm:grid-cols-3">
+      {
+        CONTACT_METHODS.map((m) => (
+          <a
+            href={m.href}
+            rel={m.href.startsWith('http') ? 'noopener' : undefined}
+            target={m.href.startsWith('http') ? '_blank' : undefined}
+            class:list={[
+              'group flex min-w-0 flex-col rounded-card border p-6 transition',
+              m.primary
+                ? 'border-brand-500 bg-brand-500 shadow-cta hover:bg-brand-600'
+                : 'border-ink-200 bg-white hover:-translate-y-0.5 hover:border-brand-300 hover:shadow-lift',
+            ]}
+          >
+            <span
+              class:list={[
+                'text-xs font-bold tracking-wide uppercase',
+                m.primary ? 'text-white/80' : 'text-ink-500',
+              ]}
+            >
+              {m.label}
+            </span>
+            <span
+              class:list={[
+                'mt-2 font-extrabold break-words',
+                m.primary ? 'text-xl text-white' : 'text-lg text-brand-700',
+              ]}
+            >
+              {m.value}
+            </span>
+            <span
+              class:list={[
+                'mt-2.5 flex-1 text-sm leading-relaxed',
+                m.primary ? 'text-white/90' : 'text-ink-600',
+              ]}
+            >
+              {m.note}
+            </span>
+            <span
+              class:list={[
+                'mt-4 text-sm font-bold',
+                m.primary ? 'text-white' : 'text-brand-600',
+              ]}
+            >
+              {m.href.startsWith('http') ? 'Opens in a new tab →' : '→'}
+            </span>
+          </a>
+        ))
+      }
+    </div>
+  </div>
+
+  <div class="border-y border-ink-100 bg-ink-50">
+    <div class="container-page grid gap-12 py-14 sm:py-16 lg:grid-cols-12 lg:gap-14">
+      <div class="lg:col-span-7">
+        <h2 class="text-h2">Have these ready before you call</h2>
+        <p class="mt-3 max-w-2xl text-lead text-ink-600">
+          None of this is essential. It is simply the difference between a two-minute conversation
+          and a long one, and the long one is fine too.
+        </p>
+        <dl class="mt-8 space-y-5">
+          {
+            BEFORE.map((b) => (
+              <div class="flex gap-4">
+                <dt class="flex-1">
+                  <span class="block text-[0.98rem] font-bold text-ink-900">{b.title}</span>
+                  <span class="mt-1 block text-sm leading-relaxed text-ink-600">{b.note}</span>
+                </dt>
+              </div>
+            ))
+          }
+        </dl>
+      </div>
+
+      <aside class="lg:col-span-5">
+        <div class="rounded-card border border-ink-200 bg-white p-6">
+          <h2 class="text-sm font-bold tracking-wide text-ink-500 uppercase">When I am available</h2>
+          <p class="mt-3 text-sm leading-relaxed text-ink-700">{site.hours.note}</p>
+
+          <table class="mt-5 w-full text-sm">
+            <caption class="sr-only">Opening hours</caption>
+            <tbody>
+              {
+                site.hours.days.map((day) => (
+                  <tr class="border-b border-ink-50 last:border-0">
+                    <th scope="row" class="py-2 text-left font-medium text-ink-700">
+                      {day}
+                    </th>
+                    <td class="py-2 text-right font-semibold text-ink-900">
+                      {site.hours.opens} – {site.hours.closes}
+                    </td>
+                  </tr>
+                ))
+              }
+            </tbody>
+          </table>
+          <p class="mt-3 text-xs text-ink-500">
+            schema.org: <code>{openingHoursSpec}</code>. These hours are provisional and should be
+            confirmed before launch.
+          </p>
+
+          <h2 class="mt-7 text-sm font-bold tracking-wide text-ink-500 uppercase">Where I work</h2>
+          <p class="mt-3 text-sm leading-relaxed text-ink-700">
+            {site.serviceAreas.join(', ')} and {suburbs.length} suburbs in total, with travel
+            included in the rate.
+          </p>
+          <a
+            href="/service-area/"
+            class="mt-3 inline-flex items-center gap-1.5 text-sm font-bold text-brand-700 hover:text-brand-800"
+          >
+            Check your suburb
+            <svg class="size-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+              <path d="M4 10a1 1 0 0 1 1-1h9.2l-3.6-3.6a1 1 0 1 1 1.4-1.4l5.3 5.3a1 1 0 0 1 0 1.4l-5.3 5.3a1 1 0 1 1-1.4-1.4L14.2 11H5a1 1 0 0 1-1-1Z" />
+            </svg>
+          </a>
+
+          {
+            site.address.street ? (
+              <div class="mt-7 border-t border-ink-100 pt-6">
+                <h2 class="text-sm font-bold tracking-wide text-ink-500 uppercase">Address</h2>
+                <address class="mt-2 text-sm not-italic leading-relaxed text-ink-700">
+                  {site.address.street}
+                  <br />
+                  {site.address.locality} {site.address.postcode}
+                </address>
+              </div>
+            ) : (
+              <p class="mt-7 border-t border-ink-100 pt-6 text-sm text-ink-500">
+                This is a mobile service - there is no shop to visit. The work happens at your home
+                or office.
+              </p>
+            )
+          }
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <div class="container-page py-14 sm:py-16">
+    <div class="mx-auto max-w-3xl">
+      <h2 class="text-h2">Booking questions</h2>
+      <dl class="mt-8 space-y-6">
+        {
+          faqs.map((f) => (
+            <div class="border-b border-ink-100 pb-6 last:border-0">
+              <dt class="text-[1.05rem] font-bold text-ink-900">{f.q}</dt>
+              <dd class="mt-2 text-[0.95rem] leading-relaxed text-ink-600">{f.a}</dd>
+            </div>
+          ))
+        }
+      </dl>
+    </div>
+  </div>
+</BaseLayout>

@@ -1,0 +1,23 @@
+<!--
+  Placeholder brand mark. The real logo is not available yet - this is a
+  geometric stand-in so the header, the favicon and the structured data do not
+  404. Swap it for the real artwork before launch; keep the same viewBox
+  (0 0 40 40) so nothing else needs to change.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" role="img" aria-label="Fix My Home Computer">
+  <defs>
+    <linearGradient id="fmh-mark" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#146dd5" />
+      <stop offset="1" stop-color="#0c4f9e" />
+    </linearGradient>
+  </defs>
+  <rect width="40" height="40" rx="9" fill="url(#fmh-mark)" />
+  <!-- Monitor body -->
+  <rect x="8" y="11" width="24" height="15" rx="2.5" fill="none" stroke="#fff" stroke-width="2.4" />
+  <path d="M15 31h10" stroke="#fff" stroke-width="2.4" stroke-linecap="round" />
+  <!-- Wrench across the screen: the "fix" half of the mark -->
+  <path
+    d="M13.6 24.2a3.2 3.2 0 0 0 4.5 0l4-4a3.6 3.6 0 0 0 .2-5.1l-2 2-2-.4-.4-2 2-2a3.6 3.6 0 0 0-5.1.2z"
+    fill="#fff"
+  />
+</svg>

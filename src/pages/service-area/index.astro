@@ -1,0 +1,218 @@
+---
+/**
+ * Service-area index.
+ *
+ * Structurally the most important page on the site after the home page. It is
+ * the only place that links to all 666 suburbs, which means without it the
+ * entire programmatic matrix is orphaned - reachable from the sitemap but with
+ * almost no internal links pointing at it, which is exactly the pattern that
+ * gets programmatic SEO sections de-indexed.
+ *
+ * Built as regions -> suburbs rather than one flat list of 666 links, for two
+ * reasons: a 666-item wall of links is useless to a human, and the region
+ * grouping gives the crawler topical structure.
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
+import PageHero from '../../components/PageHero.astro';
+import CallToAction from '../../components/CallToAction.astro';
+import FaqList from '../../components/FaqList.astro';
+import { site } from '../../data/site';
+import { families } from '../../data/services';
+import { suburbsByRegion, suburbs, type Suburb } from '../../lib/suburbs';
+import { regionSlug, liveSuburbUrl } from '../../lib/suburb-url.mjs';
+import { formatInline } from '../../lib/seo';
+import * as schema from '../../lib/schema';
+
+const path = '/service-area/';
+const title = `Computer Repairs Brisbane Suburbs | ${suburbs.length} Areas Served`;
+const description =
+  `Computer repairs in all ${suburbs.length} suburbs across Brisbane, Logan and Ipswich, ` +
+  `including the Sunshine Coast and Gold Coast. Flat $${site.pricing.flatRate}, travel included. ` +
+  `Call ${site.phone.display}.`;
+
+const trail = [
+  { name: 'Home', path: '/' },
+  { name: 'Service area', path },
+];
+
+const regions = suburbsByRegion();
+
+/** This page links every suburb in the computer-repairs family. */
+const computerRepairs = families.find((f) => f.slug === 'computer-repairs')!;
+
+/** Total suburb links, used to describe the size of the matrix. */
+const totalLinks = regions.reduce((n, r) => n + r.suburbs.length, 0);
+
+/**
+ * The four most-searched suburbs get their own short block above the region
+ * list, because those are the ones with real volume and a bare alphabetical
+ * list buries them.
+ */
+const POPULAR = ['Brisbane City', 'Aspley', 'Toowoomba', 'Ipswich', 'Slacks Creek', 'Woolloongabba']
+  .map((name) => suburbs.find((s) => s.name === name))
+  .filter((s): s is Suburb => Boolean(s));
+
+const faqs = [
+  {
+    q: 'How many suburbs do you cover?',
+    a: `${suburbs.length} across ${site.serviceAreas.join(', ')} and the surrounding areas, including the Sunshine Coast and the northern Gold Coast. Travel is included in the $${site.pricing.flatRate} rate, so the suburb you are in does not change the price.`,
+  },
+  {
+    q: 'What if my suburb is not listed?',
+    a: 'Call anyway. The list is what the site is organised around, not a boundary. If it is a reasonable trip I will come; if it is not, I will say so and point you somewhere sensible rather than waste your time.',
+  },
+  {
+    q: 'Do you charge more for distance?',
+    a: `No. The rate is $${site.pricing.flatRate} whether you are in the CBD or on the far side of the Sunshine Coast. A call-out fee is the thing that quietly makes the first hour of a cheaper quote the most expensive hour of the day.`,
+  },
+  {
+    q: 'Which suburbs are closest to you?',
+    a: 'The business is based in the Brisbane area, so the inner north, the CBD, Logan and Ipswich are the shortest trips. That does not change the price, but it does mean same-day is most reliable there.',
+  },
+];
+
+const jsonLd = schema.graph({
+  path,
+  name: title,
+  description,
+  extra: [
+    schema.breadcrumbList(trail),
+    schema.faqPage(faqs),
+    schema.itemList({
+      name: 'Suburbs serviced',
+      path,
+      items: regions.flatMap((r) =>
+        r.suburbs.map((s) => ({ name: s.name, path: liveSuburbUrl(computerRepairs, s) })),
+      ),
+    }),
+  ],
+});
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  path={path}
+  schema={jsonLd}
+  brandInTitle={false}
+>
+  <div class="container-page pt-5 sm:pt-6">
+    <Breadcrumb trail={trail} />
+  </div>
+
+  <PageHero
+    eyebrow={`${suburbs.length} suburbs · travel included`}
+    title="Where I work"
+    intro={[
+      formatInline(
+        `Every suburb listed here gets the same flat $${site.pricing.flatRate} rate. Travel is ` +
+          `included, so being further out does not cost you more - it only takes a little longer ` +
+          `to get there.`,
+      ),
+    ]}
+    icon="network"
+    badges={[
+      `Flat $${site.pricing.flatRate} rate`,
+      'Travel included',
+      'No travel surcharge',
+      '7 days a week',
+    ]}
+    facts={[
+      { label: 'Suburbs covered', value: String(suburbs.length) },
+      { label: 'Regions', value: String(regions.length) },
+      { label: 'Travel cost', value: 'Included' },
+    ]}
+  />
+
+  <div class="container-page space-y-14 py-14 sm:space-y-16 sm:py-20">
+    {
+      POPULAR.length > 0 && (
+        <section aria-labelledby="popular-heading">
+          <h2 id="popular-heading" class="text-h2">Commonly booked</h2>
+          <p class="mt-3 max-w-2xl text-lead text-ink-600">
+            The suburbs that come up most on the phone. Every one of them is a normal booking, not
+            a special case.
+          </p>
+          <div class="mt-7 flex flex-wrap gap-2.5">
+            {POPULAR.map((s) => (
+              <a
+                href={liveSuburbUrl(computerRepairs, s)}
+                class="rounded-xl border border-brand-200 bg-brand-50 px-4 py-2.5 text-sm font-semibold text-brand-800 transition hover:border-brand-400 hover:bg-brand-100"
+              >
+                Computer repairs {s.name}
+              </a>
+            ))}
+          </div>
+        </section>
+      )
+    }
+
+    <!-- One card per region, each linking to its own page and to every suburb. -->
+    {
+      regions.map((r) => (
+        <section aria-labelledby={`r-${regionSlug(r.region)}`}>
+          <div class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+            <h2 id={`r-${regionSlug(r.region)}`} class="text-h2">
+              {r.region}
+            </h2>
+            <a
+              href={`/service-area/${regionSlug(r.region)}/`}
+              class="text-sm font-bold text-brand-700 hover:text-brand-800"
+            >
+              {r.suburbs.length} suburbs in {r.region} →
+            </a>
+          </div>
+
+          <ul class="mt-5 flex flex-wrap gap-x-4 gap-y-2 text-[0.95rem]">
+            {r.suburbs.map((s) => (
+              <li>
+                <a
+                  href={liveSuburbUrl(computerRepairs, s)}
+                  class="text-ink-700 underline-offset-2 hover:text-brand-700 hover:underline"
+                >
+                  {s.name}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))
+    }
+
+    <!-- The other three service families, so every suburb page type is reachable. -->
+    <section aria-labelledby="by-service-heading" class="border-t border-ink-100 pt-14">
+      <h2 id="by-service-heading" class="text-h2">Pick your service first</h2>
+      <p class="mt-3 max-w-2xl text-lead text-ink-600">
+        The same {suburbs.length} suburbs are covered for every service. Choose the job that
+        describes your problem, then your suburb.
+      </p>
+      <div class="mt-7 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {
+          families.map((f) => (
+            <a
+              href={`/${f.slug}/`}
+              class="rounded-card border border-ink-200 bg-white p-5 transition hover:-translate-y-0.5 hover:border-brand-300 hover:shadow-lift"
+            >
+              <h3 class="text-[0.98rem] font-extrabold text-brand-700">{f.title}</h3>
+              <p class="mt-2 text-sm leading-relaxed text-ink-600">{f.summary}</p>
+            </a>
+          ))
+        }
+      </div>
+    </section>
+
+    <FaqList
+      faqs={faqs}
+      title="About the service area"
+      intro={`All ${totalLinks} suburb links on this page are live and lead to their own page.`}
+    />
+  </div>
+
+  <div class="container-page pb-16 sm:pb-20">
+    <CallToAction
+      title="Not sure if I come to you?"
+      body="Call with your suburb and I will tell you straight away. If I cannot reach you, I will say so rather than leave you waiting."
+    />
+  </div>
+</BaseLayout>

@@ -1,0 +1,242 @@
+---
+/**
+ * Quote request page at /quote/.
+ *
+ * This exists because the header and footer link to it on all 2,700+ pages, and
+ * because "request a quote" is the second thing people want after the price.
+ * It deliberately does not host a form: there is no backend, and a form that
+ * silently swallows enquiries is worse than a clear handoff. The page explains
+ * what happens, then sends people to the hosted form or the phone.
+ *
+ * Worth noting the honest version of the pitch: for a flat-rate business the
+ * phone is genuinely faster than a form, so the call button leads.
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
+import PageHero from '../components/PageHero.astro';
+import FaqList from '../components/FaqList.astro';
+import CallToAction from '../components/CallToAction.astro';
+import { site } from '../data/site';
+import { families } from '../data/services';
+import * as schema from '../lib/schema';
+
+const path = '/quote/';
+const rate = site.pricing.flatRate;
+const title = `Request a Quote | Computer Repairs Brisbane | Flat $${rate}`;
+const description =
+  `Ask for a computer repair quote in Brisbane. Flat $${rate} for the first hour, no call-out ` +
+  `fee, no obligation. Call ${site.phone.display} or send the form.`;
+
+const trail = [
+  { name: 'Home', path: '/' },
+  { name: 'Request a quote', path },
+];
+
+const STEPS = [
+  {
+    h: 'Tell me what is wrong',
+    p: 'A sentence is enough. "My laptop will not turn on", "the computer is really slow", "I get pop-ups on every page". If you are not sure what the fault is, say that instead - working it out is the first hour of the job and it is included in the rate.',
+  },
+  {
+    h: 'Get a straight answer on price',
+    p: `You will be told what the job is likely to cost before anything is booked. It is a flat $${rate} for the first hour, so in most cases the answer is "one hour, $${rate}", and I will tell you that on the phone rather than after.`,
+  },
+  {
+    h: 'Book a time that suits you',
+    p: 'Evenings, weekends and public holidays are all available at the same rate. Most bookings are same-day or next-day, and if I cannot make a time I will say so rather than leave you waiting on a maybe.',
+  },
+  {
+    h: 'Get it fixed, or do not pay',
+    p: 'If the fault turns out to be beyond repair, or beyond what is worth spending money on, you do not pay for the diagnosis. That is the whole point of quoting before starting rather than billing after the fact.',
+  },
+];
+
+const NO_SURPRISES = [
+  `Flat $${rate} for the first hour, then 15-minute blocks at the same rate`,
+  'No call-out fee anywhere in the service area',
+  'No weekend or public holiday surcharge',
+  'Parts at cost, and you are told the part and the price before anything is ordered',
+  'No obligation - a quote is a quote, not a booking you are locked into',
+  'GST note: if the work is for a business, GST is excluded from the rate',
+];
+
+const faqs = [
+  {
+    q: 'Do I have to book to get a price?',
+    a: 'No. Describe the fault and you will be given an indication of the cost and the time on the spot, before anything is committed. If the price does not suit you, that is completely fine.',
+  },
+  {
+    q: 'Is a quote free?',
+    a: 'Yes. There is no charge for telling you what the job is likely to be and what it will cost. You only pay once work has actually been done.',
+  },
+  {
+    q: 'What if I am not sure what the problem is?',
+    a: 'That is normal and it is what the first hour is for. Diagnosing the fault is included in the rate, not billed on top, so there is no risk in asking. The worst case is that it cannot be fixed and you do not pay.',
+  },
+  {
+    q: 'Do you need me to be home?',
+    a: 'Yes, for an onsite visit someone needs to let me in and be there to approve anything that costs extra - a part, most obviously. For workshop work I will take the machine and keep you posted.',
+  },
+  {
+    q: 'Can you help with business computers?',
+    a: 'Yes. GST is excluded from the rate for commercial work, and repeat work is faster because I already know your setup. Mention it on the phone and I will price it accordingly.',
+  },
+];
+
+const jsonLd = schema.graph({
+  path,
+  name: title,
+  description,
+  extra: [
+    schema.breadcrumbList(trail),
+    schema.faqPage(faqs),
+  ],
+});
+---
+
+<BaseLayout title={title} description={description} path={path} schema={jsonLd} brandInTitle={false}>
+  <div class="container-page pt-5 sm:pt-6">
+    <Breadcrumb trail={trail} />
+  </div>
+
+  <PageHero
+    eyebrow={`Flat $${rate} · No call-out fee · No obligation`}
+    title="Request a quote"
+    intro={[
+      `Tell me what is wrong and you will get a straight answer on cost and timing - usually on the same phone call, before anything is booked.`,
+      `For a flat $${rate} first hour, calling is genuinely faster than filling in a form, so the phone button leads. The form is here if you would rather write it down.`,
+    ]}
+    icon="wrench"
+    badges={[`Flat $${rate} rate`, 'No call-out fee', 'No obligation', '7 days a week']}
+  />
+
+  <div class="container-page space-y-14 py-14 sm:space-y-16 sm:py-20">
+    <div class="grid gap-12 lg:grid-cols-12 lg:gap-12">
+      <div class="space-y-12 lg:col-span-7">
+        <section aria-labelledby="q-steps">
+          <h2 id="q-steps" class="text-h2">What happens after you get in touch</h2>
+          <ol class="mt-6 space-y-6">
+            {
+              STEPS.map((s, i) => (
+                <li class="flex gap-4">
+                  <span
+                    class="flex size-9 shrink-0 items-center justify-center rounded-full bg-brand-700 text-sm font-bold text-white"
+                    aria-hidden="true"
+                  >
+                    {i + 1}
+                  </span>
+                  <div>
+                    <h3 class="text-[1.05rem] font-bold text-ink-900">{s.h}</h3>
+                    <p class="mt-1.5 text-[0.98rem] leading-relaxed text-ink-600">{s.p}</p>
+                  </div>
+                </li>
+              ))
+            }
+          </ol>
+        </section>
+
+        <section aria-labelledby="q-nosurprises">
+          <h2 id="q-nosurprises" class="text-h2">No surprises in the price</h2>
+          <ul class="mt-5 space-y-3">
+            {
+              NO_SURPRISES.map((item) => (
+                <li class="flex gap-3 text-[0.98rem] text-ink-700">
+                  <svg
+                    class="mt-0.5 size-5 shrink-0 text-brand-600"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path d="M8.2 13.6 4.6 10a1 1 0 0 1 1.4-1.4l2.2 2.2 5.8-5.8A1 1 0 1 1 15.4 6.4l-6.5 6.5a1 1 0 0 1-1.4 0Z" />
+                  </svg>
+                  <span>{item}</span>
+                </li>
+              ))
+            }
+          </ul>
+        </section>
+      </div>
+
+      <aside class="lg:col-span-5">
+        <div class="lg:sticky lg:top-28 space-y-4">
+          <div class="rounded-card border border-brand-200 bg-brand-50 p-6">
+            <h2 class="text-h3">Call - fastest option</h2>
+            <p class="mt-2 text-[0.95rem] leading-relaxed text-ink-600">
+              For a flat-rate job the quote and the booking usually happen in the one call. Nothing
+              to fill in.
+            </p>
+            <a
+              href={site.phone.href}
+              class="mt-4 flex items-center justify-center gap-2 rounded-xl bg-brand-700 px-5 py-3.5 text-base font-bold text-white transition hover:bg-brand-800"
+            >
+              <svg class="size-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                <path
+                  d="M3.6 2.9h2.3c.5 0 .9.3 1 .7l.9 3a1 1 0 0 1-.3 1l-1.3 1a10.6 10.6 0 0 0 5.2 5.2l1-1.3a1 1 0 0 1 1-.3l3 .9c.4.1.7.5.7 1v2.3a1.6 1.6 0 0 1-1.8 1.6A14.4 14.4 0 0 1 2 4.7a1.6 1.6 0 0 1 1.6-1.8Z"
+                ></path>
+              </svg>
+              {site.phone.display}
+            </a>
+            <p class="mt-3 text-center text-sm text-ink-500">
+              {site.hours.opens}–{site.hours.closes}, {site.hours.days} days · {site.hours.note}
+            </p>
+          </div>
+
+          <div class="rounded-card border border-ink-200 bg-white p-6">
+            <h2 class="text-h3">Or send the form</h2>
+            <p class="mt-2 text-[0.95rem] leading-relaxed text-ink-600">
+              Opens in a new tab. I read every one and come back with a cost and a time - usually
+              the same day.
+            </p>
+            <a
+              href={site.quoteForm.url}
+              target="_blank"
+              rel="noopener"
+              class="mt-4 flex items-center justify-center gap-2 rounded-xl border border-ink-300 px-5 py-3.5 text-base font-bold text-ink-900 transition hover:border-brand-400 hover:bg-brand-50"
+            >
+              Open the quote form
+              <svg class="size-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                <path
+                  d="M12 3h5v5h-1.5V6.1l-6.4 6.4-1.1-1.1 6.4-6.4H12V3ZM4 5h5v1.5H5.5v9h9V11H16v5H4V5Z"
+                ></path>
+              </svg>
+            </a>
+            <p class="mt-3 text-sm text-ink-500">
+              Prefer email? <a
+                href={site.email.href}
+                class="font-semibold break-all text-brand-700 underline-offset-2 hover:underline"
+                >{site.email.display}</a
+              >
+            </p>
+          </div>
+
+          <div class="rounded-card border border-ink-200 bg-white p-6">
+            <h2 class="text-sm font-bold tracking-wide text-ink-900 uppercase">
+              Common jobs I get quoted for
+            </h2>
+            <ul class="mt-3 space-y-2 text-sm">
+              {
+                families.map((f) => (
+                  <li>
+                    <a
+                      href={`/${f.slug}/`}
+                      class="font-semibold text-brand-700 underline-offset-2 hover:underline"
+                    >
+                      {f.title}
+                    </a>
+                  </li>
+                ))
+              }
+            </ul>
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <FaqList faqs={faqs} title="Before you get in touch" />
+
+    <CallToAction
+      title={`Get a straight answer on ${site.serviceAreas[0]} computer repairs`}
+      body={`Flat $${rate} for the first hour and no call-out fee, so the cost is known before the work starts. If it cannot be fixed, you do not pay.`}
+    />
+  </div>
+</BaseLayout>

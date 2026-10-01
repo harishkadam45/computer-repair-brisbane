@@ -1,0 +1,47 @@
+---
+/**
+ * Breadcrumb trail. Visual version only - the matching BreadcrumbList JSON-LD
+ * is emitted by the page through src/lib/schema.ts, so the two never drift
+ * because they are built from the same array.
+ */
+interface Crumb {
+  name: string;
+  path: string;
+}
+
+interface Props {
+  trail: Crumb[];
+}
+
+const { trail } = Astro.props;
+---
+
+{
+  trail.length > 1 && (
+    <nav aria-label="Breadcrumb" class="not-prose">
+      <ol class="flex flex-wrap items-center gap-x-1.5 gap-y-1 text-sm text-ink-500">
+        {trail.map((crumb, i) => {
+          const isLast = i === trail.length - 1;
+          return (
+            <li class="flex items-center gap-1.5">
+              {isLast ? (
+                <span class="font-semibold text-ink-700" aria-current="page">
+                  {crumb.name}
+                </span>
+              ) : (
+                <>
+                  <a href={crumb.path} class="transition hover:text-brand-700">
+                    {crumb.name}
+                  </a>
+                  <svg class="size-3.5 shrink-0 text-ink-300" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                    <path d="M7.2 4.6a1 1 0 0 1 1.4 0l5 5a1 1 0 0 1 0 1.4l-5 5a1 1 0 1 1-1.4-1.4L11.5 10 7.2 5.6a1 1 0 0 1 0-1.4Z" />
+                  </svg>
+                </>
+              )}
+            </li>
+          );
+        })}
+      </ol>
+    </nav>
+  )
+}

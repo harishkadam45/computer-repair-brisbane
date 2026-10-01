@@ -1,0 +1,231 @@
+---
+/**
+ * 404 page.
+ *
+ * Two jobs beyond saying "not found":
+ *
+ *  1. Catch people who followed an old WordPress URL that has no equivalent in
+ *     the new structure, and give them a search box rather than a dead end.
+ *  2. Offer the most likely destinations - the suburb matrix is 2,660 pages, so
+ *     a mistyped suburb URL is the single most common way to land here.
+ *
+ * Marked noindex, which it should be, but a 404 that is a useful page still
+ * converts better than a bare nginx default.
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { site } from '../data/site';
+import { families } from '../data/services';
+import { suburbs, getSuburb } from '../lib/suburbs';
+import { liveSuburbUrl } from '../lib/suburb-url.mjs';
+
+const path = '/404/';
+const title = `Page not found | ${site.name}`;
+const description =
+  'That page does not exist. Search for your suburb, or call and it will be sorted.';
+
+/**
+ * The family the suburb search points at. Named explicitly rather than taken as
+ * `families[0]`, because the results are labelled "Computer repairs ..." and
+ * that label would quietly go stale if the array order changed.
+ */
+const defaultFamily = families.find((f) => f.slug === 'computer-repairs')!;
+
+/**
+ * Finished URLs for every suburb, resolved through the same legacy-slug rule
+ * the route uses. Building these at build time rather than guessing the slug in
+ * the browser is the point: a suburb served from a legacy variant like
+ * `computer-repairs-aspley-qld-4066` would 404 if the page derived the slug
+ * from the name.
+ *
+ * Serialised as `path~name` pairs. Neither a path nor a suburb name can contain
+ * `~` or `|`, so the two delimiters are unambiguous.
+ */
+const suburbIndex = suburbs
+  .map((s) => `${liveSuburbUrl(defaultFamily, s)}~${s.name}`)
+  .join('|');
+
+/**
+ * Offered because they are the highest-traffic destinations on the site: a
+ * visitor who mistyped a suburb URL almost always wanted one of these.
+ */
+const SUGGESTIONS = ['Aspley', 'Ipswich', 'Slacks Creek', 'Woolloongabba', 'Toowoomba', 'Brisbane City']
+  .map((name) => getSuburb(name.toLowerCase().replace(/[^a-z]+/g, '-')))
+  .filter((s): s is NonNullable<typeof s> => Boolean(s));
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  path={path}
+  brandInTitle={true}
+  noindex
+  padForStickyBar
+>
+  <div class="container-page py-20 sm:py-28">
+    <div class="mx-auto max-w-2xl text-center">
+      <p class="text-sm font-bold tracking-wide text-brand-600 uppercase">404</p>
+      <h1 class="mt-3 text-h1">That page is not here</h1>
+      <p class="mx-auto mt-5 max-w-xl text-lead text-ink-600">
+        The link may be old, or the address may have a typo in it. Both are easy to sort out -
+        start with your suburb below, or call and describe the problem.
+      </p>
+    </div>
+
+    <!-- Client-side suburb lookup. No JS framework, no build step, ~20 lines. -->
+    <div class="mx-auto mt-10 max-w-xl">
+      <label for="suburb-search" class="block text-sm font-bold text-ink-900">
+        Search {suburbs.length} suburbs
+      </label>
+      <form class="mt-2 flex gap-2" role="search" onsubmit="return false;">
+        <input
+          id="suburb-search"
+          type="search"
+          name="suburb"
+          placeholder="e.g. Aspley, Slacks Creek, Woombye"
+          autocomplete="off"
+          class="min-w-0 flex-1 rounded-xl border border-ink-300 bg-white px-4 py-3 text-base text-ink-900 placeholder:text-ink-400 focus:border-brand-500 focus:ring-2 focus:ring-brand-200 focus:outline-none"
+        />
+        <button
+          type="submit"
+          class="shrink-0 rounded-xl bg-brand-500 px-5 py-3 font-bold text-white transition hover:bg-brand-600"
+        >
+          Go
+        </button>
+      </form>
+      <ul id="suburb-results" class="mt-3 space-y-1.5 text-left text-sm" role="list"></ul>
+      <p id="suburb-empty" class="mt-3 hidden text-left text-sm text-ink-500">
+        No match. Call
+        <a href={site.phone.href} class="font-bold text-brand-700 hover:underline">{site.phone.display}</a>
+        and I will tell you whether I come to you.
+      </p>
+      <noscript>
+        <p class="mt-3 text-left text-sm text-ink-600">
+          JavaScript is off, so the search box is disabled. Use
+          <a href="/service-area/" class="font-bold text-brand-700 hover:underline">the full suburb list</a>
+          instead.
+        </p>
+      </noscript>
+    </div>
+
+    {
+      SUGGESTIONS.length > 0 && (
+        <div class="mx-auto mt-12 max-w-2xl">
+          <h2 class="text-center text-sm font-bold tracking-wide text-ink-500 uppercase">
+            Commonly booked
+          </h2>
+          <ul class="mt-4 flex flex-wrap justify-center gap-2.5">
+            {SUGGESTIONS.map((s) => (
+              <li>
+                <a
+                  href={liveSuburbUrl(defaultFamily, s)}
+                  class="inline-block rounded-xl border border-ink-200 bg-white px-4 py-2.5 text-sm font-semibold text-ink-700 transition hover:border-brand-300 hover:bg-brand-50"
+                >
+                  {s.name}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )
+    }
+
+    <div class="mx-auto mt-12 max-w-2xl">
+      <div class="rounded-card border border-ink-200 bg-ink-50 p-6 sm:p-8">
+        <h2 class="text-h3">Or just call</h2>
+        <p class="mt-2.5 text-[0.95rem] leading-relaxed text-ink-600">
+          If you were trying to reach a page about a specific problem, describing it on the phone is
+          faster than finding the right link.
+        </p>
+        <a
+          href={site.phone.href}
+          class="mt-5 inline-flex items-center gap-2.5 rounded-xl bg-brand-500 px-6 py-3.5 text-lg font-bold text-white shadow-cta transition hover:bg-brand-600"
+        >
+          <svg class="size-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+            <path d="M2 3.5A1.5 1.5 0 0 1 3.5 2h2.1a.75.75 0 0 1 .74.64l.5 2.5a.75.75 0 0 1-.19.7L5.4 7.3a12 12 0 0 0 7.3 7.3l1.46-1.25a.75.75 0 0 1 .7-.19l2.5.5a.75.75 0 0 1 .64.74v2.1a1.5 1.5 0 0 1-1.5 1.5A15.5 15.5 0 0 1 2 5v-1.5Z"></path>
+          </svg>
+          {site.phone.display}
+        </a>
+      </div>
+
+      <nav class="mt-8" aria-label="Popular sections">
+        <ul class="flex flex-wrap justify-center gap-x-5 gap-y-2 text-sm">
+          {
+            families.map((f) => (
+              <li>
+                <a href={`/${f.slug}/`} class="font-semibold text-ink-600 hover:text-brand-700">
+                  {f.title}
+                </a>
+              </li>
+            ))
+          }
+          <li>
+            <a href="/pricing/" class="font-semibold text-ink-600 hover:text-brand-700">Pricing</a>
+          </li>
+          <li>
+            <a href="/contact/" class="font-semibold text-ink-600 hover:text-brand-700">Contact</a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+</BaseLayout>
+
+<!--
+  Suburb search for the 404.
+
+  Inlines the suburb list as a compact string of "key name key name" pairs
+  rather than 666 <option> elements or a JSON blob: it keeps the payload to a
+  few kilobytes, avoids a second round trip, and the matching logic is four
+  lines. Runs only on this page.
+-->
+<script is:inline define:vars={{ suburbIndex }}>
+  const input = document.getElementById('suburb-search');
+  const results = document.getElementById('suburb-results');
+  const empty = document.getElementById('suburb-empty');
+  if (!input || !results || !empty) throw new Error('404 search markup missing');
+
+  const all = suburbIndex
+    .split('|')
+    .map((pair) => pair.split('~'))
+    .map(([path, name]) => ({ path, name }));
+
+  const search = () => {
+    const q = input.value.trim().toLowerCase();
+    results.textContent = '';
+
+    if (q.length < 2) {
+      empty.classList.add('hidden');
+      return;
+    }
+
+    // Prefix matches first, then substring matches, so typing "asl" puts
+    // Aspley at the top rather than somewhere in the middle of the list.
+    const starts = [];
+    const contains = [];
+    for (const s of all) {
+      const n = s.name.toLowerCase();
+      if (n.startsWith(q)) starts.push(s);
+      else if (n.includes(q)) contains.push(s);
+    }
+    const hits = [...starts, ...contains].slice(0, 8);
+
+    for (const s of hits) {
+      const li = document.createElement('li');
+      const a = document.createElement('a');
+      a.href = s.path;
+      a.textContent = `Computer repairs ${s.name}`;
+      a.className = 'font-semibold text-brand-700 hover:underline';
+      li.appendChild(a);
+      results.appendChild(li);
+    }
+
+    empty.classList.toggle('hidden', hits.length > 0);
+  };
+
+  input.addEventListener('input', search);
+  input.form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const first = results.querySelector('a');
+    if (first) first.click();
+  });
+</script>

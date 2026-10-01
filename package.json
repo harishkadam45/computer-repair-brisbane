@@ -1,0 +1,33 @@
+{
+  "name": "computer-repairs-brisbane-2",
+  "type": "module",
+  "version": "0.0.1",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "astro dev --background",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "verify": "node scripts/verify-build.mjs",
+    "redirects": "node --experimental-strip-types scripts/build-redirects.mjs",
+    "posts:fetch": "node scripts/fetch-posts.mjs",
+    "posts:build": "node scripts/build-posts.mjs",
+    "icons": "node scripts/build-icons.mjs",
+    "suburbs": "node scripts/build-suburbs.mjs",
+    "release": "npm run build && npm run redirects && npm run verify"
+  },
+  "dependencies": {
+    "@tailwindcss/vite": "^4.3.3",
+    "astro": "^7.3.5",
+    "tailwindcss": "^4.3.3"
+  },
+  "allowScripts": {
+    "esbuild": true
+  },
+  "devDependencies": {
+    "@astrojs/sitemap": "^3.7.4",
+    "sharp": "^0.35.5"
+  }
+}

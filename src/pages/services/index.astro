@@ -1,0 +1,221 @@
+---
+/**
+ * Service index. The hub every individual service page hangs off, and the
+ * page that ranks for the broad head terms ("computer repairs Brisbane").
+ *
+ * Deliberately not a keyword list. The four families come first because they
+ * are what people actually search for, then the individual jobs in the order a
+ * visitor is likely to need them, then the suburb entry points.
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
+import PageHero from '../../components/PageHero.astro';
+import ServiceCard from '../../components/ServiceCard.astro';
+import FaqList from '../../components/FaqList.astro';
+import CallToAction from '../../components/CallToAction.astro';
+import { site } from '../../data/site';
+import { services, families } from '../../data/services';
+import { formatInline } from '../../lib/seo';
+import * as schema from '../../lib/schema';
+
+const path = '/services/';
+const title = `Computer Repair Services Brisbane | From $${site.pricing.flatRate}`;
+const description =
+  `Every computer, laptop and Mac repair offered in Brisbane: virus removal, data recovery, ` +
+  `speed ups, hardware upgrades, networking and setup. Flat $${site.pricing.flatRate} for the ` +
+  `first hour, no call-out fee. Call ${site.phone.display}.`;
+
+const trail = [
+  { name: 'Home', path: '/' },
+  { name: 'Services', path },
+];
+
+/** Group the standalone jobs under the heading a customer would use. */
+const GROUPS = [
+  {
+    title: 'Fixing software problems',
+    blurb:
+      'The jobs where the computer works, but not usefully. Often fixable inside the first hour without replacing anything.',
+    match: (slug: string) =>
+      /virus|malware|spyware|pop-windows|hijack|junk|clean|redirect|slow-start|health-check|maintenance/.test(
+        slug,
+      ),
+  },
+  {
+    title: 'Speed and performance',
+    blurb:
+      'A machine that used to be fine and now takes minutes to do anything. Usually storage, RAM, startup bloat or a failing drive.',
+    match: (slug: string) => /optimization/.test(slug),
+  },
+  {
+    title: 'Data, setup and upgrades',
+    blurb:
+      'Moving to a new computer, building one, or making it faster. Straightforward work with an agreed price before it starts.',
+    match: (slug: string) => /data-recovery|setup|upgrade|reinstallation/.test(slug),
+  },
+  {
+    title: 'Network and remote support',
+    blurb:
+      'For when the problem is not the computer - the internet is out, the Wi-Fi will not connect, or you need someone to talk you through it.',
+    match: (slug: string) => /network|remote/.test(slug),
+  },
+  {
+    title: 'Macs',
+    blurb: 'Apple hardware and macOS, including the models where the battery or logic board is the problem.',
+    match: (slug: string) => /apple-mac/.test(slug),
+  },
+];
+
+const grouped = GROUPS.map((g) => ({
+  ...g,
+  items: services.filter((s) => !families.some((f) => f.slug === s.slug) && g.match(s.slug)),
+})).filter((g) => g.items.length > 0);
+
+const faqs = [
+  {
+    q: 'Is the $150 first hour the same for every job?',
+    a: 'Yes. The rate covers diagnosis, labour and travel, whatever the job. If it takes twenty minutes you pay for twenty minutes in 15-minute blocks. The only things charged on top are parts, and those are at cost.',
+  },
+  {
+    q: 'Do you repair both PCs and Macs?',
+    a: 'Yes. Desktops, laptops and Apple Macs, on Windows or macOS, from machines made last year to machines made fifteen years ago. If a part is genuinely unobtainable or uneconomic I will tell you before spending your money.',
+  },
+  {
+    q: 'Can you fix a problem I cannot describe?',
+    a: 'That is most of the work. Describe what you see - the message, the noise, when it started - and the diagnosis is part of the job.',
+  },
+  {
+    q: 'Do you come to my suburb?',
+    a: `All ${site.serviceAreas.join(', ')} and the surrounding suburbs, with travel included in the rate. Call with your suburb and I will confirm straight away.`,
+  },
+  {
+    q: 'What if I need a part replaced?',
+    a: `You are told the part and the price before anything is ordered, and the part is charged at cost. If a cheaper equivalent exists I will mention it, but I will not fit something that is going to fail again in six months to save twenty dollars.`,
+  },
+];
+
+const jsonLd = schema.graph({
+  path,
+  name: title,
+  description,
+  extra: [
+    schema.breadcrumbList(trail),
+    schema.faqPage(faqs),
+    schema.itemList({
+      name: 'Computer repair services in Brisbane',
+      path,
+      items: [
+        ...families.map((f) => ({ name: f.title, path: `/${f.slug}/` })),
+        ...services
+          .filter((s) => !families.some((f) => f.slug === s.slug))
+          .map((s) => ({ name: s.title, path: `/${s.slug}/` })),
+      ],
+    }),
+  ],
+});
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  path={path}
+  schema={jsonLd}
+  brandInTitle={false}
+>
+  <div class="container-page pt-5 sm:pt-6">
+    <Breadcrumb trail={trail} />
+  </div>
+
+  <PageHero
+    eyebrow={`Brisbane · Flat $${site.pricing.flatRate} rate`}
+    title="Computer repair services in Brisbane"
+    intro={[
+      formatInline(
+        `One technician, one flat rate, and every repair listed on this page. Travel to ` +
+          `${site.serviceAreas.join(', ')} and the surrounding suburbs is included - the ` +
+          `$${site.pricing.flatRate} is the same whether the job is a ten-minute fix or a full ` +
+          `afternoon.`,
+      ),
+    ]}
+    icon="wrench"
+    badges={[
+      `Flat $${site.pricing.flatRate} rate`,
+      'No call-out fee',
+      'No weekend surcharge',
+      'Parts at cost',
+    ]}
+    facts={[
+      { label: 'Jobs fixed', value: 'Most in the first hour' },
+      { label: 'Onsite', value: 'Home or office' },
+      { label: 'Diagnostics', value: 'Included' },
+    ]}
+  />
+
+  <div class="container-page space-y-14 py-14 sm:space-y-16 sm:py-20">
+    <!-- Families first: these are the broad, high-volume searches. -->
+    <section aria-labelledby="families-heading">
+      <h2 id="families-heading" class="text-h2">Start with the type of machine</h2>
+      <p class="mt-3 max-w-2xl text-lead text-ink-600">
+        If you know what you have, go straight to the page for it. Each one covers the common
+        faults for that machine in detail, with pricing and turnaround.
+      </p>
+      <div class="mt-8 grid gap-4 sm:grid-cols-2">
+        {
+          families.map((f) => (
+            <a
+              href={`/${f.slug}/`}
+              class="group rounded-card border border-ink-200 bg-white p-6 transition hover:-translate-y-0.5 hover:border-brand-300 hover:shadow-lift"
+            >
+              <h3 class="text-xl font-extrabold text-brand-600 transition group-hover:text-brand-700">
+                {f.title}
+              </h3>
+              <p class="mt-2.5 text-[0.95rem] leading-relaxed text-ink-600">{f.summary}</p>
+              <p class="mt-4 inline-flex items-center gap-1.5 text-sm font-bold text-brand-700">
+                {f.turnaround}
+                <svg class="size-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                  <path d="M4 10a1 1 0 0 1 1-1h9.2l-3.6-3.6a1 1 0 1 1 1.4-1.4l5.3 5.3a1 1 0 0 1 0 1.4l-5.3 5.3a1 1 0 1 1-1.4-1.4L14.2 11H5a1 1 0 0 1-1-1Z" />
+                </svg>
+              </p>
+            </a>
+          ))
+        }
+      </div>
+    </section>
+
+    {
+      grouped.map((group) => (
+        <section aria-labelledby={`g-${group.title.replace(/\W+/g, '-').toLowerCase()}`}>
+          <h2
+            id={`g-${group.title.replace(/\W+/g, '-').toLowerCase()}`}
+            class="text-h2"
+          >
+            {group.title}
+          </h2>
+          <p class="mt-3 max-w-2xl text-lead text-ink-600">{group.blurb}</p>
+          <div class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {group.items.map((s) => (
+              <ServiceCard
+                href={`/${s.slug}/`}
+                title={s.title}
+                summary={s.summary}
+                icon={s.icon}
+                price={s.price}
+                pricePrefix="from"
+              />
+            ))}
+          </div>
+        </section>
+      ))
+    }
+
+    <FaqList
+      faqs={faqs}
+      title="Questions about the services"
+      intro="What people ask before booking, including the money ones."
+    />
+  </div>
+
+  <div class="container-page pb-16 sm:pb-20">
+    <CallToAction />
+  </div>
+</BaseLayout>

@@ -1,0 +1,207 @@
+@import 'tailwindcss';
+
+/*
+ * Design tokens.
+ *
+ * The palette is lifted from the existing brand - #146dd5 is the blue the
+ * current site uses for links, buttons and headings, with #5890e5 as its
+ * lighter companion and #0097cf / #3f2bb6 as accents.
+ *
+ * Tailwind v4 is CSS-first, so every token here becomes a utility
+ * (bg-brand-500, text-accent, rounded-card, …) with no JS config.
+ */
+@theme {
+  --color-brand-50: #f1f7fe;
+  --color-brand-100: #e0eefd;
+  --color-brand-200: #c2dcfb;
+  --color-brand-300: #92c1f6;
+  --color-brand-400: #5890e5; /* legacy site */
+  --color-brand-500: #146dd5; /* legacy site primary */
+  --color-brand-600: #0c5aad;
+  --color-brand-700: #0a4a8f;
+  --color-brand-800: #0a3a70;
+  --color-brand-900: #0a2c52;
+  --color-brand-950: #061c37;
+
+  --color-accent-50: #e8f8fd;
+  --color-accent-100: #c6eefa;
+  --color-accent-200: #8fdef4;
+  --color-accent-300: #4ec9e8;
+  --color-accent-400: #11a3d6;
+  --color-accent-500: #0097cf; /* legacy site accent */
+  --color-accent-600: #017cab;
+  --color-accent-700: #056286;
+  --color-accent-800: #0a516e;
+  --color-accent-900: #0d435a;
+
+  --color-indigo-brand: #3f2bb6; /* legacy site secondary */
+
+  --color-ink-50: #f7f8fa;
+  --color-ink-100: #eceef2;
+  --color-ink-200: #d5dae3;
+  --color-ink-300: #b0b9ca;
+  --color-ink-400: #8492ab;
+  --color-ink-500: #64748f;
+  --color-ink-600: #4d5a73;
+  --color-ink-700: #3f4a5f;
+  --color-ink-800: #28303f;
+  --color-ink-900: #161d28;
+  --color-ink-950: #0b1017;
+
+  --color-success-500: #00d084;
+  --color-success-600: #00a86c;
+  --color-success-700: #057a50;
+
+  --color-gold-500: #c28a14;
+  --color-gold-600: #a06d0d;
+
+  --font-sans:
+    'Inter var', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto,
+    'Helvetica Neue', Arial, sans-serif;
+
+  --radius-card: 0.875rem;
+  --radius-hero: 1.5rem;
+
+  --shadow-card: 0 1px 2px rgb(11 16 23 / 0.04), 0 4px 16px rgb(11 16 23 / 0.06);
+  --shadow-lift: 0 8px 30px rgb(11 16 23 / 0.1);
+  --shadow-cta: 0 6px 18px rgb(20 109 213 / 0.35);
+
+  /* Fluid type scale - no breakpoints needed for the display sizes. */
+  --text-display: clamp(2.1rem, 1.4rem + 3.1vw, 3.5rem);
+  --text-display--line-height: 1.08;
+  --text-display--letter-spacing: -0.022em;
+  --text-h1: clamp(1.75rem, 1.3rem + 2vw, 2.6rem);
+  --text-h1--line-height: 1.15;
+  --text-h1--letter-spacing: -0.02em;
+  --text-h2: clamp(1.4rem, 1.15rem + 1.1vw, 1.9rem);
+  --text-h2--line-height: 1.22;
+  --text-h2--letter-spacing: -0.015em;
+  --text-h3: clamp(1.12rem, 1.02rem + 0.45vw, 1.35rem);
+  --text-h3--line-height: 1.3;
+  --text-h3--letter-spacing: -0.01em;
+  --text-lead: clamp(1.02rem, 0.97rem + 0.28vw, 1.18rem);
+  --text-lead--line-height: 1.65;
+}
+
+/*
+ * One focus style for every interactive element, and a :focus-visible reset
+ * so mouse users do not see rings. Keyboard users always do.
+ */
+@layer base {
+  :focus-visible {
+    outline: 3px solid var(--color-brand-500);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
+  body {
+    @apply bg-gray-100 text-ink-800 font-sans antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply text-ink-900 font-bold text-balance;
+  }
+
+  p {
+    @apply text-ink-700;
+  }
+
+  /* Long suburb names must not blow out a card. */
+  h1,
+  h2,
+  h3 {
+    overflow-wrap: break-word;
+  }
+}
+
+@layer components {
+  .container-page {
+    @apply mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8;
+  }
+
+  /* Skip link - visually hidden until focused. */
+  .skip-link {
+    @apply sr-only;
+  }
+  .skip-link:focus {
+    @apply not-sr-only fixed top-3 left-3 z-[100] rounded-lg bg-brand-500 px-4 py-2.5
+           font-semibold text-white shadow-lift;
+  }
+
+  /* Long-form body copy inside a content well. */
+  .prose-copy {
+    @apply text-lead text-ink-700 space-y-4;
+  }
+  .prose-copy strong {
+    @apply font-semibold text-ink-900;
+  }
+  .prose-copy a {
+    @apply text-brand-600 font-medium underline underline-offset-2 hover:text-brand-700;
+  }
+  .prose-copy ul {
+    @apply my-4 space-y-2 pl-5;
+    list-style-type: disc;
+  }
+  .prose-copy ol {
+    @apply my-4 list-decimal space-y-2 pl-5;
+  }
+  .prose-copy li::marker {
+    @apply text-brand-500;
+  }
+  .prose-copy h2 {
+    @apply mt-10 mb-3 text-h2;
+  }
+  .prose-copy h3 {
+    @apply mt-8 mb-2 text-h3;
+  }
+  .prose-copy blockquote {
+    @apply my-6 border-l-4 border-brand-300 bg-brand-50 py-3 pr-4 pl-5 text-ink-700 italic;
+  }
+  .prose-copy code {
+    @apply bg-ink-100 rounded px-1.5 py-0.5 text-[0.9em] text-ink-800;
+  }
+}
+
+@layer utilities {
+  /* Diagonal brand wash used behind hero sections. */
+  .bg-brand-mesh {
+    background-image:
+      radial-gradient(60rem 30rem at 85% -10%, var(--color-brand-200) 0%, transparent 60%),
+      radial-gradient(45rem 25rem at 5% 0%, var(--color-accent-100) 0%, transparent 55%),
+      linear-gradient(180deg, var(--color-brand-50) 0%, #fff 85%);
+  }
+
+  .bg-hero-dark {
+    background-image:
+      radial-gradient(50rem 28rem at 90% 0%, rgb(20 109 213 / 0.55) 0%, transparent 62%),
+      radial-gradient(38rem 24rem at 0% 100%, rgb(0 151 207 / 0.32) 0%, transparent 58%),
+      linear-gradient(160deg, var(--color-brand-950) 0%, var(--color-brand-900) 100%);
+  }
+
+  /* Visible only to screen readers. */
+  .sr-only-focusable:not(:focus):not(:focus-within) {
+    @apply sr-only;
+  }
+}

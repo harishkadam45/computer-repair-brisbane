@@ -1,0 +1,596 @@
+---
+/**
+ * Home page.
+ *
+ * Structure follows what someone searches for when their computer is broken
+ * and they are on a phone: what does it cost, can you come out, where do you
+ * go, and who is coming. Price and phone are above the fold.
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ServiceCard from '../components/ServiceCard.astro';
+import FaqList from '../components/FaqList.astro';
+import CallToAction from '../components/CallToAction.astro';
+import { site } from '../data/site';
+import { services, families } from '../data/services';
+import { suburbsByRegion, suburbs } from '../lib/suburbs';
+import { liveSuburbUrl } from '../lib/suburb-url.mjs';
+import * as schema from '../lib/schema';
+
+const path = '/';
+
+/**
+ * The suburb links on this page all point at the computer-repairs family, so
+ * they need the real family record to resolve a live URL. Hand-writing
+ * `/computer-repairs-{key}/` gets it wrong for every suburb that already had a
+ * legacy page, because those are served from their old slug.
+ */
+const computerRepairs = families.find((f) => f.slug === 'computer-repairs')!;
+
+const featured = [
+  services.find((s) => s.slug === 'virus-malware-and-spyware-removal-brisbane')!,
+  services.find((s) => s.slug === 'data-recovery')!,
+  services.find((s) => s.slug === 'computer-setup')!,
+  services.find((s) => s.slug === 'pc-optimization-faster-overall-speed')!,
+  services.find((s) => s.slug === 'network-setup')!,
+  services.find((s) => s.slug === 'computer-upgrade')!,
+];
+
+const homeFaqs = [
+  {
+    q: 'How much does a computer repair cost in Brisbane?',
+    a: `The flat onsite rate is $${site.pricing.flatRate} for the first hour, then work continues in 15-minute blocks. There is no call-out fee and no surcharge for weekends or public holidays. Most problems are fixed inside the first hour. If it cannot be fixed, you do not pay.`,
+  },
+  {
+    q: 'Which suburbs do you service?',
+    a: `All of ${site.serviceAreas.join(', ')} and the surrounding suburbs - 666 in total, from the Brisbane CBD and inner north through to the Redland Coast, Ipswich, Logan, the Sunshine Coast and the northern Gold Coast. Call and ask if you are not sure; if I cannot reach you I will say so.`,
+  },
+  {
+    q: 'Do you come to my house or do I bring the computer in?',
+    a: 'I come to you. Home or office, early morning, evening, weekend or public holiday. For heavier work I take the machine to the workshop, agree the price first, and keep you told at every step.',
+  },
+  {
+    q: 'Who actually does the work?',
+    a: 'I do. This is a one-person business - the person who answers the phone is the person who turns up and fixes it. No call centre, no junior tech, no upsell.',
+  },
+  {
+    q: 'What if you cannot fix my computer?',
+    a: 'Then you do not pay. If the fault is beyond repair or beyond what is worth repairing, I will tell you straight rather than charging you to find out. And if something I did stops working, I will come back and look at it.',
+  },
+  {
+    q: 'How quickly can you come out?',
+    a: 'Most bookings are same-day or next-day, and evenings and weekends are available with no surcharge. Call and describe the problem and I will tell you straight away whether it is something I can fix and what it will cost.',
+  },
+];
+
+/**
+ * Symptom-led entry points, ahead of the service list.
+ *
+ * People search the thing that is broken, not the name of the service that
+ * fixes it - "computer won't turn on" gets more searches than "computer
+ * repairs". Each one links to a real service page so the path from symptom to
+ * fix is one click.
+ */
+const SYMPTOMS = [
+  {
+    slug: 'virus-malware-and-spyware-removal-brisbane',
+    title: 'Pop-ups, redirects and dodgy search results',
+    body: 'Ads you did not click, a homepage you did not set, or a browser that hijacks your typing. Usually cleared inside the first hour.',
+    cta: 'Clear it out',
+  },
+  {
+    slug: 'pc-optimization-faster-overall-speed',
+    title: 'Slow to start, slow to open anything',
+    body: 'Freezing, beachballing, or a fan that sounds like a jet engine. Trimming startup bloat and replacing the drive usually fixes it.',
+    cta: 'Speed it up',
+  },
+  {
+    slug: 'data-recovery',
+    title: 'Deleted or died, and you need the files back',
+    body: 'Photos, tax records, the thing you needed five minutes ago. Recovered in place where possible, and I tell you before I touch anything.',
+    cta: 'Try to recover it',
+  },
+  {
+    slug: 'network-setup',
+    title: 'WiFi drops, or the signal dies in the back rooms',
+    body: 'Dead zones, a router that needs restarting weekly, or a device that will not stay connected. Setup and configuration, explained as I go.',
+    cta: 'Get it connected',
+  },
+  {
+    slug: 'computer-setup',
+    title: 'New machine, and nothing is set up yet',
+    body: 'Bought it, opened the box, gave up. Accounts, email, printer, backups, and the settings that stop it slowing down again in a year.',
+    cta: 'Set it up',
+  },
+  {
+    slug: 'computer-upgrade',
+    title: 'Running out of space or running out of road',
+    body: 'A full drive, an old machine struggling, or a laptop that cannot keep up. Upgrades quoted before anything is bought.',
+    cta: 'Look at upgrading',
+  },
+];
+
+const symptoms = SYMPTOMS.map((s) => ({
+  ...s,
+  href: `/${services.find((x) => x.slug === s.slug)?.slug ?? s.slug}/`,
+}));
+
+const regions = suburbsByRegion();
+const jsonLd = schema.graph({
+  path,
+  name: `Computer Repairs Brisbane | $${site.pricing.flatRate} Flat Rate | ${site.name}`,
+  description: site.description,
+  extra: [
+    schema.faqPage(homeFaqs),
+    schema.itemList({
+      name: 'Service areas',
+      path: '/service-area/',
+      items: regions.flatMap((r) =>
+        r.suburbs.slice(0, 6).map((s) => ({ name: s.name, path: liveSuburbUrl(computerRepairs, s) })),
+      ),
+    }),
+  ],
+});
+
+/** Brands listed on the legacy site, kept because customers search for them. */
+const brands = ['HP', 'Dell', 'Lenovo', 'Apple', 'Asus', 'Acer', 'Toshiba', 'Sony', 'Compaq', 'IBM'];
+---
+
+<BaseLayout
+  title={`Computer Repairs Brisbane | $${site.pricing.flatRate} Flat Rate | ${site.name}`}
+  description={site.description}
+  path={path}
+  schema={jsonLd}
+  ogImageAlt="Computer repairs in Brisbane by Fix My Home Computer"
+>
+  <!-- ================= Hero ================= -->
+  <section class="bg-brand-mesh border-b border-ink-100">
+    <div class="container-page py-14 sm:py-20 lg:py-24">
+      <div class="grid items-center gap-12 lg:grid-cols-12 lg:gap-14">
+        <div class="lg:col-span-7">
+          <p
+            class="inline-flex items-center gap-2 rounded-full bg-white px-3.5 py-1.5 text-xs font-bold tracking-wide text-brand-700 uppercase ring-1 ring-brand-200"
+          >
+            <span class="size-1.5 rounded-full bg-success-500"></span>
+            Booked 7 days a week · no surcharge
+          </p>
+
+          <h1 class="mt-5 text-display">
+            Computer repairs in Brisbane.<br class="hidden sm:block" />
+            <span class="text-brand-600">One flat rate.</span>
+          </h1>
+
+          <p class="mt-6 max-w-2xl text-lead text-ink-700">
+            {site.technician.name} is a {site.technician.credential} technician who spent years on
+            the help desk of the largest IT company in the world, fixing other people's problems
+            over the phone. Now he comes to your house, in {site.serviceAreas.join(', ')}, for
+            <strong class="font-semibold text-ink-900">${site.pricing.flatRate} the first hour</strong>
+            - no call-out fee, no weekend surcharge, and if it cannot be fixed you do not pay.
+          </p>
+
+          <div class="mt-8 flex flex-col gap-3 sm:flex-row">
+            <a
+              href={site.phone.href}
+              class="inline-flex items-center justify-center gap-2.5 rounded-xl bg-brand-500 px-7 py-4 text-lg font-bold text-white shadow-cta transition hover:bg-brand-600"
+            >
+              <svg class="size-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                <path d="M2 3.5A1.5 1.5 0 0 1 3.5 2h2.1a.75.75 0 0 1 .74.64l.5 2.5a.75.75 0 0 1-.19.7L5.4 7.3a12 12 0 0 0 7.3 7.3l1.46-1.25a.75.75 0 0 1 .7-.19l2.5.5a.75.75 0 0 1 .64.74v2.1a1.5 1.5 0 0 1-1.5 1.5A15.5 15.5 0 0 1 2 5v-1.5Z"></path>
+              </svg>
+              Call {site.phone.display}
+            </a>
+            <a
+              href={site.quoteForm.url}
+              rel="noopener"
+              target="_blank"
+              class="inline-flex items-center justify-center rounded-xl border-2 border-brand-500 px-7 py-4 text-lg font-bold text-brand-700 transition hover:bg-brand-50"
+            >
+              Get a free quote
+            </a>
+          </div>
+
+          <ul class="mt-8 flex flex-wrap gap-x-6 gap-y-2.5">
+            {
+              [
+                `Flat $${site.pricing.flatRate} rate`,
+                '$0 call-out fee',
+                'No weekend surcharge',
+                'Parts at cost',
+                'Most jobs under 1 hour',
+              ].map((b) => (
+                <li class="flex items-center gap-2 text-sm font-semibold text-ink-700">
+                  <svg class="size-4 text-success-600" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                    <path d="M16.7 5.3a1 1 0 0 1 0 1.4l-7.5 7.5a1 1 0 0 1-1.4 0L3.3 9.7a1 1 0 1 1 1.4-1.4l3.8 3.8 6.8-6.8a1 1 0 0 1 1.4 0Z" />
+                  </svg>
+                  {b}
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+
+        <!-- Price card: the reason people are still here. -->
+        <div class="lg:col-span-5">
+          <div class="rounded-hero border border-ink-200 bg-white p-7 shadow-lift sm:p-8">
+            <h2 class="text-sm font-bold tracking-wide text-ink-500 uppercase">
+              What a visit costs
+            </h2>
+            <p class="mt-3 text-5xl font-extrabold tracking-tight text-ink-900">
+              ${site.pricing.flatRate}
+              <span class="ml-2 text-base font-semibold text-ink-500">first hour</span>
+            </p>
+            <p class="mt-1.5 text-sm text-ink-600">
+              Then 15-minute blocks. Most problems are fixed inside that first hour.
+            </p>
+
+            <dl class="mt-7 space-y-3.5 border-t border-ink-100 pt-6 text-sm">
+              {
+                [
+                  ['Call-out fee', '$0'],
+                  ['Weekends & public holidays', 'No surcharge'],
+                  ['Travel to your suburb', 'Included'],
+                  ['Replacement parts', 'At cost, no mark-up'],
+                ].map(([dt, dd]) => (
+                  <div class="flex items-baseline justify-between gap-4">
+                    <dt class="text-ink-600">{dt}</dt>
+                    <dd class="font-bold text-ink-900">{dd}</dd>
+                  </div>
+                ))
+              }
+            </dl>
+
+            <a
+              href="/pricing/"
+              class="mt-7 block rounded-xl bg-ink-900 px-5 py-3.5 text-center text-sm font-bold text-white transition hover:bg-ink-800"
+            >
+              See the full price list →
+            </a>
+            <p class="mt-4 text-center text-xs text-ink-500">
+              {site.pricing.gstNote}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= Trust bar ================= -->
+  <section class="border-b border-ink-100 bg-white" aria-label="Why choose us">
+    <div class="container-page py-8">
+      <ul class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        {
+          [
+            {
+              t: 'One person, not a call centre',
+              d: 'The technician who answers the phone is the one who comes out and does the work.',
+            },
+            {
+              t: 'Ex-IBM help desk',
+              d: `${site.technician.background}`,
+            },
+            {
+              t: `${suburbs.length} suburbs covered`,
+              d: `Every suburb in ${site.serviceAreas.join(', ')} and the surrounding areas.`,
+            },
+            {
+              t: 'No fix, no fee',
+              d: 'If it is not worth repairing, you will be told - and not charged for the diagnosis.',
+            },
+          ].map((item) => (
+            <li class="flex gap-3.5">
+              <span class="flex size-10 shrink-0 items-center justify-center rounded-xl bg-brand-50 text-brand-600">
+                <svg class="size-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                  <path d="M16.7 5.3a1 1 0 0 1 0 1.4l-7.5 7.5a1 1 0 0 1-1.4 0L3.3 9.7a1 1 0 1 1 1.4-1.4l3.8 3.8 6.8-6.8a1 1 0 0 1 1.4 0Z" />
+                </svg>
+              </span>
+              <div>
+                <h2 class="text-[0.98rem] font-bold text-ink-900">{item.t}</h2>
+                <p class="mt-1 text-sm leading-relaxed text-ink-600">{item.d}</p>
+              </div>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- ================= Symptoms ================= -->
+  <section class="container-page py-16 sm:py-20" aria-labelledby="symptoms-heading">
+    <div class="max-w-2xl">
+      <h2 id="symptoms-heading" class="text-h2">Sound familiar?</h2>
+      <p class="mt-3 text-lead text-ink-600">
+        Most calls start with one of these. If yours is not on the list, describe it on the phone -
+        it is usually something I have seen before.
+      </p>
+    </div>
+
+    <ul class="mt-9 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      {
+        symptoms.map((s) => (
+          <li>
+            <a
+              href={s.href}
+              class="group flex h-full flex-col rounded-card border border-ink-200 bg-white p-5 transition hover:-translate-y-0.5 hover:border-brand-300 hover:shadow-lift"
+            >
+              <h3 class="text-lg font-extrabold text-ink-900 transition group-hover:text-brand-700">
+                {s.title}
+              </h3>
+              <p class="mt-2 flex-1 text-sm leading-relaxed text-ink-600">{s.body}</p>
+              <span class="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-brand-600">
+                {s.cta}
+                <svg class="size-4 transition group-hover:translate-x-0.5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                  <path d="M4 10a1 1 0 0 1 1-1h9.2l-3.6-3.6a1 1 0 1 1 1.4-1.4l5.3 5.3a1 1 0 0 1 0 1.4l-5.3 5.3a1 1 0 1 1-1.4-1.4L14.2 11H5a1 1 0 0 1-1-1Z" />
+                </svg>
+              </span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <!-- ================= Services ================= -->
+  <section class="border-t border-ink-100 bg-white" aria-labelledby="services-heading">
+    <div class="flex flex-wrap items-end justify-between gap-4">
+      <div>
+        <h2 id="services-heading" class="text-h2">What I fix</h2>
+        <p class="mt-3 max-w-2xl text-lead text-ink-600">
+          Desktops, laptops and Macs, plus the software problems that make them unusable. Every job
+          at the same flat rate.
+        </p>
+      </div>
+      <a
+        href="/services/"
+        class="inline-flex items-center gap-1.5 text-sm font-bold text-brand-700 hover:text-brand-800"
+      >
+        All {services.length + families.length} services
+        <svg class="size-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+          <path d="M4 10a1 1 0 0 1 1-1h9.2l-3.6-3.6a1 1 0 1 1 1.4-1.4l5.3 5.3a1 1 0 0 1 0 1.4l-5.3 5.3a1 1 0 1 1-1.4-1.4L14.2 11H5a1 1 0 0 1-1-1Z"></path>
+        </svg>
+      </a>
+    </div>
+
+    <div class="mt-9 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      {
+        families.map((f) => (
+          <a
+            href={`/${f.slug}/`}
+            class="group flex flex-col rounded-card border border-ink-200 bg-white p-5 transition hover:-translate-y-0.5 hover:border-brand-300 hover:shadow-lift"
+          >
+            <span class="text-lg font-extrabold text-brand-600 transition group-hover:text-brand-700">
+              {f.title}
+            </span>
+            <p class="mt-2 flex-1 text-sm leading-relaxed text-ink-600">{f.summary}</p>
+            <span class="mt-4 text-sm font-semibold text-brand-600">{f.turnaround}</span>
+          </a>
+        ))
+      }
+    </div>
+
+    <div class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      {featured.map((s) => <ServiceCard href={`/${s.slug}/`} title={s.title} summary={s.summary} icon={s.icon} price={s.price} pricePrefix={s.price ? 'from' : undefined} />)}
+    </div>
+  </section>
+
+  <!-- ================= Pricing comparison ================= -->
+  <section class="border-y border-ink-100 bg-ink-50" aria-labelledby="compare-heading">
+    <div class="container-page py-16 sm:py-20">
+      <div class="grid gap-12 lg:grid-cols-12 lg:gap-14">
+        <div class="lg:col-span-5">
+          <h2 id="compare-heading" class="text-h2">
+            ${site.pricing.flatRate} flat, versus paying by the hour
+          </h2>
+          <p class="mt-4 text-lead text-ink-700">
+            The rates below were published by the competitors themselves. The point is not that
+            the work is better - it is that you are not paying for a technician's drive, a
+            technician's learning curve on your machine, and a technician who has just been told
+            by someone else to charge you for the next half hour.
+          </p>
+          <p class="mt-4 text-lead text-ink-700">
+            One rate, agreed before I start, and nothing added for the distance to get to you.
+          </p>
+          <a
+            href="/pricing/"
+            class="mt-7 inline-flex items-center gap-2 rounded-xl bg-brand-500 px-6 py-3.5 text-base font-bold text-white shadow-cta transition hover:bg-brand-600"
+          >
+            See the full pricing page
+          </a>
+        </div>
+
+        <div class="lg:col-span-7">
+          <div class="overflow-hidden rounded-card border border-ink-200 bg-white">
+            <table class="w-full text-sm">
+              <caption class="sr-only">
+                What this business charges against published competitor rates
+              </caption>
+              <thead>
+                <tr class="border-b border-ink-200 bg-ink-50">
+                  <th scope="col" class="px-4 py-3.5 text-left font-bold text-ink-900 sm:px-5">
+                    Service
+                  </th>
+                  <th scope="col" class="px-3 py-3.5 text-right font-extrabold text-brand-700">
+                    {site.name.replace('Fix My Home Computer', 'Here')}
+                  </th>
+                  <th scope="col" class="px-3 py-3.5 text-right font-semibold text-ink-600 sm:px-5">
+                    Geek&nbsp;Squad
+                  </th>
+                  <th scope="col" class="px-3 py-3.5 text-right font-semibold text-ink-600 sm:px-5">
+                    Gizmo
+                  </th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-ink-100">
+                {
+                  [
+                    ['Basic computer training', 150, 160, 160],
+                    ['Data migration / backup', 129, 229, 229],
+                    ['Virus & spyware removal', 129, 149, 149],
+                    ['Software installation', 89, 129, 129],
+                    ['Add computer to network', 79, 89, 89],
+                    ['Wireless network + router setup', 150, 149, 149],
+                  ].map(([label, ours, geek, gizmo]) => (
+                    <tr>
+                      <th scope="row" class="px-4 py-3 text-left font-medium text-ink-800 sm:px-5">
+                        {label}
+                      </th>
+                      <td class="px-3 py-3 text-right font-extrabold text-brand-700 sm:px-4">
+                        ${ours}
+                      </td>
+                      <td class="px-3 py-3 text-right text-ink-500 sm:px-5">${geek}</td>
+                      <td class="px-3 py-3 text-right text-ink-500 sm:px-5">${gizmo}</td>
+                    </tr>
+                  ))
+                }
+              </tbody>
+            </table>
+          </div>
+          <p class="mt-3 text-xs text-ink-500">
+            Competitor rates as published at the time of writing. Figures are indicative and may
+            have changed - check the full pricing page for the current list.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= Service area ================= -->
+  <section class="container-page py-16 sm:py-20" aria-labelledby="area-heading">
+    <div class="flex flex-wrap items-end justify-between gap-4">
+      <div>
+        <h2 id="area-heading" class="text-h2">Where I work</h2>
+        <p class="mt-3 max-w-2xl text-lead text-ink-600">
+          {suburbs.length} suburbs across {site.serviceAreas.join(', ')} and the surrounding
+          areas, all at the same ${site.pricing.flatRate} rate. No travel surcharge, anywhere.
+        </p>
+      </div>
+      <a
+        href="/service-area/"
+        class="inline-flex items-center gap-1.5 text-sm font-bold text-brand-700 hover:text-brand-800"
+      >
+        Search your suburb
+        <svg class="size-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+          <path d="M4 10a1 1 0 0 1 1-1h9.2l-3.6-3.6a1 1 0 1 1 1.4-1.4l5.3 5.3a1 1 0 0 1 0 1.4l-5.3 5.3a1 1 0 1 1-1.4-1.4L14.2 11H5a1 1 0 0 1-1-1Z"></path>
+        </svg>
+      </a>
+    </div>
+
+    <div class="mt-9 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      {
+        regions.slice(0, 6).map((r) => (
+          <div class="rounded-card border border-ink-200 bg-white p-5">
+            <div class="flex items-baseline justify-between gap-3">
+              <h3 class="text-[0.98rem] font-bold text-ink-900">{r.region}</h3>
+              <span class="rounded-full bg-ink-100 px-2 py-0.5 text-xs font-semibold text-ink-600">
+                {r.suburbs.length}
+              </span>
+            </div>
+            <ul class="mt-3 flex flex-wrap gap-x-3 gap-y-1.5 text-sm">
+              {r.suburbs.slice(0, 10).map((s) => (
+                <li>
+                  <a
+                    href={liveSuburbUrl(computerRepairs, s)}
+                    class="text-ink-600 underline-offset-2 hover:text-brand-700 hover:underline"
+                  >
+                    {s.name}
+                  </a>
+                </li>
+              ))}
+            </ul>
+            {r.suburbs.length > 10 && (
+              <a
+                href="/service-area/"
+                class="mt-3 inline-block text-sm font-semibold text-brand-700 hover:text-brand-800"
+              >
+                + {r.suburbs.length - 10} more
+              </a>
+            )}
+          </div>
+        ))
+      }
+    </div>
+  </section>
+
+  <!-- ================= About strip ================= -->
+  <section class="border-t border-ink-100 bg-ink-50" aria-labelledby="about-heading">
+    <div class="container-page py-16 sm:py-20">
+      <div class="grid gap-12 lg:grid-cols-12 lg:gap-14">
+        <div class="lg:col-span-7">
+          <h2 id="about-heading" class="text-h2">
+            {site.technician.name}. One person. No call centre.
+          </h2>
+          <div class="prose-copy mt-5 max-w-2xl">
+            <p>
+              This is a deliberately small business. There is one technician, and he is the person
+              who answers the phone, turns up at your door, and does the work. Nobody hands your
+              job to someone else and nobody sells you a service plan on the way out the door.
+            </p>
+            <p>
+              {site.technician.background} The difference shows up in the awkward cases - the
+              machine that works for everyone else, the one where the obvious answer is not the
+              right one, the one where it would be easy to say "buy a new one" and get paid for a
+              new one. That judgement is the whole service.
+            </p>
+            <p>
+              Rates are competitive because there is no office, no insurance overhead baked into
+              your invoice, and no technician spending the first twenty minutes of your hour
+              learning your machine.
+            </p>
+          </div>
+          <a
+            href="/about/"
+            class="mt-7 inline-flex items-center gap-2 rounded-xl border-2 border-brand-500 px-6 py-3.5 text-base font-bold text-brand-700 transition hover:bg-brand-50"
+          >
+            More about the service
+          </a>
+        </div>
+
+        <div class="lg:col-span-5">
+          <div class="rounded-card border border-ink-200 bg-white p-6">
+            <h3 class="text-sm font-bold tracking-wide text-ink-500 uppercase">Brands serviced</h3>
+            <ul class="mt-4 flex flex-wrap gap-2">
+              {
+                brands.map((b) => (
+                  <li class="rounded-lg border border-ink-200 bg-ink-50 px-3 py-1.5 text-sm font-semibold text-ink-700">
+                    {b}
+                  </li>
+                ))
+              }
+            </ul>
+
+            <h3 class="mt-7 text-sm font-bold tracking-wide text-ink-500 uppercase">Open</h3>
+            <p class="mt-3 text-sm leading-relaxed text-ink-700">{site.hours.note}</p>
+            <p class="mt-1 text-sm text-ink-600">
+              Early mornings, evenings and weekends are all normal booking times.
+            </p>
+
+            <div class="mt-7 border-t border-ink-100 pt-6">
+              <p class="text-sm text-ink-600">{site.reviews.label}:</p>
+              <a
+                href={site.reviews.url}
+                rel="noopener nofollow"
+                target="_blank"
+                class="mt-2 inline-flex items-center gap-1.5 text-sm font-bold text-brand-700 hover:text-brand-800"
+              >
+                Read the reviews
+                <svg class="size-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                  <path d="M4 10a1 1 0 0 1 1-1h9.2l-3.6-3.6a1 1 0 1 1 1.4-1.4l5.3 5.3a1 1 0 0 1 0 1.4l-5.3 5.3a1 1 0 1 1-1.4-1.4L14.2 11H5a1 1 0 0 1-1-1Z"></path>
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= FAQs ================= -->
+  <div class="container-page py-16 sm:py-20">
+    <FaqList
+      faqs={homeFaqs}
+      title="Computer repair questions"
+      intro="The things people ask on the phone, answered before you have to ask."
+    />
+  </div>
+
+  <div class="container-page pb-16 sm:pb-20">
+    <CallToAction />
+  </div>
+</BaseLayout>

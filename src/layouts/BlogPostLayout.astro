@@ -1,0 +1,176 @@
+---
+/**
+ * A single migrated blog post.
+ *
+ * The body is migrated HTML rendered with set:html, which is the only way to
+ * keep the 110 posts intact - rewriting them by hand would mean losing 98,000
+ * words of already-indexed content. The safety of that decision lives in
+ * scripts/build-posts.mjs, which strips <script>, <style>, <iframe>, inline
+ * event handlers and javascript: URLs at build time. Nothing should ever reach
+ * this template that can execute.
+ *
+ * Posts keep their original publication date, which is the point: these URLs
+ * have ranked for years and backdating them to "now" would throw that away.
+ */
+import BaseLayout from './BaseLayout.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
+import CallToAction from '../components/CallToAction.astro';
+import { site } from '../data/site';
+import { getPost, formatDate, isoDate, posts, type Post } from '../data/posts';
+import { clampDescription } from '../lib/seo';
+import * as schema from '../lib/schema';
+
+interface Props {
+  slug: string;
+}
+
+const { slug } = Astro.props;
+const post = getPost(slug);
+
+if (!post) {
+  throw new Error(`Unknown post slug: "${slug}". Run scripts/build-posts.mjs.`);
+}
+
+const path: string = post.path;
+// The post's own headline is the strongest signal in a <title>, and the brand
+// suffix costs 24 characters on top of titles that are already long. Google
+// re-appends the site name in most result layouts anyway, so the post title
+// gets the space instead.
+const title = post.title;
+const description = clampDescription(post.excerpt, 155);
+
+const trail = [
+  { name: 'Home', path: '/' },
+  { name: 'Blog', path: '/blog/' },
+  { name: post.title, path },
+];
+
+/** Newer and older posts, for the footer pager. */
+const index = posts.findIndex((p) => p.slug === post.slug);
+const newer = index > 0 ? posts[index - 1] : undefined;
+const older = index < posts.length - 1 ? posts[index + 1] : undefined;
+
+/** A handful of other posts, chosen by proximity in the archive. */
+const related: Post[] = [
+  ...(newer ? [newer] : []),
+  ...(older ? [older] : []),
+  ...posts.filter((_, i) => Math.abs(i - index) > 1 && Math.abs(i - index) < 5),
+].slice(0, 4);
+
+const jsonLd = schema.graph({
+  path,
+  name: title,
+  description,
+  datePublished: isoDate(post.date),
+  dateModified: isoDate(post.modified || post.date),
+  type: 'Article',
+  extra: [
+    schema.breadcrumbList(trail),
+    schema.article({
+      headline: post.title,
+      description,
+      path,
+      datePublished: isoDate(post.date),
+      dateModified: isoDate(post.modified || post.date),
+      author: site.technician.name,
+      image: site.defaultOgImage,
+    }),
+  ],
+});
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  path={path}
+  schema={jsonLd}
+  ogType="article"
+  ogImageAlt={post.title}
+  brandInTitle={false}
+  skipTitleCheck
+>
+  <div class="container-page pt-5 sm:pt-6">
+    <Breadcrumb trail={trail} />
+  </div>
+
+  <article class="container-page py-12 sm:py-16">
+    <header class="mx-auto max-w-3xl">
+      <p class="text-sm font-bold tracking-wide text-brand-700 uppercase">Blog</p>
+      <h1 class="mt-3 text-h1">{post.title}</h1>
+      <p class="mt-4 flex flex-wrap items-center gap-x-3 gap-y-1 text-[0.95rem] text-ink-500">
+        <time datetime={isoDate(post.date)}>{formatDate(post.date)}</time>
+        <span aria-hidden="true">·</span>
+        <span>{Math.round(post.words / 100) / 10}k words</span>
+        <span aria-hidden="true">·</span>
+        <span>By {site.technician.name}</span>
+      </p>
+    </header>
+
+    <div
+      class="prose-copy mt-10 mx-auto max-w-3xl"
+      set:html={post.body}
+    />
+
+    <!-- Pager: real internal links between adjacent posts in date order. -->
+    {
+      (newer || older) && (
+        <nav
+          class="mx-auto mt-14 grid max-w-3xl gap-4 border-t border-ink-200 pt-8 sm:grid-cols-2"
+          aria-label="More articles"
+        >
+          {older ? (
+            <a href={older.path} class="group rounded-card border border-ink-200 bg-white p-5 transition hover:border-brand-300">
+              <span class="block text-xs font-bold tracking-wide text-ink-500 uppercase">Older</span>
+              <span class="mt-1.5 block font-bold text-ink-900 group-hover:text-brand-700">
+                {older.title}
+              </span>
+            </a>
+          ) : (
+            <span />
+          )}
+          {newer && (
+            <a
+              href={newer.path}
+              class="group rounded-card border border-ink-200 bg-white p-5 text-right transition hover:border-brand-300"
+            >
+              <span class="block text-xs font-bold tracking-wide text-ink-500 uppercase">Newer</span>
+              <span class="mt-1.5 block font-bold text-ink-900 group-hover:text-brand-700">
+                {newer.title}
+              </span>
+            </a>
+          )}
+        </nav>
+      )
+    }
+
+    {
+      related.length > 0 && (
+        <aside class="mx-auto mt-12 max-w-3xl" aria-labelledby="related-heading">
+          <h2 id="related-heading" class="text-h3">More from the blog</h2>
+          <ul class="mt-4 grid gap-3 sm:grid-cols-2">
+            {related.map((p) => (
+              <li>
+                <a
+                  href={p.path}
+                  class="block rounded-card border border-ink-200 bg-white p-4 transition hover:border-brand-300"
+                >
+                  <span class="block text-sm text-ink-500">
+                    <time datetime={isoDate(p.date)}>{formatDate(p.date)}</time>
+                  </span>
+                  <span class="mt-1 block font-semibold text-ink-900">{p.title}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </aside>
+      )
+    }
+  </article>
+
+  <div class="container-page pb-14 sm:pb-20">
+    <CallToAction
+      title="Computer trouble? Talk to a person, not a call centre"
+      body={`Flat $${site.pricing.flatRate} for the first hour, no call-out fee, and no surcharge at the weekend. Call ${site.phone.display} and describe the fault.`}
+    />
+  </div>
+</BaseLayout>

@@ -1,0 +1,53 @@
+---
+/**
+ * Root-level single-segment route: service pages and blog posts.
+ *
+ * Two different kinds of page share this file because the legacy site published
+ * both at the domain root and those URLs are indexed:
+ *
+ *   - 19 services at  /data-recovery/, /pc-health-check/, /windows-reinstallation/ ...
+ *   - 110 blog posts at /why-does-my-windows-pc-keep-restarting-randomly/ ...
+ *
+ * Of the 1,806 legacy URLs, only two live under `/services/`. Moving either set
+ * to a nested path would have meant 301-ing a couple of hundred pages that
+ * already rank, so the routes stay where the traffic is.
+ *
+ * Astro allows one dynamic segment per directory, so `[service].astro` and
+ * `[post].astro` cannot coexist. Both are therefore generated from one
+ * getStaticPaths and dispatched on `kind`.
+ *
+ * Route priority is what keeps this safe:
+ *   static (/about/, /services/, /pricing/)  >  [slug].astro  >  [...suburb].astro
+ * so the 2,664 suburb URLs are untouched and nothing collides.
+ */
+import type { GetStaticPaths } from 'astro';
+import ServicePageLayout from '../layouts/ServicePageLayout.astro';
+import BlogPostLayout from '../layouts/BlogPostLayout.astro';
+import { services, families } from '../data/services';
+import { posts } from '../data/posts';
+
+export const getStaticPaths: GetStaticPaths = () => {
+  const paths: {
+    params: { slug: string };
+    props: { kind: 'service' | 'post'; slug: string };
+  }[] = [];
+
+  // A family shares the namespace with its hub page (both are `/pc-repairs/`
+  // style), so exclude any service that is really a family hub to avoid two
+  // routes fighting over one URL.
+  for (const service of services) {
+    if (families.some((f) => f.slug === service.slug)) continue;
+    paths.push({ params: { slug: service.slug }, props: { kind: 'service', slug: service.slug } });
+  }
+
+  for (const post of posts) {
+    paths.push({ params: { slug: post.slug }, props: { kind: 'post', slug: post.slug } });
+  }
+
+  return paths;
+};
+
+const { kind, slug } = Astro.props;
+---
+
+{kind === 'service' ? <ServicePageLayout slug={slug} /> : <BlogPostLayout slug={slug} />}

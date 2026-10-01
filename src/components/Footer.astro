@@ -1,0 +1,178 @@
+---
+/**
+ * Site footer.
+ *
+ * Carries the internal-link weight for the suburb pages: every service family
+ * links to its hub, the hub links back, and the service-area page is linked
+ * from the primary nav on every template.
+ */
+import { site } from '../data/site';
+import { families, services } from '../data/services';
+
+/** pc-repairs-brisbane is a suburb-matrix page, not a service; it has its own link above. */
+const serviceLinks = services.filter((s) => s.slug !== 'pc-repairs-brisbane');
+const year = new Date().getFullYear();
+---
+
+<footer class="mt-24 border-t border-ink-200 bg-white">
+  <div class="container-page py-14">
+    <div class="grid gap-10 lg:grid-cols-12 lg:gap-8">
+      <!-- Brand + NAP -->
+      <div class="lg:col-span-4">
+        <div class="flex items-center gap-2.5">
+          <img src={site.logo} alt="" width="40" height="40" class="size-10 rounded-xl" loading="lazy" decoding="async" />
+          <span class="flex flex-col leading-none">
+            <span class="text-lg font-extrabold tracking-tight text-ink-900">{site.name}</span>
+            <span class="mt-0.5 text-[0.68rem] font-medium tracking-wide text-ink-500 uppercase">
+              {site.tagline}
+            </span>
+          </span>
+        </div>
+        <p class="mt-4 max-w-sm text-sm leading-relaxed text-ink-600">
+          {site.technician.name} is a {site.technician.credential} ex-IBM help desk technician working
+          alone across {site.serviceAreas.join(', ')}. One flat rate, no call-out fee, no weekend
+          surcharge, and if it cannot be fixed you do not pay.
+        </p>
+
+        <div class="mt-6 space-y-2.5 text-sm">
+          <a
+            href={site.phone.href}
+            class="flex items-center gap-2.5 font-bold text-brand-700 transition hover:text-brand-800"
+          >
+            <svg class="size-4 shrink-0" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+              <path d="M2 3.5A1.5 1.5 0 0 1 3.5 2h2.1a.75.75 0 0 1 .74.64l.5 2.5a.75.75 0 0 1-.19.7L5.4 7.3a12 12 0 0 0 7.3 7.3l1.46-1.25a.75.75 0 0 1 .7-.19l2.5.5a.75.75 0 0 1 .64.74v2.1a1.5 1.5 0 0 1-1.5 1.5A15.5 15.5 0 0 1 2 5v-1.5Z"></path>
+            </svg>
+            {site.phone.display}
+          </a>
+          <a
+            href={site.email.href}
+            class="flex items-center gap-2.5 break-all text-ink-700 transition hover:text-brand-700"
+          >
+            <svg class="size-4 shrink-0" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+              <path d="M2 5.5A1.5 1.5 0 0 1 3.5 4h13A1.5 1.5 0 0 1 18 5.5v9a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 2 14.5v-9Z M3 6l7 4.5L17 6"></path>
+            </svg>
+            {site.email.display}
+          </a>
+          <p class="flex items-start gap-2.5 text-ink-700">
+            <svg class="mt-0.5 size-4 shrink-0" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+              <path d="M10 2a6 6 0 0 1 6 6c0 4.2-6 10-6 10S4 12.2 4 8a6 6 0 0 1 6-6Zm0 4.2A1.8 1.8 0 1 0 10 9.8 1.8 1.8 0 0 0 10 6.2Z"></path>
+            </svg>
+            <span>Mobile service across {site.serviceAreas.join(', ')} and surrounding suburbs</span>
+          </p>
+          <p class="flex items-start gap-2.5 text-ink-700">
+            <svg class="mt-0.5 size-4 shrink-0" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+              <path d="M10 2a8 8 0 1 1 0 16 8 8 0 0 1 0-16Zm1 4H9v5l4 2 1-1.6-3-1.4V6Z"></path>
+            </svg>
+            <span>{site.hours.note}</span>
+          </p>
+        </div>
+      </div>
+
+      <!-- Service families + core services -->
+      <nav class="lg:col-span-3" aria-labelledby="f-services">
+        <h2 id="f-services" class="text-sm font-bold tracking-wide text-ink-900 uppercase">
+          Repairs
+        </h2>
+        <ul class="mt-4 space-y-2.5 text-sm">
+          {
+            families.map((f) => (
+              <li>
+                <a href={`/${f.slug}/`} class="text-ink-600 transition hover:text-brand-700">
+                  {f.title}
+                </a>
+              </li>
+            ))
+          }
+          <li>
+            <a href="/pc-repairs-brisbane/" class="text-ink-600 transition hover:text-brand-700">
+              Computer Repairs Brisbane
+            </a>
+          </li>
+          <li>
+            <a href="/service-area/" class="text-ink-600 transition hover:text-brand-700">
+              All suburbs we service
+            </a>
+          </li>
+          <li>
+            <a href="/pricing/" class="text-ink-600 transition hover:text-brand-700">Pricing</a>
+          </li>
+          <li>
+            <a href="/quote/" class="text-ink-600 transition hover:text-brand-700">Request a quote</a>
+          </li>
+        </ul>
+      </nav>
+
+      <nav class="lg:col-span-3" aria-labelledby="f-services2">
+        <h2
+          id="f-services2"
+          class="text-center text-sm font-bold tracking-wide text-ink-900 uppercase"
+        >
+          Services
+        </h2>
+        <ul class="mt-4 grid grid-cols-2 gap-x-4 gap-y-2.5 text-center text-sm">
+          {
+            serviceLinks.map((s) => (
+              <li>
+                <a href={`/${s.slug}/`} class="text-ink-600 transition hover:text-brand-700">
+                  {s.shortTitle}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+
+      <!-- Company + trust -->
+      <div class="lg:col-span-2">
+        <h2 class="text-sm font-bold tracking-wide text-ink-900 uppercase">Company</h2>
+        <ul class="mt-4 space-y-2.5 text-sm">
+          <li><a href="/about/" class="text-ink-600 transition hover:text-brand-700">About Robert</a></li>
+          <li><a href="/testimonials/" class="text-ink-600 transition hover:text-brand-700">Reviews</a></li>
+          <li><a href="/blog/" class="text-ink-600 transition hover:text-brand-700">Blog</a></li>
+          <li><a href="/contact/" class="text-ink-600 transition hover:text-brand-700">Contact</a></li>
+          <li>
+            <a href={site.reviews.url} rel="noopener nofollow" target="_blank" class="text-ink-600 transition hover:text-brand-700">
+              Word of Mouth reviews ↗
+            </a>
+          </li>
+        </ul>
+
+        <h2 class="mt-8 text-sm font-bold tracking-wide text-ink-900 uppercase">Follow</h2>
+        <div class="mt-4 flex gap-2">
+          <a
+            href={site.social.facebook}
+            rel="noopener"
+            target="_blank"
+            class="flex size-9 items-center justify-center rounded-lg border border-ink-200 bg-white text-ink-600 transition hover:border-brand-300 hover:text-brand-600"
+            aria-label="Facebook"
+          >
+            <svg class="size-4" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M22 12a10 10 0 1 0-11.6 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.4h-1.2c-1.2 0-1.6.8-1.6 1.6V12h2.7l-.4 2.9h-2.3v7A10 10 0 0 0 22 12Z"></path></svg>
+          </a>
+          <a
+            href={site.social.twitter}
+            rel="noopener"
+            target="_blank"
+            class="flex size-9 items-center justify-center rounded-lg border border-ink-200 bg-white text-ink-600 transition hover:border-brand-300 hover:text-brand-600"
+            aria-label="X (Twitter)"
+          >
+            <svg class="size-4" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.2 2h3.3l-7.3 8.3L23 22h-6.7l-5.2-6.8L5 22H1.7l7.8-8.9L1 2h6.9l4.7 6.2L18.2 2Zm-1.2 18h1.8L7.1 3.9H5.2L17 20Z"></path></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="border-t border-ink-200">
+    <div class="container-page flex flex-col gap-3 py-6 text-xs text-ink-500 sm:flex-row sm:items-center sm:justify-between">
+      <p>
+        © {year} {site.name}. Computer repairs in Brisbane, Logan and Ipswich. ABN details available
+        on request.
+      </p>
+      <p class="flex flex-wrap items-center gap-x-4 gap-y-1">
+        <span>Servicing {site.serviceAreas.join(' · ')}</span>
+        <a href="/sitemap-index.xml" class="underline underline-offset-2 hover:text-brand-700">Sitemap</a>
+        <a href="/rss.xml" class="underline underline-offset-2 hover:text-brand-700">RSS</a>
+      </p>
+    </div>
+  </div>
+</footer>

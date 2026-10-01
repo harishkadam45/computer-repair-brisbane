@@ -1,0 +1,191 @@
+---
+/**
+ * Template for the four service-family hubs (/computer-repairs/,
+ * /pc-repairs/, /mac-repairs/, /laptop-repairs/).
+ *
+ * These sit between the service index and the suburb pages: broad enough to
+ * rank for "computer repairs Brisbane", specific enough that a visitor knows
+ * they are in the right place before scrolling.
+ */
+import BaseLayout from './BaseLayout.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
+import PageHero from '../components/PageHero.astro';
+import CopySection from '../components/CopySection.astro';
+import HowItWorks from '../components/HowItWorks.astro';
+import FaqList from '../components/FaqList.astro';
+import RelatedServices from '../components/RelatedServices.astro';
+import CallToAction from '../components/CallToAction.astro';
+import { site } from '../data/site';
+import { families } from '../data/services';
+import { suburbs, getSuburb } from '../lib/suburbs';
+import { liveSuburbUrl } from '../lib/suburb-url.mjs';
+import { formatInline, fill } from '../lib/seo';
+import * as schema from '../lib/schema';
+
+interface Props {
+  familySlug: string;
+}
+
+const { familySlug } = Astro.props;
+const family = families.find((f) => f.slug === familySlug);
+
+if (!family) {
+  throw new Error(`Unknown family slug: "${familySlug}". Check src/data/services.ts.`);
+}
+
+const path = `/${family.slug}/`;
+
+/**
+ * The hub gets its own title and description rather than reusing
+ * `family.metaTitle` / `family.metaDescription`.
+ *
+ * Those two fields are written for the suburb pages and contain a literal
+ * `{suburb}` placeholder - "PC Repairs {suburb} Brisbane | Desktop
+ * Specialists". Filling it here with "Brisbane" would read "PC Repairs Brisbane
+ * Brisbane", and leaving it unfilled ships the raw placeholder into the
+ * <title> tag. Deriving from `family.title` sidesteps both problems and keeps
+ * the hub titles comfortably inside the length budget.
+ */
+const title = `${family.title} Brisbane | Flat $${site.pricing.flatRate} Rate`;
+const description =
+  `${family.title} across ${site.serviceAreas.join(', ')} and surrounding suburbs. ` +
+  `Flat $${site.pricing.flatRate} for the first hour, no call-out fee, no weekend surcharge. ` +
+  `Call ${site.phone.display}.`;
+
+const trail = [
+  { name: 'Home', path: '/' },
+  { name: 'Services', path: '/services/' },
+  { name: family.title, path },
+];
+
+const vars = { suburb: 'Brisbane', region: 'Brisbane', postcode: '', pc: '' };
+
+/**
+ * A sample of suburbs for this family, so the hub links into the matrix rather
+ * than being a dead end. Sorted alphabetically for a stable page.
+ */
+const sampleSuburbs = suburbs.slice(0, 60).sort((a, b) => a.name.localeCompare(b.name));
+
+const jsonLd = schema.graph({
+  path,
+  name: title,
+  description,
+  extra: [
+    schema.breadcrumbList(trail),
+    schema.service({
+      name: family.title,
+      description: family.summary,
+      path,
+      areaServed: site.serviceAreas,
+    }),
+    schema.faqPage(family.faqs),
+  ],
+});
+
+const ctaTitle = `${family.title} in Brisbane - book ${site.technician.name}.`;
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  path={path}
+  schema={jsonLd}
+  brandInTitle={false}
+>
+  <div class="container-page pt-5 sm:pt-6">
+    <Breadcrumb trail={trail} />
+  </div>
+
+  <PageHero
+    eyebrow={`Brisbane · Flat $${site.pricing.flatRate} rate`}
+    title={family.title}
+    intro={family.intro.map((p) => formatInline(fill(p, vars)))}
+    icon={family.icon}
+    badges={[
+      `Flat $${site.pricing.flatRate} rate`,
+      'No call-out fee',
+      '7 days a week',
+      'Fixed or you do not pay',
+    ]}
+    facts={[
+      { label: 'Turnaround', value: family.turnaround },
+      { label: 'Onsite', value: 'Home or office' },
+      { label: 'Areas', value: `${suburbs.length} suburbs` },
+    ]}
+  />
+
+  <div class="container-page space-y-14 py-14 sm:space-y-16 sm:py-20">
+    <div class="grid gap-12 lg:grid-cols-12 lg:gap-12">
+      <div class="space-y-12 lg:col-span-8">
+        {family.sections.map((section, i) => (
+          <CopySection section={{ ...section, h: fill(section.h, vars) }} id={`f-${i}`} />
+        ))}
+      </div>
+
+      <aside class="lg:col-span-4">
+        <div class="sticky top-24 space-y-4">
+          <div class="rounded-card border border-ink-200 bg-white p-6">
+            <h2 class="text-sm font-bold tracking-wide text-ink-500 uppercase">Nearby suburbs</h2>
+            <ul class="mt-4 space-y-2 text-sm">
+              {
+                sampleSuburbs.slice(0, 12).map((s) => (
+                  <li>
+                    <a
+                      href={liveSuburbUrl(family, s)}
+                      class="text-brand-700 underline-offset-2 hover:underline"
+                    >
+                      {family.title} {s.name}
+                    </a>
+                  </li>
+                ))
+              }
+            </ul>
+            <a
+              href="/service-area/"
+              class="mt-4 inline-flex items-center gap-1.5 text-sm font-bold text-brand-700 hover:text-brand-800"
+            >
+              All {suburbs.length} suburbs
+              <svg class="size-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                <path d="M4 10a1 1 0 0 1 1-1h9.2l-3.6-3.6a1 1 0 1 1 1.4-1.4l5.3 5.3a1 1 0 0 1 0 1.4l-5.3 5.3a1 1 0 1 1-1.4-1.4L14.2 11H5a1 1 0 0 1-1-1Z" />
+              </svg>
+            </a>
+          </div>
+
+          <div class="rounded-card border border-ink-200 bg-ink-50 p-6">
+            <h2 class="text-sm font-bold tracking-wide text-ink-500 uppercase">Other services</h2>
+            <ul class="mt-4 space-y-2 text-sm">
+              {
+                families
+                  .filter((f) => f.slug !== family.slug)
+                  .map((f) => (
+                    <li>
+                      <a
+                        href={`/${f.slug}/`}
+                        class="text-brand-700 underline-offset-2 hover:underline"
+                      >
+                        {f.title}
+                      </a>
+                    </li>
+                  ))
+              }
+            </ul>
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <RelatedServices slugs={family.related} title={`Other ${family.shortTitle.toLowerCase()} jobs`} />
+
+    <HowItWorks />
+
+    <FaqList
+      faqs={family.faqs}
+      title={`${family.title} - common questions`}
+      intro="The questions that come up most on these jobs."
+    />
+  </div>
+
+  <div class="container-page pb-16 sm:pb-20">
+    <CallToAction title={ctaTitle} />
+  </div>
+</BaseLayout>

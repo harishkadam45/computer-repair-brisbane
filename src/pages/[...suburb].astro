@@ -1,0 +1,55 @@
+---
+/**
+ * The programmatic suburb matrix - ~1,650 pages from one route file.
+ *
+ * The legacy site used four separate page templates crossed with every
+ * suburb. Here the four services are one data array and this is one
+ * component, so there is one thing to fix rather than four.
+ *
+ * All of these URLs sit at the domain root (`/pc-repairs-aspley-qld-4066/`),
+ * which is where the legacy pages lived. Astro's route priority puts this
+ * rest parameter below every static route, so /services/, /blog/[slug] and
+ * friends are unaffected, and any path not returned by getStaticPaths 404s
+ * rather than rendering an empty page.
+ *
+ * Where a suburb had several near-duplicate legacy slugs (e.g.
+ * `computer-repairs-surfers-paradise-2`), the first is kept live and the rest
+ * become 301s via scripts/build-redirects.mjs, which imports the same URL
+ * helpers from src/lib/suburb-url.mjs so the two can never disagree.
+ */
+import type { GetStaticPaths } from 'astro';
+import SuburbPageLayout from '../layouts/SuburbPageLayout.astro';
+import { families, familyBySlug } from '../data/services';
+import { suburbs } from '../lib/suburbs';
+import { liveSuburbUrl } from '../lib/suburb-url.mjs';
+
+export const getStaticPaths: GetStaticPaths = () => {
+  const paths: { params: { suburb: string }; props: Record<string, string> }[] = [];
+
+  for (const family of families) {
+    for (const suburb of suburbs) {
+      paths.push({
+        // liveSuburbUrl() is the same helper the layout uses for its canonical,
+        // so the path the file is written to and the path it claims to be at
+        // are guaranteed identical rather than merely similar.
+        params: { suburb: liveSuburbUrl(family, suburb).replace(/^\/|\/$/g, '') },
+        props: {
+          familySlug: family.slug,
+          suburbKey: suburb.key,
+        },
+      });
+    }
+  }
+
+  return paths;
+};
+
+const { familySlug, suburbKey } = Astro.props;
+const family = familyBySlug.get(familySlug);
+if (!family) throw new Error(`Unknown service family: ${familySlug}`);
+
+const suburb = suburbs.find((s) => s.key === suburbKey);
+if (!suburb) throw new Error(`Unknown suburb: ${suburbKey}`);
+---
+
+<SuburbPageLayout family={family} suburbKey={suburbKey} />

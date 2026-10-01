@@ -1,0 +1,50 @@
+---
+/**
+ * A body-copy section. Paragraphs arrive as pre-formatted HTML (escaped, then
+ * bold/italic/code applied) from formatInline() in lib/seo.ts.
+ */
+import type { ServiceSection } from '../data/services';
+import { formatInline } from '../lib/seo';
+
+interface Props {
+  section: ServiceSection;
+  /** Used to build a stable heading id for the aria-labelledby link. */
+  id: string;
+}
+
+const { section, id } = Astro.props;
+---
+
+<section class="scroll-mt-24" aria-labelledby={id}>
+  <h2 id={id} class="text-h2">
+    {section.h}
+  </h2>
+
+  {
+    section.p && section.p.length > 0 && (
+      <div class="mt-4 max-w-3xl space-y-4 text-lead text-ink-700">
+        {section.p.map((para) => <p set:html={para} />)}
+      </div>
+    )
+  }
+
+  {
+    section.list && section.list.length > 0 && (
+      <ul class="mt-5 grid max-w-3xl gap-x-6 gap-y-2.5 sm:grid-cols-2">
+        {section.list.map((item) => (
+          <li class="flex items-start gap-2.5 text-[0.97rem] leading-relaxed text-ink-700">
+            <svg
+              class="mt-1 size-4 shrink-0 text-brand-500"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+              aria-hidden="true"
+            >
+              <path d="M16.7 5.3a1 1 0 0 1 0 1.4l-7.5 7.5a1 1 0 0 1-1.4 0L3.3 9.7a1 1 0 1 1 1.4-1.4l3.8 3.8 6.8-6.8a1 1 0 0 1 1.4 0Z" />
+            </svg>
+            <span set:html={formatInline(item)} />
+          </li>
+        ))}
+      </ul>
+    )
+  }
+</section>

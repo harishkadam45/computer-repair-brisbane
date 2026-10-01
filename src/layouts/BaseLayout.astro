@@ -1,0 +1,148 @@
+---
+/**
+ * The single HTML shell. Everything else in src/layouts composes this.
+ *
+ * Performance notes:
+ *  - No framework. No hydration. The only inline script is a ~15-line nav
+ *    toggle in Header.astro.
+ *  - Fonts are system-stack, so there is no webfont request blocking render.
+ *  - The preconnect is only for the external quote form origin, which is
+ *    opened in a new tab and never needed for first paint.
+ *  - JSON-LD is emitted inline, after the content, so it does not compete
+ *    with the critical CSS for parser time.
+ */
+import '../styles/global.css';
+import { site } from '../data/site';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import StickyCallBar from '../components/StickyCallBar.astro';
+import { clampDescription, checkTitleLength, checkDescriptionLength } from '../lib/seo';
+
+export interface Props {
+  title: string;
+  description: string;
+  /** Canonical path, always leading-slashed and including a trailing slash. */
+  path: string;
+  /**
+   * Pre-built JSON-LD @graph, serialised by src/lib/schema.ts.
+   *
+   * Optional on purpose. The 404 page is noindex and has nothing useful to
+   * describe, and making this required only encouraged pages to forget it -
+   * which is exactly how the pricing page ended up shipping no structured data
+   * at all while still building clean. An empty <script type="application/
+   * ld+json"> is worse than no script, so the tag is omitted entirely when
+   * this is absent.
+   */
+  schema?: string;
+  /** Absolute or root-relative OG image. */
+  ogImage?: string;
+  ogImageAlt?: string;
+  /** `website` for the root, `article` for posts. */
+  ogType?: 'website' | 'article';
+  /** Set on pages that should not be indexed (redirect stubs, previews). */
+  noindex?: boolean;
+  /**
+   * Whether to append `| {site.name}` when the title does not already contain
+   * it. On by default, because for the core pages the brand is a real keyword.
+   *
+   * Turned off for the ~2,660 suburb pages: their titles are already at the
+   * length budget ("Laptop Repairs Woolloongabba | $150 Flat Rate") and the
+   * brand suffix costs another 23 characters, which pushes them into the
+   * truncation zone. Google rewrites titles with the brand appended anyway, so
+   * spending the pixels there buys nothing.
+   */
+  brandInTitle?: boolean;
+  skipTitleCheck?: boolean;
+  /** Extra classes on <main>. */
+  mainClass?: string;
+  /** Adds bottom padding for the sticky mobile bar. */
+  padForStickyBar?: boolean;
+}
+
+const {
+  title,
+  description,
+  path,
+  schema,
+  ogImage = site.defaultOgImage,
+  ogImageAlt,
+  ogType = 'website',
+  noindex = false,
+  brandInTitle = true,
+  skipTitleCheck = false,
+  mainClass = '',
+  padForStickyBar = true,
+} = Astro.props;
+
+const fullTitle =
+  !brandInTitle || title.includes(site.name) ? title : `${title} | ${site.name}`;
+const desc = clampDescription(description);
+const canonical = `${site.url}${path}`;
+const ogImageUrl = ogImage.startsWith('http') ? ogImage : `${site.url}${ogImage}`;
+
+if (!skipTitleCheck) checkTitleLength(fullTitle, path);
+checkDescriptionLength(desc, path);
+---
+
+<!doctype html>
+<html lang={site.lang} class="scroll-pt-20">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="canonical" href={canonical} />
+
+    <title>{fullTitle}</title>
+    <meta name="description" content={desc} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+
+    <!-- Open Graph -->
+    <meta property="og:type" content={ogType} />
+    <meta property="og:site_name" content={site.ogSiteName} />
+    <meta property="og:locale" content={site.locale} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={desc} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImageUrl} />
+    {ogImageAlt && <meta property="og:image:alt" content={ogImageAlt} />}
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={desc} />
+    <meta name="twitter:image" content={ogImageUrl} />
+    {ogImageAlt && <meta name="twitter:image:alt" content={ogImageAlt} />}
+
+    <!-- Icons and feeds. Small, cached aggressively at the edge. -->
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="sitemap" type="application/xml" href="/sitemap-index.xml" />
+    <link rel="alternate" type="application/rss+xml" title={`${site.name} blog`} href={`${site.url}/rss.xml`} />
+
+    <meta name="theme-color" content="#146dd5" />
+    <meta name="format-detection" content="telephone=yes" />
+
+    <!-- Only preconnect to what a tap on the quote button needs. -->
+    <link rel="preconnect" href="https://my.forms.app" crossorigin />
+  </head>
+
+  <body class="flex min-h-dvh flex-col">
+    <a href="#main" class="skip-link">Skip to main content</a>
+
+    <Header />
+
+    <main
+      id="main"
+      class:list={['flex-1', mainClass, padForStickyBar && 'pb-14 sm:pb-0']}
+    >
+      <slot />
+    </main>
+
+    <Footer />
+    <StickyCallBar />
+
+    {schema && <script type="application/ld+json" set:html={schema} is:inline />}
+  </body>
+</html>

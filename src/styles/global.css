@@ -199,7 +199,150 @@
   }
 }
 
+/*
+ * Motion
+ * -----
+ * Everything here is decorative and must never be load-bearing. Two rules keep
+ * that honest:
+ *
+ * 1. Reveal animations only hide content under `html.motion-ready`, which an
+ *    inline script in <head> adds. If the script is blocked, errors, or never
+ *    runs, the class never appears and every element renders at its final
+ *    state. Same for search engines, which do not run it.
+ *
+ * 2. Only `transform` and `opacity` are animated. Animating width, height,
+ *    margin or padding would push content around as it ran, which is layout
+ *    shift: bad for CLS, worse for anyone reading the page mid-animation.
+ *
+ * The reduced-motion block in @layer base above clamps all of this to 0.01ms,
+ * so `html.motion-ready` elements still land in their final state instantly.
+ */
+@layer components {
+  /* Keyframes are shared: `animate-reveal` is the only one most pages use. */
+  @keyframes reveal-up {
+    from {
+      opacity: 0;
+      transform: translate3d(0, 14px, 0);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @keyframes reveal-fade {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes pop-in {
+    0% {
+      opacity: 0;
+      transform: scale(0.94);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  /*
+   * Staggering is done with `animation-delay` set from a `--reveal-i` custom
+   * property that the observer writes when it registers the element, so a grid
+   * of cards cascades without hardcoded per-card delays in every component.
+   * The cap keeps the last card from feeling late on long lists.
+   */
+  @property --reveal-i {
+    syntax: '<number>';
+    inherits: false;
+    initial-value: 0;
+  }
+}
+
 @layer utilities {
+  /*
+   * Scroll reveal. The hiding is the `:not(.is-in)` half, not the animation:
+   * the element is held at opacity 0 until the observer adds `.is-in`, and only
+   * then does the animation run. An animation that starts on its own at parse
+   * time would finish long before the element scrolled into view.
+   *
+   * opacity is paint-only, so a hidden element still occupies its exact space.
+   * Nothing reflows when it is revealed, which keeps CLS at zero.
+   */
+  .motion-ready [data-reveal]:not(.is-in) {
+    opacity: 0;
+  }
+
+  .motion-ready [data-reveal].is-in {
+    animation: reveal-up 0.5s cubic-bezier(0.22, 0.61, 0.36, 1) backwards;
+    animation-delay: calc(var(--reveal-i, 0) * 60ms);
+  }
+
+  .motion-ready [data-reveal='fade'].is-in {
+    animation-name: reveal-fade;
+  }
+
+  /*
+   * Entrance for above-the-fold hero content. Unlike scroll reveal this runs on
+   * load, so it is written as an unconditional animation rather than waiting
+   * for the observer - there is no scroll involved, and a delayed reveal there
+   * would just make the hero appear late.
+   */
+  .motion-ready [data-enter] {
+    animation: reveal-up 0.6s cubic-bezier(0.22, 0.61, 0.36, 1) backwards;
+    animation-delay: calc(var(--reveal-i, 0) * 70ms);
+  }
+
+  .motion-ready [data-enter='pop'] {
+    animation-name: pop-in;
+  }
+
+  /*
+   * Press feedback for the big CTAs. transform only, so it costs nothing in
+   * layout and reads as a physical button rather than a colour change.
+   */
+  .motion-ready .pressable {
+    transition:
+      transform 0.12s ease-out,
+      box-shadow 0.12s ease-out,
+      background-color 0.12s ease-out,
+      border-color 0.12s ease-out;
+  }
+
+  .motion-ready .pressable:active {
+    transform: scale(0.98);
+  }
+
+  /*
+   * Inline link underline that thickens on hover.
+   *
+   * The underline is always present rather than growing from zero: a link that
+   * is only underlined once hovered is signalled by colour alone, which fails
+   * for anyone who cannot distinguish the brand blue from body text. So this
+   * animates thickness and offset, not visibility.
+   *
+   * Drawn as a background gradient rather than a pseudo-element, because a
+   * pseudo-element underline can be clipped by the line box and cannot animate
+   * its own thickness smoothly.
+   */
+  .motion-ready .link-underline {
+    background-image: linear-gradient(currentColor, currentColor);
+    background-position: 0 100%;
+    background-repeat: no-repeat;
+    background-size: 100% 1px;
+    padding-bottom: 1px;
+    transition: background-size 0.2s ease-out, color 0.15s ease-out;
+  }
+
+  .motion-ready .link-underline:hover,
+  .motion-ready .link-underline:focus-visible {
+    background-size: 100% 2px;
+  }
+
   /* Diagonal brand wash used behind hero sections. */
   .bg-brand-mesh {
     background-image:

@@ -146,20 +146,21 @@ const brands = ['HP', 'Dell', 'Lenovo', 'Apple', 'Asus', 'Acer', 'Toshiba', 'Son
   <section class="bg-brand-mesh border-b border-ink-100">
     <div class="container-page py-14 sm:py-20 lg:py-24">
       <div class="grid items-center gap-12 lg:grid-cols-12 lg:gap-14">
-        <div class="lg:col-span-7 min-w-0">
-          <p
-            class="inline-flex items-center gap-2 rounded-full bg-white px-3.5 py-1.5 text-xs font-bold tracking-wide text-brand-700 uppercase ring-1 ring-brand-200"
-          >
-            <span class="size-1.5 rounded-full bg-success-500"></span>
-            Booked 7 days a week · no surcharge
-          </p>
+<div class="lg:col-span-7 min-w-0">
+            <p
+              data-enter="fade"
+              class="inline-flex items-center gap-2 rounded-full bg-white px-3.5 py-1.5 text-xs font-bold tracking-wide text-brand-700 uppercase ring-1 ring-brand-200"
+            >
+              <span class="size-1.5 rounded-full bg-success-500"></span>
+              Booked 7 days a week A� no surcharge
+            </p>
 
-          <h1 class="mt-5 text-display">
-            Computer repairs in Brisbane.<br class="hidden sm:block" />
-            <span class="text-brand-600">One flat rate.</span>
-          </h1>
+            <h1 data-enter style="--reveal-i: 1" class="mt-5 text-display">
+              Computer repairs in Brisbane.<br class="hidden sm:block" />
+              <span class="text-brand-600">One flat rate.</span>
+            </h1>
 
-          <p class="mt-6 max-w-2xl text-lead text-ink-700">
+            <p data-enter style="--reveal-i: 2" class="mt-6 max-w-2xl text-lead text-ink-700">
             {site.technician.name} is a {site.technician.credential} technician who spent years on
             the help desk of the largest IT company in the world, fixing other people's problems
             over the phone. Now he comes to your house, in {site.serviceAreas.join(', ')}, for
@@ -167,10 +168,10 @@ const brands = ['HP', 'Dell', 'Lenovo', 'Apple', 'Asus', 'Acer', 'Toshiba', 'Son
             - no call-out fee, no weekend surcharge, and if it cannot be fixed you do not pay.
           </p>
 
-          <div class="mt-8 flex flex-col gap-3 sm:flex-row">
+          <div data-enter="pop" style="--reveal-i: 3" class="mt-8 flex flex-col gap-3 sm:flex-row">
             <a
               href={site.phone.href}
-              class="inline-flex items-center justify-center gap-2.5 rounded-xl bg-brand-500 px-7 py-4 text-lg font-bold text-white shadow-cta transition hover:bg-brand-600"
+              class="pressable inline-flex items-center justify-center gap-2.5 rounded-xl bg-brand-500 px-7 py-4 text-lg font-bold text-white shadow-cta transition hover:bg-brand-600"
             >
               <svg class="size-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                 <path d="M2 3.5A1.5 1.5 0 0 1 3.5 2h2.1a.75.75 0 0 1 .74.64l.5 2.5a.75.75 0 0 1-.19.7L5.4 7.3a12 12 0 0 0 7.3 7.3l1.46-1.25a.75.75 0 0 1 .7-.19l2.5.5a.75.75 0 0 1 .64.74v2.1a1.5 1.5 0 0 1-1.5 1.5A15.5 15.5 0 0 1 2 5v-1.5Z"></path>

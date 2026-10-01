@@ -33,20 +33,20 @@ const { eyebrow, title, intro, icon, facts, badges } = Astro.props;
       <div class="lg:col-span-7 min-w-0">
         {
           eyebrow && (
-            <p class="inline-flex items-center gap-2 rounded-full bg-white px-3 py-1.5 text-xs font-bold tracking-wide text-brand-700 uppercase ring-1 ring-brand-200">
-              <span class="size-1.5 rounded-full bg-brand-500" />
-              {eyebrow}
-            </p>
-          )
-        }
-        <h1 class="mt-4 text-h1">
-          {title}
-        </h1>
-        <div class="mt-5 max-w-2xl space-y-4 text-lead text-ink-700">
-          {intro.map((p) => <p set:html={p} />)}
-        </div>
+<p data-enter="fade" class="inline-flex items-center gap-2 rounded-full bg-white px-3 py-1.5 text-xs font-bold tracking-wide text-brand-700 uppercase ring-1 ring-brand-200">
+                <span class="size-1.5 rounded-full bg-brand-500" />
+                {eyebrow}
+              </p>
+            )
+          }
+          <h1 data-enter style="--reveal-i: 1" class="mt-4 text-h1">
+            {title}
+          </h1>
+          <div data-enter style="--reveal-i: 2" class="mt-5 max-w-2xl space-y-4 text-lead text-ink-700">
+            {intro.map((p) => <p set:html={p} />)}
+          </div>
 
-        <div class="mt-8 flex flex-col gap-3 sm:flex-row">
+          <div data-enter="pop" style="--reveal-i: 3" class="mt-8 flex flex-col gap-3 sm:flex-row">
           <a
             href={site.phone.href}
             class="inline-flex items-center justify-center gap-2.5 rounded-xl bg-brand-500 px-6 py-3.5 text-base font-bold text-white shadow-cta transition hover:bg-brand-600"

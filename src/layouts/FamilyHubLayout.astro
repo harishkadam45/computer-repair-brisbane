@@ -129,10 +129,10 @@ const ctaTitle = `${family.title} in Brisbane - book ${site.technician.name}.`;
             <ul class="mt-4 space-y-2 text-sm">
               {
                 sampleSuburbs.slice(0, 12).map((s) => (
-                  <li>
+                  <li data-reveal>
                     <a
                       href={liveSuburbUrl(family, s)}
-                      class="text-brand-700 underline-offset-2 hover:underline"
+                      class="link-underline text-brand-700"
                     >
                       {family.title} {s.name}
                     </a>

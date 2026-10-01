@@ -17,6 +17,7 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import StickyCallBar from '../components/StickyCallBar.astro';
   import QuoteModal from '../components/QuoteModal.astro';
+import Motion from '../components/Motion.astro';
 import { clampDescription, checkTitleLength, checkDescriptionLength } from '../lib/seo';
 
 export interface Props {
@@ -127,6 +128,19 @@ checkDescriptionLength(desc, path);
 
     <!-- Only preconnect to what a tap on the quote button needs. -->
     <link rel="preconnect" href="https://my.forms.app" crossorigin />
+
+    <!--
+      Enable the reveal animations. This has to be inline and in <head>: it
+      gates every [data-reveal] element, and if the class lands after first
+      paint the page renders visible and then snaps to hidden, which reads as a
+      flash. It also checks prefers-reduced-motion so those users never get a
+      hidden-then-revealed element at all.
+    -->
+    <script is:inline>
+      if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        document.documentElement.classList.add('motion-ready');
+      }
+    </script>
   </head>
 
   <body class="flex min-h-dvh flex-col">
@@ -143,6 +157,7 @@ checkDescriptionLength(desc, path);
 
     <Footer />
     <StickyCallBar />
+    <Motion />
     <QuoteModal />
 
     {schema && <script type="application/ld+json" set:html={schema} is:inline />}

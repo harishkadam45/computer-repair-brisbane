@@ -1,0 +1,81 @@
+---
+/**
+ * Scroll reveal.
+ *
+ * Mounted once from BaseLayout. Adds `.is-in` to [data-reveal] elements as they
+ * scroll into view, staggering siblings within a group so a grid of cards
+ * cascades instead of arriving all at once.
+ *
+ * The hiding itself is in CSS, under `html.motion-ready`, which an inline
+ * script in <head> sets. This component only ever adds `.is-in`. So if this
+ * script never runs, the CSS rule that hides elements applies without ever
+ * being undone - which is why the observer owns the escape hatch, and why the
+ * timeout below exists.
+ *
+ * Constraints worth keeping:
+ *
+ * - IntersectionObserver, not a scroll handler. 2,818 pages should not each run
+ *   a listener on every scroll event.
+ * - `unobserve` after revealing, so each element animates once. Re-animating on
+ *   scroll-back tends to fight the visitor and can re-trigger expensive layers.
+ * - rootMargin bottom is negative so the animation has started before the
+ *   element is comfortably readable, instead of finishing as it arrives.
+ * - A timeout reveals everything regardless. Reader modes and print preview
+ *   can observe but not run IntersectionObserver callbacks, and blank sections
+ *   would be far worse than no animation.
+ */
+---
+
+<script is:inline>
+  (function () {
+    var root = document.documentElement;
+    var targets = document.querySelectorAll('[data-reveal]');
+    if (!root.classList.contains('motion-ready') || !targets.length) return;
+
+    function show(el) {
+      el.classList.add('is-in');
+    }
+
+    function showAll() {
+      for (var i = 0; i < targets.length; i++) show(targets[i]);
+    }
+
+    // Stagger is per container, so each grid on a page cascades from zero
+    // instead of continuing one count across the whole document. Keyed on the
+    // parent node itself rather than its tag name, because a page can hold
+    // three separate grids and "DIV" would tie them together.
+    //
+    // Capped at 5 steps: past about half a second of delay the last item in a
+    // list feels broken rather than choreographed.
+    var counts = new WeakMap();
+    for (var i = 0; i < targets.length; i++) {
+      var el = targets[i];
+      var group = el.getAttribute('data-reveal-group')
+        ? el.getAttribute('data-reveal-group')
+        : el.parentNode;
+      var n = counts.get(group) || 0;
+      el.style.setProperty('--reveal-i', String(Math.min(n, 5)));
+      counts.set(group, n + 1);
+    }
+
+    if (!('IntersectionObserver' in window)) {
+      showAll();
+      return;
+    }
+
+    var io = new IntersectionObserver(
+      function (entries) {
+        for (var i = 0; i < entries.length; i++) {
+          if (!entries[i].isIntersecting) continue;
+          show(entries[i].target);
+          io.unobserve(entries[i].target);
+        }
+      },
+      { rootMargin: '0px 0px -12% 0px', threshold: 0.01 }
+    );
+
+    for (var j = 0; j < targets.length; j++) io.observe(targets[j]);
+
+    setTimeout(showAll, 4000);
+  })();
+</script>

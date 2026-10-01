@@ -236,34 +236,30 @@ const isActive = (href: string) =>
         nav
           .filter((item) => !['/', '/services/'].includes(item.href))
           .map((item) => (
-            <>
-              {/* Search sits immediately before Contact, from 1120px up. The
-                  width is capped by the nav's real slack: 217px at 1120 and
-                  249px from 1280, so w-48 then w-56 - a wider field pushes
-                  "Services" into a second line. The utility bar owns
-                  1024-1119px, where this one is hidden. */}
-              {item.href === '/contact/' && (
-                <SearchField
-                  id="navbar-search"
-                  formClass="relative hidden w-48 shrink-0 min-[1120px]:block xl:w-56"
-                  inputClass="w-full rounded-lg border border-ink-200 bg-ink-50 py-2 pr-3 pl-8 text-[0.95rem] text-ink-900 placeholder:text-ink-400 focus:border-brand-400 focus:bg-white focus:outline-none"
-                />
-              )}
-              <a
-                href={item.href}
-                class:list={[
-                  'rounded-lg px-3 py-2 text-[0.95rem] font-semibold transition',
-                  isActive(item.href)
-                    ? 'text-brand-700'
-                    : 'text-ink-700 hover:bg-ink-50 hover:text-ink-900',
-                ]}
-                aria-current={isActive(item.href) ? 'page' : undefined}
-              >
-                {item.label}
-              </a>
-            </>
-          ))
+          <a
+            href={item.href}
+            class:list={[
+              'rounded-lg px-3 py-2 text-[0.95rem] font-semibold transition',
+              isActive(item.href)
+                ? 'text-brand-700'
+                : 'text-ink-700 hover:bg-ink-50 hover:text-ink-900',
+            ]}
+            aria-current={isActive(item.href) ? 'page' : undefined}
+          >
+            {item.label}
+          </a>
+        ))
       }
+
+      <!-- Search, last in the nav after Contact. The width is capped by the
+           nav's real slack: 217px at 1120 and 249px from 1280, so w-48 then
+           w-56 - a wider field pushes "Services" onto a second line. The
+           utility bar owns 1024-1119px, where this one is hidden. -->
+      <SearchField
+        id="navbar-search"
+        formClass="relative hidden w-48 shrink-0 min-[1120px]:block xl:w-56"
+        inputClass="w-full rounded-lg border border-ink-200 bg-ink-50 py-2 pr-3 pl-8 text-[0.95rem] text-ink-900 placeholder:text-ink-400 focus:border-brand-400 focus:bg-white focus:outline-none"
+      />
     </nav>
 
     <!-- The phone number is no longer duplicated here; it lives in the utility

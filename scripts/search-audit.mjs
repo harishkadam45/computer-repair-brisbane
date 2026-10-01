@@ -112,13 +112,21 @@ for (const { name, type } of engines) {
       await input.evaluate((el) => el.form?.getAttribute('method') === 'get' && el.form?.getAttribute('action') === '/search/'),
       'works without JS');
 
-    // It must sit before Contact, which is where it was asked to go.
-    record(name, 'nav search is placed before Contact',
+    // It must sit after Contact, at the end of the nav.
+    record(name, 'nav search is placed after Contact',
       await page.evaluate(() => {
         const f = document.getElementById('navbar-search');
         const c = [...document.querySelectorAll('header a')].find((a) => a.textContent.trim() === 'Contact');
-        return !!f && !!c && !!(f.compareDocumentPosition(c) & Node.DOCUMENT_POSITION_FOLLOWING);
+        return !!f && !!c && !!(c.compareDocumentPosition(f) & Node.DOCUMENT_POSITION_FOLLOWING);
       }), 'DOM order');
+
+    // About must directly precede Contact, with nothing wedged between them.
+    record(name, 'About is directly followed by Contact',
+      await page.evaluate(() => {
+        const links = [...document.querySelectorAll('header nav a')];
+        const about = links.findIndex((a) => a.textContent.trim() === 'About');
+        return about !== -1 && links[about + 1]?.textContent.trim() === 'Contact';
+      }), 'no items between');
 
     await input.click();
     await input.fill('virus');

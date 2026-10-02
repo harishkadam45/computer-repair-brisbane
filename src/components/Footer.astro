@@ -123,10 +123,10 @@ const year = new Date().getFullYear();
 
       <!-- Service families + core services -->
       <nav class="min-w-0" aria-labelledby="f-services">
-        <h2 id="f-services" class="text-center text-sm font-bold tracking-wide text-white uppercase">
+        <h2 id="f-services" class="text-left text-sm font-bold tracking-wide text-white uppercase lg:text-center">
           Repairs
         </h2>
-        <ul class="mt-4 space-y-2.5 text-center text-sm">
+        <ul class="mt-4 space-y-2.5 text-left text-sm lg:text-center">
           {
             families.map((f) => (
               <li>
@@ -158,11 +158,11 @@ const year = new Date().getFullYear();
       <nav class="min-w-0" aria-labelledby="f-services2">
         <h2
           id="f-services2"
-          class="text-center text-sm font-bold tracking-wide text-white uppercase"
+          class="text-left text-sm font-bold tracking-wide text-white uppercase lg:text-center"
         >
           Services
         </h2>
-        <ul class="mt-4 grid grid-cols-2 gap-x-4 gap-y-2.5 text-center text-sm">
+        <ul class="mt-4 grid grid-cols-1 gap-x-4 gap-y-2.5 text-left text-sm sm:grid-cols-2 lg:text-center">
           {
             serviceLinks.map((s) => (
               <li>
@@ -177,8 +177,8 @@ const year = new Date().getFullYear();
 
       <!-- Company + trust -->
       <div class="min-w-0">
-        <h2 class="text-center text-sm font-bold tracking-wide text-white uppercase">Company</h2>
-        <ul class="mt-4 space-y-2.5 text-center text-sm">
+        <h2 class="text-left text-sm font-bold tracking-wide text-white uppercase lg:text-center">Company</h2>
+        <ul class="mt-4 space-y-2.5 text-left text-sm lg:text-center">
           <li><a href="/about/" class="text-white/75 transition hover:text-brand-400">About Robert</a></li>
           <li><a href="/testimonials/" class="text-white/75 transition hover:text-brand-400">Reviews</a></li>
           <li><a href="/blog/" class="text-white/75 transition hover:text-brand-400">Blog</a></li>
@@ -190,8 +190,8 @@ const year = new Date().getFullYear();
           </li>
         </ul>
 
-        <h2 class="mt-8 text-center text-sm font-bold tracking-wide text-white uppercase">Follow</h2>
-        <div class="mt-4 flex justify-center gap-2">
+        <h2 class="mt-8 text-left text-sm font-bold tracking-wide text-white uppercase lg:text-center">Follow</h2>
+        <div class="mt-4 flex justify-start gap-2 lg:justify-center">
           <a
             href={site.social.facebook}
             rel="noopener"

@@ -21,6 +21,7 @@
     "audit:responsive": "node scripts/responsive-audit.mjs",
     "audit:hero": "node scripts/hero-audit.mjs",
     "audit:footer": "node scripts/footer-audit.mjs",
+    "audit:footer-align": "node scripts/footer-align-audit.mjs",
     "audit:icons": "node scripts/icon-audit.mjs",
     "audit:contrast": "node scripts/contrast-audit.mjs",
     "audit:interaction": "node scripts/interaction-audit.mjs",

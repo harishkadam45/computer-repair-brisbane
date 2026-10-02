@@ -17,20 +17,42 @@ const year = new Date().getFullYear();
 <footer class="mt-24 border-t border-ink-200 bg-white">
   <div class="container-page py-14">
     {/*
-      Fractional columns rather than the old 4/3/3/2 out of twelve. Spans and
-      gap trade off against each other: raising the gap from 32px to 48px on a
-      fixed twelve-column grid would have taken the Company column from 155px
-      down to about 135px, squeezing the column that had least room already.
+      Flex with space-between, not a grid of fixed column widths.
 
-      The fractions are set from measured text, not guessed. At 14px the
-      longest titles are "New Computer Setup" at 133px (needs 306px for two
-      columns plus the 16px gap), "Computer Repairs Brisbane" at 167px, and
-      "Word of Mouth reviews ↗" at 159px. Give Services the 1.65 and those
-      all fit on one line while the gaps stay at 48px.
+      Equal gaps in the markup are not equal gaps on screen. The previous
+      grid gave every column the same 48px gap, but the columns were 280 /
+      178 / 308 / 178px wide while their text only needed 280 / 167 / 282 /
+      159. That slack sat inside the columns, so the visible space between
+      Repairs and Services was much smaller than between Services and
+      Company. Equal column gaps with unequal content cannot look even.
+
+      Here each block is only as wide as its own content (the links are
+      nowrap, so a block measures to its longest label) and the leftover
+      width is split equally between the three spaces. At 1280 that is
+      1088 - 889 = 199px over three gaps, so all three render at 66px.
+
+      flex-wrap is what keeps that safe. Content-sized nowrap blocks cannot
+      shrink, so under larger text they overflowed the page sideways - 247px
+      of it at 1024px with 125% text. Wrapping drops a block onto a second
+      line instead of pushing the layout off screen, and justify-between
+      still splits each line's leftover evenly. The gap floor is 16px rather
+      than 24px for one specific reason: at exactly 1024px the four blocks
+      need 889px of the 960px available, which leaves 23.6px per gap. A 24px
+      floor is a hair too big and dropped the last block onto a second line
+      for a single pixel of shortfall.
     */}
-    <div class="grid gap-10 lg:grid-cols-[1.5fr_0.95fr_1.65fr_0.95fr] lg:gap-12">
+    <div
+      class="flex flex-col gap-10 lg:flex-row lg:flex-wrap lg:justify-between lg:gap-x-4 lg:gap-y-10"
+    >
       <!-- Brand + NAP -->
-      <div class="min-w-0">
+      {/*
+        max-w, not a fixed w. A fixed width here was measured in rem, so it
+        grew with the user's text size and dragged the footer into horizontal
+        overflow at 150%. A max-width caps this block at its 280px reading
+        width while still letting flex shrink it when the row runs out of
+        room, which is what keeps the text zoom-safe.
+      */}
+      <div class="min-w-0 max-w-[17.5rem]">
         <div class="flex items-center gap-2.5">
           <img src={site.logo} alt="" width="40" height="40" class="size-10 rounded-xl" loading="lazy" decoding="async" />
           <span class="flex flex-col leading-none">
@@ -40,6 +62,12 @@ const year = new Date().getFullYear();
             </span>
           </span>
         </div>
+        {/*
+          max-w-sm is load-bearing here, not decoration. As a flex item this
+          paragraph would otherwise resolve to max-content and stretch the
+          brand block across most of the footer, leaving the three spaces
+          crowded to one side.
+        */}
         <p class="mt-4 max-w-sm text-sm leading-relaxed text-ink-600">
           {site.technician.name} is a {site.technician.credential} ex-IBM help desk technician working
           alone across {site.serviceAreas.join(', ')}. One flat rate, no call-out fee, no weekend

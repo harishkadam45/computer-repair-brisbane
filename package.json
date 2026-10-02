@@ -20,6 +20,7 @@
     "smoke-dev": "node scripts/smoke-dev.mjs",
     "audit:responsive": "node scripts/responsive-audit.mjs",
     "audit:hero": "node scripts/hero-audit.mjs",
+    "audit:footer": "node scripts/footer-audit.mjs",
     "audit:contrast": "node scripts/contrast-audit.mjs",
     "audit:interaction": "node scripts/interaction-audit.mjs",
     "audit:megamenu": "node scripts/mega-menu-travel.mjs",

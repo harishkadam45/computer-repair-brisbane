@@ -185,6 +185,25 @@
     @apply mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8;
   }
 
+  /*
+    The footer is the one dark surface on a light site, and it needs a reset
+    before any colour swap works.
+
+    The base layer paints colour straight onto the element - p gets
+    text-ink-700, h1-h4 get text-ink-900. Because that is set on the element
+    itself it beats inheritance, so simply setting a light colour on the
+    <footer> would leave every <p> and <h2> inside it still holding the dark
+    ink value. ink-700 on black is 2.6:1, which is effectively invisible for
+    the copyright and credit lines.
+
+    Resetting those elements to inherit lets each one take the shade set on
+    the footer. Any explicit utility still wins: this selector is two type
+    selectors, a class utility is one class.
+  */
+  .site-footer :is(h1, h2, h3, h4, p) {
+    color: inherit;
+  }
+
   /* Skip link - visually hidden until focused. */
   .skip-link {
     @apply sr-only;

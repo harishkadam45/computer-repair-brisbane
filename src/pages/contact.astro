@@ -272,7 +272,14 @@ const faqs = [
   </div>
 
   <div class="container-page py-14 sm:py-16">
-    <div class="mx-auto max-w-3xl">
+    {/*
+      max-w-3xl without mx-auto, matching the page's own h1 wrapper. The
+      mx-auto centred the whole block, which pushed this section's left edge
+      192px in from the container while every other section on the page sits
+      flush at 32px - so it read as a centred section even though the text
+      itself was left-aligned.
+    */}
+    <div class="max-w-3xl">
       <h2 class="text-h2">Booking questions</h2>
       <dl class="mt-8 space-y-6">
         {

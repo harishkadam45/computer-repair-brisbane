@@ -204,10 +204,13 @@ const year = new Date().getFullYear();
 
   <div class="border-t border-ink-200">
     <div class="container-page flex flex-col gap-3 py-6 text-xs text-ink-500 sm:flex-row sm:items-center sm:justify-between">
-      <p>
-        © {year} {site.name}. Computer repairs in Brisbane, Logan and Ipswich. ABN details available
-        on request.
-      </p>
+      <div>
+        <p>
+          © {year} {site.name}. Computer repairs in Brisbane, Logan and Ipswich. ABN details available
+          on request.
+        </p>
+        <p class="mt-1.5">{site.credit}</p>
+      </div>
       <p class="flex flex-wrap items-center gap-x-4 gap-y-1">
         <span>Servicing {site.serviceAreas.join(' · ')}</span>
         <a href="/sitemap-index.xml" class="underline underline-offset-2 hover:text-brand-700">Sitemap</a>

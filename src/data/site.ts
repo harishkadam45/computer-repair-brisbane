@@ -160,6 +160,13 @@ export const site = {
     twitter: 'https://twitter.com/FixMyHomeCmputer',
   },
 
+  /**
+   * Site credit, shown under the copyright line in the footer. Set here rather
+   * than written into the markup so it is one edit, not a find-and-replace
+   * across every page that renders the footer.
+   */
+  credit: 'Designed and developed by Harish Kadam',
+
   /** Absolute-path defaults, used where a page has no better og:image. */
   defaultOgImage: '/og/default.png',
   logo: '/logo.svg',

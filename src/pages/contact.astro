@@ -122,17 +122,21 @@ const faqs = [
     <Breadcrumb trail={trail} />
   </div>
 
-  <div class="container-page py-14 sm:py-20">
-    <div class="max-w-3xl">
-      <h1 class="text-h1">Book a repair</h1>
-      <p class="mt-5 text-lead text-ink-700">
-        Call is quickest and gets you a straight answer on whether it is fixable and what it will
-        cost. If you would rather not phone, the online form is below - and the phone number is on
-        every page of this site, including yours right now.
-      </p>
+  <section class="border-b border-ink-100 bg-brand-mesh">
+    <div class="container-page py-14 sm:py-20">
+      <div class="max-w-3xl">
+        <h1 class="text-h1">Book a repair</h1>
+        <p class="mt-5 text-lead text-ink-700">
+          Call is quickest and gets you a straight answer on whether it is fixable and what it will
+          cost. If you would rather not phone, the online form is below - and the phone number is on
+          every page of this site, including yours right now.
+        </p>
+      </div>
     </div>
+  </section>
 
-    <div class="mt-10 grid gap-4 sm:grid-cols-3">
+  <div class="container-page py-14 sm:py-20">
+    <div class="grid gap-4 sm:grid-cols-3">
       {
         CONTACT_METHODS.map((m) => (
 <a

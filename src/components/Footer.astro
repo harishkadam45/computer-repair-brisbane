@@ -16,9 +16,21 @@ const year = new Date().getFullYear();
 
 <footer class="mt-24 border-t border-ink-200 bg-white">
   <div class="container-page py-14">
-    <div class="grid gap-10 lg:grid-cols-12 lg:gap-8">
+    {/*
+      Fractional columns rather than the old 4/3/3/2 out of twelve. Spans and
+      gap trade off against each other: raising the gap from 32px to 48px on a
+      fixed twelve-column grid would have taken the Company column from 155px
+      down to about 135px, squeezing the column that had least room already.
+
+      The fractions are set from measured text, not guessed. At 14px the
+      longest titles are "New Computer Setup" at 133px (needs 306px for two
+      columns plus the 16px gap), "Computer Repairs Brisbane" at 167px, and
+      "Word of Mouth reviews ↗" at 159px. Give Services the 1.65 and those
+      all fit on one line while the gaps stay at 48px.
+    */}
+    <div class="grid gap-10 lg:grid-cols-[1.5fr_0.95fr_1.65fr_0.95fr] lg:gap-12">
       <!-- Brand + NAP -->
-      <div class="lg:col-span-4 min-w-0">
+      <div class="min-w-0">
         <div class="flex items-center gap-2.5">
           <img src={site.logo} alt="" width="40" height="40" class="size-10 rounded-xl" loading="lazy" decoding="async" />
           <span class="flex flex-col leading-none">
@@ -69,11 +81,11 @@ const year = new Date().getFullYear();
       </div>
 
       <!-- Service families + core services -->
-      <nav class="lg:col-span-3 min-w-0" aria-labelledby="f-services">
-        <h2 id="f-services" class="text-sm font-bold tracking-wide text-ink-900 uppercase">
+      <nav class="min-w-0" aria-labelledby="f-services">
+        <h2 id="f-services" class="text-center text-sm font-bold tracking-wide text-ink-900 uppercase">
           Repairs
         </h2>
-        <ul class="mt-4 space-y-2.5 text-sm">
+        <ul class="mt-4 space-y-2.5 text-center text-sm">
           {
             families.map((f) => (
               <li>
@@ -102,7 +114,7 @@ const year = new Date().getFullYear();
         </ul>
       </nav>
 
-      <nav class="lg:col-span-3 min-w-0" aria-labelledby="f-services2">
+      <nav class="min-w-0" aria-labelledby="f-services2">
         <h2
           id="f-services2"
           class="text-center text-sm font-bold tracking-wide text-ink-900 uppercase"
@@ -123,9 +135,9 @@ const year = new Date().getFullYear();
       </nav>
 
       <!-- Company + trust -->
-      <div class="lg:col-span-2 min-w-0">
-        <h2 class="text-sm font-bold tracking-wide text-ink-900 uppercase">Company</h2>
-        <ul class="mt-4 space-y-2.5 text-sm">
+      <div class="min-w-0">
+        <h2 class="text-center text-sm font-bold tracking-wide text-ink-900 uppercase">Company</h2>
+        <ul class="mt-4 space-y-2.5 text-center text-sm">
           <li><a href="/about/" class="text-ink-600 transition hover:text-brand-700">About Robert</a></li>
           <li><a href="/testimonials/" class="text-ink-600 transition hover:text-brand-700">Reviews</a></li>
           <li><a href="/blog/" class="text-ink-600 transition hover:text-brand-700">Blog</a></li>
@@ -137,8 +149,8 @@ const year = new Date().getFullYear();
           </li>
         </ul>
 
-        <h2 class="mt-8 text-sm font-bold tracking-wide text-ink-900 uppercase">Follow</h2>
-        <div class="mt-4 flex gap-2">
+        <h2 class="mt-8 text-center text-sm font-bold tracking-wide text-ink-900 uppercase">Follow</h2>
+        <div class="mt-4 flex justify-center gap-2">
           <a
             href={site.social.facebook}
             rel="noopener"

@@ -40,18 +40,27 @@ const phoneDigits = site.phone.display.replace(/\D/g, '');
   <div
     class="relative mx-auto my-2 w-full max-w-2xl rounded-card border border-ink-200 bg-white shadow-lift"
   >
-    <button
-      type="button"
-      data-quote-close
-      class="absolute top-3 right-3 z-10 flex size-10 items-center justify-center rounded-xl text-ink-500 transition hover:bg-ink-100 hover:text-ink-900"
-    >
-      <span class="sr-only">Close the quote form</span>
-      <svg class="size-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-        <path
-          d="M5.3 5.3a1 1 0 0 1 1.4 0L10 8.6l3.3-3.3a1 1 0 1 1 1.4 1.4L11.4 10l3.3 3.3a1 1 0 0 1-1.4 1.4L10 11.4l-3.3 3.3a1 1 0 0 1-1.4-1.4L8.6 10 5.3 6.7a1 1 0 0 1 0-1.4Z"
-        ></path>
-      </svg>
-    </button>
+    {/*
+      Sticky, not absolute. The dialog itself is the scroll container, so an
+      absolutely-positioned close button scrolls away with the form and
+      becomes unreachable once the visitor has scrolled into the lower half -
+      on mobile, which is exactly where they are when they want to back out.
+      Sticky pins it to the top of the scrollport instead.
+    */}
+    <div class="sticky top-0 z-10 -mt-2 -mb-2 flex justify-end px-6 pt-1 sm:px-8">
+      <button
+        type="button"
+        data-quote-close
+        class="flex size-10 items-center justify-center rounded-xl text-ink-500 transition hover:bg-ink-100 hover:text-ink-900"
+      >
+        <span class="sr-only">Close the quote form</span>
+        <svg class="size-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+          <path
+            d="M5.3 5.3a1 1 0 0 1 1.4 0L10 8.6l3.3-3.3a1 1 0 1 1 1.4 1.4L11.4 10l3.3 3.3a1 1 0 0 1-1.4 1.4L10 11.4l-3.3 3.3a1 1 0 0 1-1.4-1.4L8.6 10 5.3 6.7a1 1 0 0 1 0-1.4Z"
+          ></path>
+        </svg>
+      </button>
+    </div>
 
     <div data-quote-panel="form">
       <div class="border-b border-ink-100 px-6 pt-6 pb-5 sm:px-8">
@@ -115,15 +124,44 @@ const phoneDigits = site.phone.display.replace(/\D/g, '');
 
           <div class="sm:col-span-1">
             <label for="q-suburb" class="block text-sm font-semibold text-ink-900">Suburb</label>
-            <input
-              id="q-suburb"
-              name="suburb"
-              type="text"
-              autocomplete="address-level2"
-              placeholder="e.g. Brendale"
-              class="mt-1.5 w-full rounded-xl border border-ink-200 bg-white px-3 py-2.5 text-sm text-ink-900 placeholder:text-ink-400 focus:border-brand-400 focus:outline-none"
-            />
-            <p class="mt-1.5 text-xs text-ink-500">Town or suburb only, no street address needed.</p>
+            <div class="relative mt-1.5" data-suburb-field>
+              {/*
+                autocomplete="off" keeps the browser's own suggestion list
+                away. Left on, Chrome and Safari would overlay their list on
+                top of ours and the visitor would get two dropdowns fighting
+                for the same keystrokes.
+              */}
+              <input
+                id="q-suburb"
+                name="suburb"
+                type="text"
+                autocomplete="off"
+                placeholder="e.g. Brendale"
+                role="combobox"
+                aria-expanded="false"
+                aria-controls="q-suburb-list"
+                aria-autocomplete="list"
+                aria-describedby="q-suburb-status"
+                class="w-full rounded-xl border border-ink-200 bg-white px-3 py-2.5 text-sm text-ink-900 placeholder:text-ink-400 focus:border-brand-400 focus:outline-none"
+              />
+              {/*
+                The list is a plain element rather than a <datalist>: datalist
+                cannot be ranked, cannot be styled consistently, and renders
+                differently in every browser. The hosted Zoo form used one,
+                which is part of why suburb matching there felt arbitrary.
+              */}
+              <ul
+                id="q-suburb-list"
+                data-suburb-list
+                role="listbox"
+                aria-label="Matching suburbs"
+                hidden
+                class="absolute inset-x-0 top-full z-30 mt-1 max-h-64 overflow-y-auto overscroll-contain rounded-xl border border-ink-200 bg-white py-1 shadow-lift"
+              ></ul>
+            </div>
+            <p id="q-suburb-status" role="status" class="mt-1.5 text-xs text-ink-500">
+              Town or suburb only, no street address needed. Start typing to search.
+            </p>
           </div>
 
           <div class="sm:col-span-1">
@@ -299,6 +337,240 @@ const phoneDigits = site.phone.display.replace(/\D/g, '');
     var sentPanel = dialog.querySelector('[data-quote-panel="sent"]');
     var lastTrigger = null;
 
+    // ------------------------------------------------------------- suburb picker
+    //
+    // A combobox over /suburb-list.json, ranked so the suburb the visitor means
+    // is the first thing they see. Ranking rules, in order:
+    //
+    //   1. exact match on the whole query          -> Brendale for "brendale"
+    //   2. name starts with the query              -> "brent" -> Brendale
+    //   3. name starts with any typed word         -> "ridge brent" still finds it
+    //   4. name contains the query                 -> "wood" -> Gaythorne, Woodend
+    //   5. postcode match                          -> "4066" -> Toowong
+    //   6. region contains the query               -> "gold coast" suburbs
+    //
+    // Prefix beats substring because "ridge" should surface Acacia Ridge and
+    // Bellbowrie before Bellmere, not after every suburb containing those
+    // letters somewhere.
+    var suburbInput = document.getElementById('q-suburb');
+    var suburbList = dialog.querySelector('[data-suburb-list]');
+    var suburbStatus = document.getElementById('q-suburb-status');
+    var suburbIndex = null;
+    var suburbRows = [];
+    var suburbActive = -1;
+    var suburbShown = [];
+
+    function suburbLoad() {
+      if (suburbIndex) return suburbIndex;
+      suburbIndex = fetch('/suburb-list.json')
+        .then(function (r) {
+          if (!r.ok) throw new Error('suburb list ' + r.status);
+          return r.json();
+        })
+        .then(function (data) {
+          suburbRows = (data.suburbs || []).map(function (s) {
+            return {
+              name: s.n,
+              postcode: s.p || '',
+              region: s.r || '',
+              // Precomputed lowercase haystacks. Ranking runs on every
+              // keystroke across 666 rows, so normalising inside the loop
+              // would be doing 666 toLowerCase() calls per character.
+              n: s.n.toLowerCase(),
+              p: (s.p || '').toLowerCase(),
+              r: (s.r || '').toLowerCase(),
+            };
+          });
+          return suburbRows;
+        })
+        .catch(function () {
+          // Leave the field working as a plain text input rather than breaking
+          // the form. A visitor can still type their suburb by hand.
+          suburbIndex = null;
+          suburbRows = [];
+          return [];
+        });
+      return suburbIndex;
+    }
+
+    function suburbRank(row, q, words) {
+      if (row.n === q) return 100;
+      if (row.n.indexOf(q) === 0) return 80;
+      for (var i = 0; i < words.length; i++) {
+        if (row.n.indexOf(words[i]) === 0) return 65;
+      }
+      if (row.n.indexOf(q) !== -1) return 45;
+      if (q.length >= 3 && row.p.indexOf(q) !== -1) return 40;
+      if (row.r.indexOf(q) !== -1) return 20;
+      return 0;
+    }
+
+    function suburbMatches(q) {
+      var words = q.split(' ').filter(Boolean);
+      var out = [];
+      for (var i = 0; i < suburbRows.length; i++) {
+        var score = suburbRank(suburbRows[i], q, words);
+        if (score > 0) out.push({ row: suburbRows[i], score: score });
+      }
+      out.sort(function (a, b) {
+        if (b.score !== a.score) return b.score - a.score;
+        return a.row.name.localeCompare(b.row.name, 'en-AU');
+      });
+      return out.slice(0, 8);
+    }
+
+    function suburbClose() {
+      if (!suburbList) return;
+      suburbList.hidden = true;
+      suburbList.innerHTML = '';
+      suburbActive = -1;
+      suburbShown = [];
+      suburbInput.setAttribute('aria-expanded', 'false');
+      suburbInput.removeAttribute('aria-activedescendant');
+    }
+
+    function suburbRender() {
+      var q = suburbInput.value.trim().toLowerCase().replace(/\s+/g, ' ');
+      if (q.length < 2) {
+        suburbClose();
+        if (suburbStatus) {
+          suburbStatus.textContent = 'Town or suburb only, no street address needed. Start typing to search.';
+        }
+        return;
+      }
+
+      var hits = suburbMatches(q);
+      suburbShown = hits;
+
+      if (!hits.length) {
+        suburbClose();
+        if (suburbStatus) {
+          suburbStatus.textContent =
+            'No match for "' + suburbInput.value.trim() + '". Still covered if you are near the edge - just type it as it is.';
+        }
+        return;
+      }
+
+      var html = '';
+      for (var i = 0; i < hits.length; i++) {
+        var row = hits[i].row;
+        var meta = row.postcode ? row.postcode + ' · ' + row.region : row.region;
+        html +=
+          '<li id="q-suburb-opt-' + i + '" role="option" aria-selected="false" data-i="' + i +
+          '" class="flex cursor-pointer items-baseline justify-between gap-3 px-3 py-2 text-sm text-ink-900 hover:bg-brand-50 focus:bg-brand-50 focus:outline-none">' +
+          '<span class="font-medium">' + row.name + '</span>' +
+          '<span class="shrink-0 text-xs text-ink-500">' + meta + '</span>' +
+          '</li>';
+      }
+      suburbList.innerHTML = html;
+      suburbList.hidden = false;
+      suburbInput.setAttribute('aria-expanded', 'true');
+
+      if (suburbStatus) {
+        var label = hits.length === 1 ? '1 suburb' : hits.length + ' suburbs';
+        suburbStatus.textContent =
+          label + ' match. Use the arrow keys and Enter, or keep typing.';
+      }
+    }
+
+    function suburbHighlight(next) {
+      var options = suburbList.querySelectorAll('[role="option"]');
+      if (!options.length) return;
+      if (suburbActive >= 0 && options[suburbActive]) {
+        options[suburbActive].classList.remove('bg-brand-50');
+        options[suburbActive].setAttribute('aria-selected', 'false');
+      }
+      suburbActive = (next + options.length) % options.length;
+      var el = options[suburbActive];
+      el.classList.add('bg-brand-50');
+      el.setAttribute('aria-selected', 'true');
+      suburbInput.setAttribute('aria-activedescendant', el.id);
+      // Keep the active row visible in a long list.
+      if (el.scrollIntoView) el.scrollIntoView({ block: 'nearest' });
+    }
+
+    if (suburbInput && suburbList) {
+      // Fetch on first focus rather than on page load: most visitors open the
+      // modal, read it, and never reach the suburb field.
+      suburbInput.addEventListener('focus', function () {
+        // Re-render once the index lands. Without this, a visitor who focuses
+        // the field and immediately types has their keystroke matched against
+        // an empty list - the fetch has not resolved yet - so the dropdown
+        // stays shut and looks broken until they type another character.
+        suburbLoad().then(suburbRender);
+      });
+
+      suburbInput.addEventListener('input', function () {
+        // Same race, on the very first keystrokes: render what is available
+        // now, then again when the index is ready.
+        if (suburbRows.length) {
+          suburbRender();
+        } else {
+          suburbLoad().then(suburbRender);
+        }
+      });
+
+      // Tab or Escape out closes the list. Escape must stop here, or it would
+      // also close the whole modal, which would be a jarring way to dismiss a
+      // dropdown.
+      suburbInput.addEventListener('keydown', function (e) {
+        if (e.key === 'ArrowDown') {
+          if (suburbList.hidden) {
+            if (suburbInput.value.trim().length >= 2) {
+              e.preventDefault();
+              suburbHighlight(0);
+            }
+            return;
+          }
+          e.preventDefault();
+          suburbHighlight(suburbActive + 1);
+        } else if (e.key === 'ArrowUp') {
+          if (suburbList.hidden) return;
+          e.preventDefault();
+          suburbHighlight(suburbActive - 1);
+        } else if (e.key === 'Enter') {
+          if (suburbList.hidden || suburbActive < 0) return;
+          e.preventDefault();
+          var picked = suburbShown[suburbActive];
+          if (picked) {
+            suburbInput.value = picked.row.name;
+            suburbClose();
+            if (suburbStatus) suburbStatus.textContent = picked.row.name + ' selected.';
+          }
+        } else if (e.key === 'Escape') {
+          if (suburbList.hidden) return;
+          e.preventDefault();
+          e.stopPropagation();
+          suburbClose();
+          if (suburbStatus) {
+            suburbStatus.textContent = 'Town or suburb only, no street address needed.';
+          }
+        } else if (e.key === 'Tab') {
+          suburbClose();
+        }
+      });
+
+      // Mouse and touch. mousedown rather than click, because click fires after
+      // blur and the input would already have closed the list.
+      suburbList.addEventListener('mousedown', function (e) {
+        var li = e.target.closest('[data-i]');
+        if (!li) return;
+        e.preventDefault();
+        var picked = suburbShown[Number(li.getAttribute('data-i'))];
+        if (!picked) return;
+        suburbInput.value = picked.row.name;
+        suburbClose();
+        if (suburbStatus) suburbStatus.textContent = picked.row.name + ' selected.';
+        suburbInput.focus();
+      });
+
+      // A click anywhere else dismisses the list.
+      document.addEventListener('click', function (e) {
+        if (suburbList.hidden) return;
+        if (!e.target.closest('[data-suburb-field]')) suburbClose();
+      });
+    }
+
     // Any real link pointing at the hosted form becomes a modal trigger.
     // It stays a real link, so with no JS it still goes somewhere useful.
     document.addEventListener('click', function (e) {
@@ -310,6 +582,10 @@ const phoneDigits = site.phone.display.replace(/\D/g, '');
       lastTrigger = trigger;
       form.reset();
       clearErrors();
+      suburbClose();
+      if (suburbStatus) {
+        suburbStatus.textContent = 'Town or suburb only, no street address needed. Start typing to search.';
+      }
       formPanel.hidden = false;
       sentPanel.hidden = true;
       dialog.showModal();

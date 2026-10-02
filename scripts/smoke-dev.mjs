@@ -5,7 +5,10 @@
  *
  * Usage: node scripts/smoke-dev.mjs [origin]
  */
-const ORIGIN = (process.argv[2] ?? 'http://localhost:4322').replace(/\/$/, '');
+// Astro's default dev port. This used to say 4322, which made a bare
+// `npm run smoke-dev` fail every time with "fetch failed" while the server was
+// up and serving on 4321. Override by passing an origin.
+const ORIGIN = (process.argv[2] ?? 'http://localhost:4321').replace(/\/$/, '');
 
 const ROUTES = [
   '/',

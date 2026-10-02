@@ -315,6 +315,107 @@ for (const { name, type } of engines) {
     // how this site routes work.
     record(name, 'modal asks for suburb', await page.locator('#q-suburb').isVisible());
 
+    // --- suburb combobox ---
+    // The modal is still open from the validation check above, so use it
+    // rather than re-opening: the dialog is in the top layer and intercepts
+    // clicks aimed at the header trigger underneath it.
+    record(name, 'modal already open before the suburb checks',
+      await dialog.evaluate((el) => el.open));
+
+    const list = page.locator('#q-suburb-list');
+    record(name, 'suburb list starts closed', !(await list.isVisible()));
+
+    await page.fill('#q-suburb', 'brend');
+    await page.waitForTimeout(500);
+    record(name, 'suburb list opens on typing', await list.isVisible());
+
+    const first = (await page.locator('#q-suburb-list [role="option"]').first().textContent()) ?? '';
+    record(name, 'prefix match ranks Brendale first for "brend"',
+      first.includes('Brendale'), first.trim().replace(/\s+/g, ' '));
+
+    const count = await page.locator('#q-suburb-list [role="option"]').count();
+    record(name, 'suburb list is capped and non-empty', count > 0 && count <= 8, `${count} options`);
+
+    const expanded = await page.locator('#q-suburb').getAttribute('aria-expanded');
+    record(name, 'suburb input reports aria-expanded=true', expanded === 'true', `aria-expanded=${expanded}`);
+
+    const combobox = await page.locator('#q-suburb').getAttribute('role');
+    record(name, 'suburb field is a combobox', combobox === 'combobox');
+
+    // Keyboard: arrow down then Enter must pick the highlighted row.
+    await page.keyboard.press('ArrowDown');
+    await page.waitForTimeout(150);
+    const active = await page.locator('#q-suburb').getAttribute('aria-activedescendant');
+    record(name, 'arrow key sets aria-activedescendant', !!active, `activedescendant=${active}`);
+
+    await page.keyboard.press('Enter');
+    await page.waitForTimeout(200);
+    const chosen = await page.inputValue('#q-suburb');
+    record(name, 'Enter selects the highlighted suburb', chosen === 'Brendale', `value="${chosen}"`);
+    record(name, 'suburb list closes after selection', !(await list.isVisible()));
+
+    // Escape closes the dropdown without closing the modal - a jarring way to
+    // lose a whole form.
+    await page.fill('#q-suburb', 'toow');
+    await page.waitForTimeout(500);
+    await page.keyboard.press('Escape');
+    await page.waitForTimeout(200);
+    record(name, 'Escape closes the suburb list', !(await list.isVisible()));
+    record(name, 'Escape keeps the modal open', await dialog.evaluate((el) => el.open));
+
+    // Postcode search, which is how people look up their own suburb.
+    await page.fill('#q-suburb', '4066');
+    await page.waitForTimeout(500);
+    const byPostcode = (await page.locator('#q-suburb-list [role="option"]').first().textContent()) ?? '';
+    record(name, 'postcode search returns suburbs', byPostcode.includes('4066'), byPostcode.trim().replace(/\s+/g, ' '));
+
+    // An unknown string must not be treated as a match, and must not block.
+    await page.fill('#q-suburb', 'zzzz');
+    await page.waitForTimeout(500);
+    const noneCount = await page.locator('#q-suburb-list [role="option"]').count();
+    record(name, 'unmatched suburb shows no options', noneCount === 0, `${noneCount} options`);
+    record(name, 'unmatched suburb still allows typing', (await page.inputValue('#q-suburb')) === 'zzzz');
+
+    await page.fill('#q-suburb', '');
+    await page.waitForTimeout(200);
+    record(name, 'clearing the field closes the list', !(await list.isVisible()));
+
+    // The close button must survive scrolling. It was absolute before, which
+    // meant it scrolled out of reach on a long form.
+    await dialog.evaluate((el) => el.scrollTo(0, el.scrollHeight));
+    await page.waitForTimeout(200);
+    const closeBox = await page.locator('#quote-modal [data-quote-close]').first().boundingBox();
+    record(name, 'close button stays visible after scrolling the dialog',
+      !!closeBox && closeBox.y >= 0 && closeBox.y < 900,
+      closeBox ? `y=${Math.round(closeBox.y)}` : 'no box');
+
+    const closeLoc = page.locator('#quote-modal [data-quote-close]').first();
+
+    // Click by coordinates rather than by locator. Playwright's actionability
+    // check runs scrollIntoViewIfNeeded, which fights a position:sticky
+    // element and reports the button as "not visible" even though it is
+    // rendered, hit-testable and 40x40 on screen. A real click at the pixel a
+    // finger would use is both the stronger assertion and the one that does
+    // not depend on that check.
+    const hit = await page.evaluate(() => {
+      const b = document.querySelector('#quote-modal [data-quote-close]');
+      const r = b.getBoundingClientRect();
+      const top = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
+      return { x: r.left + r.width / 2, y: r.top + r.height / 2, onButton: !!(top && top.closest('[data-quote-close]')) };
+    });
+    record(name, 'close button is hit-testable where it is painted',
+      hit.onButton, `x=${Math.round(hit.x)} y=${Math.round(hit.y)}`);
+
+    await page.mouse.click(hit.x, hit.y);
+    await page.waitForTimeout(250);
+    record(name, 'clicking the scrolled close button closes the modal',
+      !(await dialog.evaluate((el) => el.open)));
+    await page.waitForTimeout(200);
+
+    // Reopen: the scrolled-close check above already closed it.
+    await utility.click();
+    await page.waitForTimeout(250);
+
     // Close button and backdrop both dismiss.
     await page.click('#quote-modal [data-quote-close]');
     await page.waitForTimeout(250);

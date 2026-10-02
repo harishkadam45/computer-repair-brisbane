@@ -411,6 +411,50 @@
       linear-gradient(160deg, var(--color-navy-500) 0%, var(--color-navy-700) 100%);
   }
 
+  /*
+   * Dark wash for the home hero.
+   *
+   * Declared after .bg-brand-mesh on purpose. Both are single-class utilities at
+   * the same specificity, so source order is what decides - putting this first
+   * would simply lose, and the pale peach wash would show through.
+   *
+   * The home hero keeps the .bg-brand-mesh class because the hero audit asserts
+   * on it by name across all routes; this overrides the paint only. The base is
+   * near-black rather than the navy used by .bg-hero-dark, matching the
+   * reference art, and the orange glow is pulled well back so it reads as a
+   * glow behind the copy rather than a tint over it.
+   */
+  .bg-home-dark {
+    background-image:
+      radial-gradient(52rem 30rem at 88% -8%, rgb(255 102 0 / 0.28) 0%, transparent 60%),
+      radial-gradient(40rem 26rem at 4% 104%, rgb(242 41 91 / 0.16) 0%, transparent 58%),
+      linear-gradient(168deg, #08090f 0%, #010104 62%, #04060b 100%);
+    color: #fff;
+  }
+
+  /*
+   * The pale .bg-brand-mesh sets a dark bottom rule. On the near-black home hero
+   * that line disappears entirely, so it is restated here as a light hairline
+   * to keep the section edge visible against the white trust bar below it.
+   */
+  .bg-home-dark.border-ink-100 {
+    border-color: rgb(255 255 255 / 0.12);
+  }
+
+  /*
+   * Restore inheritance for headings and paragraphs inside the dark hero.
+   *
+   * `color: #fff` on .bg-home-dark is not enough on its own. The base layer
+   * applies @apply text-ink-900 to h1-h4 and text-ink-700 to p directly on the
+   * element, and a colour set on the element beats the inherited value - so the
+   * hero heading and the $150 figure kept rendering ink-900 on near-black, at
+   * 1.16:1. This is the same failure as the footer's copyright line: the fix is
+   * to hand the colour back to inheritance, not to restate it.
+   */
+  .bg-home-dark :is(h1, h2, h3, h4, p) {
+    color: inherit;
+  }
+
   /* Visible only to screen readers. */
   .sr-only-focusable:not(:focus):not(:focus-within) {
     @apply sr-only;

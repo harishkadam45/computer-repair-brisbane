@@ -5,6 +5,19 @@
  * Carries the internal-link weight for the suburb pages: every service family
  * links to its hub, the hub links back, and the service-area page is linked
  * from the primary nav on every template.
+ *
+ * Icons are the real brand marks - Simple Icons for the social pair, Material
+ * for phone/email/location - not generic stand-ins, so the Facebook glyph is
+ * the Facebook glyph and the X glyph is X.
+ *
+ * The knock-out icons carry fill-rule="evenodd" on purpose. Each is two
+ * subpaths that overlap: a solid shape with its detail removed. Under the
+ * default nonzero rule the second subpath winds the same way and simply fills
+ * in, so the detail vanishes. That is not hypothetical - the hand-rolled
+ * envelope that used to sit here rendered as a solid rectangle and the clock
+ * as a filled disc with a slit, because both relied on winding nobody checked.
+ * evenodd makes the cut-out appear regardless of subpath direction. The clock
+ * depends on it most: under nonzero it is a plain orange circle with no hands.
  */
 import { site } from '../data/site';
 import { families, services } from '../data/services';
@@ -79,8 +92,8 @@ const year = new Date().getFullYear();
             href={site.phone.href}
             class="flex items-center gap-2.5 font-bold text-brand-400 transition hover:text-brand-300"
           >
-            <svg class="size-4 shrink-0" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-              <path d="M2 3.5A1.5 1.5 0 0 1 3.5 2h2.1a.75.75 0 0 1 .74.64l.5 2.5a.75.75 0 0 1-.19.7L5.4 7.3a12 12 0 0 0 7.3 7.3l1.46-1.25a.75.75 0 0 1 .7-.19l2.5.5a.75.75 0 0 1 .64.74v2.1a1.5 1.5 0 0 1-1.5 1.5A15.5 15.5 0 0 1 2 5v-1.5Z"></path>
+            <svg class="size-4 shrink-0" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1C9.39 21 2 14.61 2 6c0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"></path>
             </svg>
             {site.phone.display}
           </a>
@@ -88,20 +101,20 @@ const year = new Date().getFullYear();
             href={site.email.href}
             class="flex items-center gap-2.5 break-all text-white/75 transition hover:text-brand-400"
           >
-            <svg class="size-4 shrink-0" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-              <path d="M2 5.5A1.5 1.5 0 0 1 3.5 4h13A1.5 1.5 0 0 1 18 5.5v9a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 2 14.5v-9Z M3 6l7 4.5L17 6"></path>
+            <svg class="size-4 shrink-0" viewBox="0 0 24 24" fill="currentColor" fill-rule="evenodd" aria-hidden="true">
+              <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z"></path>
             </svg>
             {site.email.display}
           </a>
           <p class="flex items-start gap-2.5 text-white/75">
-            <svg class="mt-0.5 size-4 shrink-0" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-              <path d="M10 2a6 6 0 0 1 6 6c0 4.2-6 10-6 10S4 12.2 4 8a6 6 0 0 1 6-6Zm0 4.2A1.8 1.8 0 1 0 10 9.8 1.8 1.8 0 0 0 10 6.2Z"></path>
+            <svg class="mt-0.5 size-4 shrink-0" viewBox="0 0 24 24" fill="currentColor" fill-rule="evenodd" aria-hidden="true">
+              <path d="M12 2C8.13 2 5 5.13 5 8.5c0 5.25 7 13 7 13s7-7.75 7-13C19 5.13 15.87 2 12 2zm0 9.5a2.5 2.5 0 0 1 0-5 2.5 2.5 0 0 1 0 5z"></path>
             </svg>
             <span>Mobile service across {site.serviceAreas.join(', ')} and surrounding suburbs</span>
           </p>
           <p class="flex items-start gap-2.5 text-white/75">
-            <svg class="mt-0.5 size-4 shrink-0" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-              <path d="M10 2a8 8 0 1 1 0 16 8 8 0 0 1 0-16Zm1 4H9v5l4 2 1-1.6-3-1.4V6Z"></path>
+            <svg class="mt-0.5 size-4 shrink-0" viewBox="0 0 24 24" fill="currentColor" fill-rule="evenodd" aria-hidden="true">
+              <path d="M12 2a10 10 0 1 1 0 20 10 10 0 0 1 0-20Zm-1.5 3h3v5.5h4v3h-7Z"></path>
             </svg>
             <span>{site.hours.note}</span>
           </p>
@@ -186,7 +199,7 @@ const year = new Date().getFullYear();
             class="flex size-9 items-center justify-center rounded-lg border border-white/20 bg-white/10 text-white transition hover:border-brand-400 hover:text-brand-400"
             aria-label="Facebook"
           >
-            <svg class="size-4" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M22 12a10 10 0 1 0-11.6 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.4h-1.2c-1.2 0-1.6.8-1.6 1.6V12h2.7l-.4 2.9h-2.3v7A10 10 0 0 0 22 12Z"></path></svg>
+            <svg class="size-4" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M9.101 23.691v-7.98H6.627v-3.667h2.474v-1.58c0-4.085 1.848-5.978 5.858-5.978.401 0 .955.042 1.468.103a8.68 8.68 0 0 1 1.141.195v3.325a8.623 8.623 0 0 0-.653-.036 26.805 26.805 0 0 0-.733-.009c-.707 0-1.259.096-1.675.309a1.686 1.686 0 0 0-.679.622c-.258.42-.374.995-.374 1.752v1.297h3.919l-.386 2.103-.287 1.564h-3.246v8.245C19.396 23.238 24 18.179 24 12.044c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.628 3.874 10.35 9.101 11.647Z"></path></svg>
           </a>
           <a
             href={site.social.twitter}

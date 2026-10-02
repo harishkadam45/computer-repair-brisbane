@@ -50,11 +50,9 @@ const isActive = (href: string) =>
   href === '/' ? path === '/' : path === href || path.startsWith(href);
 ---
 
-<header class="header-art sticky top-0 z-50 border-b border-ink-100">
-  <!-- Utility bar: the two things people need on every page, above the fold.
-       Transparent so the header artwork runs through both rows; the border is
-       what separates them. -->
-  <div class="hidden border-b border-ink-100 sm:block">
+<header class="sticky top-0 z-50 border-b border-ink-100 bg-white/95 backdrop-blur-sm">
+  <!-- Utility bar: the two things people need on every page, above the fold. -->
+  <div class="hidden border-b border-ink-100 bg-ink-50 sm:block">
     <div class="container-page flex h-9 items-center justify-between text-sm">
       <p class="text-ink-600">
         Flat <strong class="font-semibold text-ink-900">${site.pricing.flatRate}</strong> rate ·
@@ -122,11 +120,7 @@ const isActive = (href: string) =>
         <span class="text-[0.98rem] font-extrabold tracking-tight text-ink-900 sm:text-lg">
           {site.name}
         </span>
-        <!-- ink-600, not ink-500: at 0.68rem this is the smallest text sitting directly
-             on the navbar artwork, and ink-500 would need a 0.88 scrim to stay
-             at 4.5:1 - which would hide the image. ink-600 clears 4.5:1 over
-             the darkest pixel in the file at 0.7. -->
-        <span class="mt-0.5 text-[0.68rem] font-medium tracking-wide text-ink-600 uppercase">
+        <span class="mt-0.5 text-[0.68rem] font-medium tracking-wide text-ink-500 uppercase">
           {site.tagline}
         </span>
       </span>
@@ -135,17 +129,12 @@ const isActive = (href: string) =>
     <!-- Not shrink-0: this row is the one that can absorb a shortfall, which is
          why search lives in the utility bar above. At 1024px the nav is already
          at min-content and "Services" wraps, so nothing here can be pinned. -->
-    <!-- brand-800, not brand-700: this row sits directly on the navbar artwork.
-             brand-700 measures 4.09:1 over the darkest pixel in the image and
-             needs 4.5:1 at 15.2px, so the active state steps one darker. The
-             dropdown and mobile copies stay on brand-700 because those panels
-             are opaque white, where it clears 5.2:1. -->
     <nav class="hidden items-center gap-1 lg:flex" aria-label="Main">
       <a
         href="/"
         class:list={[
           'rounded-lg px-3 py-2 text-[0.95rem] font-semibold transition',
-          path === '/' ? 'text-brand-800' : 'text-ink-700 hover:bg-ink-50 hover:text-ink-900',
+          path === '/' ? 'text-brand-700' : 'text-ink-700 hover:bg-ink-50 hover:text-ink-900',
         ]}
         aria-current={path === '/' ? 'page' : undefined}
       >

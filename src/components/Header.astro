@@ -66,11 +66,19 @@ const isActive = (href: string) =>
       <div class="flex items-center gap-4">
         <!-- The phone number, in the spot it has always held (immediately
              before "Get a quote"). Same colour and icon as the navbar button
-             it replaces; padding is py-1.5 rather than py-2.5 so the 32px pill
-             fits this 36px bar instead of forcing the header taller. -->
+             it replaces.
+
+             Sized as a pair with the "Get a quote" link beside it. Both were
+             14px, but the pill carried 600 weight plus 12px of vertical
+             padding, so it read as the heavier element while the link read as
+             plain small text. The pill now steps down to 13px on py-1 and the
+             link steps up to 15px on 600 weight, which balances the two
+             without turning the second action into a competing orange button.
+             leading-5 on both keeps their line boxes identical, so neither
+             shifts vertically as the label changes. -->
         <a
           href={site.phone.href}
-          class="flex items-center gap-1.5 rounded-xl bg-brand-500 px-3.5 py-1.5 text-sm font-semibold whitespace-nowrap text-white shadow-cta transition hover:bg-brand-600"
+          class="flex items-center gap-1.5 rounded-xl bg-brand-500 px-3.5 py-1 text-[0.8125rem] leading-5 font-semibold whitespace-nowrap text-white shadow-cta transition hover:bg-brand-600"
         >
           <svg class="size-3.5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
             <path
@@ -79,7 +87,11 @@ const isActive = (href: string) =>
           </svg>
           <span class="sr-only">Call </span>{site.phone.display}
         </a>
-        <a href={site.quoteForm.url} data-quote-open class="text-ink-600 transition hover:text-brand-700">
+        <a
+          href={site.quoteForm.url}
+          data-quote-open
+          class="text-[0.9375rem] leading-5 font-semibold text-ink-700 transition hover:text-brand-700"
+        >
           Get a quote
         </a>
       </div>

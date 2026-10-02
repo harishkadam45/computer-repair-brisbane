@@ -166,6 +166,8 @@ export const site = {
    * across every page that renders the footer.
    */
   credit: 'Designed and developed by Harish Kadam',
+  /** Where the credit links to. Kept beside the label so they cannot drift apart. */
+  creditUrl: 'https://updated-portfolio-three-iota.vercel.app/',
 
   /** Absolute-path defaults, used where a page has no better og:image. */
   defaultOgImage: '/og/default.png',

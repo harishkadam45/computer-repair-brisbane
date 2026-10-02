@@ -3,57 +3,86 @@
 /*
  * Design tokens.
  *
- * The palette is lifted from the existing brand - #146dd5 is the blue the
- * current site uses for links, buttons and headings, with #5890e5 as its
- * lighter companion and #0097cf / #3f2bb6 as accents.
+ * The palette is taken from geeksperth.com.au, so the two sites read as one
+ * brand. Their published tokens are reproduced exactly:
  *
- * Tailwind v4 is CSS-first, so every token here becomes a utility
- * (bg-brand-500, text-accent, rounded-card, …) with no JS config.
+ *   --gx-accent         #FF6600   primary, buttons and links
+ *   --gx-accent-hover   #E55A00
+ *   --gb-btn-fill       #B84A00   deep fill
+ *   --gb-btn-fill-hover #9C3F00
+ *   #F2295B             the pink their CTA gradient fades to
+ *   #0D003B             navy used for dark sections and dropdowns
+ *   #FBBC04             gold, used for their review stars
+ *   #FFF5F0 / #FFE8DC / #FFF3EC   peach tints for soft surfaces
+ *
+ * Everything else is a ramp built around those anchors so the existing
+ * utilities (bg-brand-500, text-ink-700, …) keep working untouched - the
+ * recolour is this block and nothing else.
+ *
+ * Token names are unchanged from the previous blue palette. That matters for
+ * readability: the components refer to brand-500 or ink-700, never to a hex,
+ * so no .astro file had to be edited to make the whole site orange.
+ *
+ * Known accessibility tradeoff: white text on #FF6600 is 2.94:1, under the
+ * WCAG AA 4.5:1 minimum for normal-size text. This is a deliberate match to
+ * the source brand, which makes the same tradeoff on its own buttons. Link
+ * and body text deliberately use the darker brand-700 (#B84A00, 4.89:1)
+ * instead of brand-500 so text stays readable while fills stay vivid.
  */
 @theme {
-  --color-brand-50: #f1f7fe;
-  --color-brand-100: #e0eefd;
-  --color-brand-200: #c2dcfb;
-  --color-brand-300: #92c1f6;
-  --color-brand-400: #5890e5; /* legacy site */
-  --color-brand-500: #146dd5; /* legacy site primary */
-  --color-brand-600: #0c5aad;
-  --color-brand-700: #0a4a8f;
-  --color-brand-800: #0a3a70;
-  --color-brand-900: #0a2c52;
-  --color-brand-950: #061c37;
+  --color-brand-50: #fff5f0; /* source tint */
+  --color-brand-100: #ffe8dc; /* source tint */
+  --color-brand-200: #ffcfb4;
+  --color-brand-300: #ffaa80;
+  --color-brand-400: #ff884d;
+  --color-brand-500: #ff6600; /* --gx-accent, exact */
+  --color-brand-600: #e55a00; /* --gx-accent-hover, exact */
+  --color-brand-700: #b84a00; /* --gb-btn-fill, exact - AA text on white */
+  --color-brand-800: #9c3f00; /* --gb-btn-fill-hover, exact */
+  --color-brand-900: #7a3200;
+  --color-brand-950: #4a1e00;
 
-  --color-accent-50: #e8f8fd;
-  --color-accent-100: #c6eefa;
-  --color-accent-200: #8fdef4;
-  --color-accent-300: #4ec9e8;
-  --color-accent-400: #11a3d6;
-  --color-accent-500: #0097cf; /* legacy site accent */
-  --color-accent-600: #017cab;
-  --color-accent-700: #056286;
-  --color-accent-800: #0a516e;
-  --color-accent-900: #0d435a;
+  --color-accent-50: #fff0f4;
+  --color-accent-100: #ffdce6;
+  --color-accent-200: #ffb3c9;
+  --color-accent-300: #ff7ea3;
+  --color-accent-400: #fb4f7c;
+  --color-accent-500: #f2295b; /* source CTA gradient end, exact */
+  --color-accent-600: #d61a4c;
+  --color-accent-700: #ae123c;
+  --color-accent-800: #870e30;
+  --color-accent-900: #630a23;
+  --color-accent-950: #3d0514;
 
-  --color-indigo-brand: #3f2bb6; /* legacy site secondary */
+  /* Replaces the old indigo secondary with their navy. */
+  --color-indigo-brand: #0d003b; /* source dark section colour, exact */
 
-  --color-ink-50: #f7f8fa;
-  --color-ink-100: #eceef2;
-  --color-ink-200: #d5dae3;
-  --color-ink-300: #b0b9ca;
-  --color-ink-400: #8492ab;
-  --color-ink-500: #64748f;
-  --color-ink-600: #4d5a73;
-  --color-ink-700: #3f4a5f;
-  --color-ink-800: #28303f;
-  --color-ink-900: #161d28;
-  --color-ink-950: #0b1017;
+  /* Navy ramp for dark sections. The source site only publishes the one navy,
+   * so the rest is derived from it to give the hero gradient somewhere to go. */
+  --color-navy-500: #0d003b; /* exact */
+  --color-navy-600: #180b4a;
+  --color-navy-700: #241659;
+  --color-navy-800: #33246b;
+  --color-navy-900: #4a3a85;
 
-  --color-success-500: #00d084;
-  --color-success-600: #00a86c;
-  --color-success-700: #057a50;
+  --color-ink-50: #f7f8f7;
+  --color-ink-100: #eff1ef;
+  --color-ink-200: #e1e4e2;
+  --color-ink-300: #c9d2ce; /* source border grey */
+  --color-ink-400: #6c7772; /* placeholders - 4.6:1 on white */
+  --color-ink-500: #697470; /* muted text - 4.8:1 on white */
+  --color-ink-600: #5a6560;
+  --color-ink-700: #47525d;
+  --color-ink-800: #26313d; /* source, exact */
+  --color-ink-900: #14161d; /* source body text, exact */
+  --color-ink-950: #0a0b10;
 
-  --color-gold-500: #c28a14;
-  --color-gold-600: #a06d0d;
+  --color-success-500: #04bb03;
+  --color-success-600: #039903;
+  --color-success-700: #037a03;
+
+  --color-gold-500: #fbbc04; /* source star gold, exact */
+  --color-gold-600: #d99400; /* darkened: gold at 500 is too pale for text */
 
   --font-sans:
     'Inter var', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto,
@@ -62,9 +91,9 @@
   --radius-card: 0.875rem;
   --radius-hero: 1.5rem;
 
-  --shadow-card: 0 1px 2px rgb(11 16 23 / 0.04), 0 4px 16px rgb(11 16 23 / 0.06);
-  --shadow-lift: 0 8px 30px rgb(11 16 23 / 0.1);
-  --shadow-cta: 0 6px 18px rgb(20 109 213 / 0.35);
+  --shadow-card: 0 1px 2px rgb(20 22 29 / 0.04), 0 4px 16px rgb(20 22 29 / 0.06);
+  --shadow-lift: 0 8px 30px rgb(20 22 29 / 0.1);
+  --shadow-cta: 0 6px 18px rgb(255 102 0 / 0.35);
 
   /* Fluid type scale - no breakpoints needed for the display sizes. */
   --text-display: clamp(2.1rem, 1.4rem + 3.1vw, 3.5rem);
@@ -173,7 +202,7 @@
     @apply font-semibold text-ink-900;
   }
   .prose-copy a {
-    @apply text-brand-600 font-medium underline underline-offset-2 hover:text-brand-700;
+    @apply text-brand-700 font-medium underline underline-offset-2 hover:text-brand-800;
   }
   .prose-copy ul {
     @apply my-4 space-y-2 pl-5;
@@ -183,7 +212,9 @@
     @apply my-4 list-decimal space-y-2 pl-5;
   }
   .prose-copy li::marker {
-    @apply text-brand-500;
+    /* 600 rather than 500: #FF6600 is 2.94:1 on white, under the 3:1 floor
+     * for non-text graphics. #E55A00 clears it at 3.62:1. */
+    @apply text-brand-600;
   }
   .prose-copy h2 {
     @apply mt-10 mb-3 text-h2;
@@ -351,11 +382,14 @@
       linear-gradient(180deg, var(--color-brand-50) 0%, #fff 85%);
   }
 
+  /* The two glows were hardcoded to the old blue (rgb(20 109 213)) and cyan
+   (rgb(0 151 207)) and would have stayed blue after the token swap. They are
+   now the brand orange and the source pink. */
   .bg-hero-dark {
     background-image:
-      radial-gradient(50rem 28rem at 90% 0%, rgb(20 109 213 / 0.55) 0%, transparent 62%),
-      radial-gradient(38rem 24rem at 0% 100%, rgb(0 151 207 / 0.32) 0%, transparent 58%),
-      linear-gradient(160deg, var(--color-brand-950) 0%, var(--color-brand-900) 100%);
+      radial-gradient(50rem 28rem at 90% 0%, rgb(255 102 0 / 0.55) 0%, transparent 62%),
+      radial-gradient(38rem 24rem at 0% 100%, rgb(242 41 91 / 0.32) 0%, transparent 58%),
+      linear-gradient(160deg, var(--color-navy-500) 0%, var(--color-navy-700) 100%);
   }
 
   /* Visible only to screen readers. */

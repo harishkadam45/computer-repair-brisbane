@@ -39,13 +39,13 @@ export const OG_SVG = `
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#0f3d7d"/>
-      <stop offset="0.55" stop-color="#146dd5"/>
-      <stop offset="1" stop-color="#0097cf"/>
+      <stop offset="0" stop-color="#0d003b"/>
+      <stop offset="0.55" stop-color="#ff6600"/>
+      <stop offset="1" stop-color="#f2295b"/>
     </linearGradient>
     <linearGradient id="mark" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0" stop-color="#ffffff"/>
-      <stop offset="1" stop-color="#cfe4ff"/>
+      <stop offset="1" stop-color="#ffe8dc"/>
     </linearGradient>
   </defs>
 
@@ -57,9 +57,9 @@ export const OG_SVG = `
   <g transform="translate(80 78)">
     <rect width="86" height="86" rx="20" fill="url(#mark)"/>
     <g transform="translate(19 18) scale(1.28)">
-      <rect x="8" y="11" width="24" height="15" rx="2.5" fill="none" stroke="#146dd5" stroke-width="2.4"/>
-      <path d="M15 31h10" stroke="#146dd5" stroke-width="2.4" stroke-linecap="round"/>
-      <path d="M13.6 24.2a3.2 3.2 0 0 0 4.5 0l4-4a3.6 3.6 0 0 0 .2-5.1l-2 2-2-.4-.4-2 2-2a3.6 3.6 0 0 0-5.1.2z" fill="#146dd5"/>
+      <rect x="8" y="11" width="24" height="15" rx="2.5" fill="none" stroke="#ff6600" stroke-width="2.4"/>
+      <path d="M15 31h10" stroke="#ff6600" stroke-width="2.4" stroke-linecap="round"/>
+      <path d="M13.6 24.2a3.2 3.2 0 0 0 4.5 0l4-4a3.6 3.6 0 0 0 .2-5.1l-2 2-2-.4-.4-2 2-2a3.6 3.6 0 0 0-5.1.2z" fill="#ff6600"/>
     </g>
   </g>
 
@@ -88,7 +88,7 @@ async function main() {
     // Apple refuses to round-mask its touch icon and will composite it onto
     // black, so that one gets a solid background rather than transparency.
     let pipeline = sharp(Buffer.from(logo)).resize(size, size);
-    if (opaque) pipeline = pipeline.flatten({ background: '#146dd5' });
+    if (opaque) pipeline = pipeline.flatten({ background: '#ff6600' });
 
     await pipeline
       .png({ compressionLevel: 9, palette: false })

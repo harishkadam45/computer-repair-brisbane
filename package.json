@@ -19,6 +19,7 @@
     "release": "npm run build && npm run redirects && npm run verify",
     "smoke-dev": "node scripts/smoke-dev.mjs",
     "audit:responsive": "node scripts/responsive-audit.mjs",
+    "audit:contrast": "node scripts/contrast-audit.mjs",
     "audit:interaction": "node scripts/interaction-audit.mjs",
     "audit:megamenu": "node scripts/mega-menu-travel.mjs",
     "audit:search": "node scripts/search-audit.mjs",

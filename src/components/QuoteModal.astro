@@ -41,17 +41,27 @@ const phoneDigits = site.phone.display.replace(/\D/g, '');
     class="relative mx-auto my-2 w-full max-w-2xl rounded-card border border-ink-200 bg-white shadow-lift"
   >
     {/*
-      Sticky, not absolute. The dialog itself is the scroll container, so an
-      absolutely-positioned close button scrolls away with the form and
-      becomes unreachable once the visitor has scrolled into the lower half -
-      on mobile, which is exactly where they are when they want to back out.
-      Sticky pins it to the top of the scrollport instead.
+      Corner placement without losing reachability.
+
+      Two mistakes are being corrected here. The row used to be in normal flow
+      with -mt-2/-mb-2, which measured the button sitting 3px *above* the card's
+      top border and left a dead strip of empty card between the close control
+      and the heading. It is now a zero-height sticky row with the button
+      absolutely positioned in the card's top-right corner, so it occupies no
+      flow space and sits inside the border at the same 24px/32px inset the
+      header block uses.
+
+      Sticky rather than absolute is kept deliberately: the dialog is the scroll
+      container, so a plain absolute button scrolls away with the form and
+      becomes unreachable once someone has scrolled into the lower half of the
+      form - on mobile, which is exactly where they are when they want to back
+      out. h-0 means the row costs no height but still pins to the scrollport.
     */}
-    <div class="sticky top-0 z-10 -mt-2 -mb-2 flex justify-end px-6 pt-1 sm:px-8">
+    <div class="sticky top-0 z-10 h-0">
       <button
         type="button"
         data-quote-close
-        class="flex size-10 items-center justify-center rounded-xl text-ink-500 transition hover:bg-ink-100 hover:text-ink-900"
+        class="absolute top-6 right-6 flex size-10 items-center justify-center rounded-xl text-ink-500 transition hover:bg-ink-100 hover:text-ink-900 sm:top-7 sm:right-8"
       >
         <span class="sr-only">Close the quote form</span>
         <svg class="size-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">

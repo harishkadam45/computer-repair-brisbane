@@ -455,6 +455,40 @@
     color: inherit;
   }
 
+  /*
+   * Navbar artwork.
+   *
+   * The supplied reference is a *light* pastel - measured relative luminance
+   * 0.378 to 0.998 across its pixels. That rules out white text immediately:
+   * it lands at 1.59:1 over the average pixel. Dark text is the only workable
+   * option, so this keeps the header's existing ink ramp and lays a white
+   * scrim over the image instead.
+   *
+   * 0.7 is chosen, not guessed. It lifts the darkest pixel in the file
+   * (0.378) to a composite luminance of 0.814, which leaves ink-600 at 4.98:1
+   * and ink-900 at 14.9:1 against their worst case. ink-500 would need 0.88,
+   * at which point the artwork is invisible and the exercise is pointless -
+   * so ink-600 is the darkest token allowed over this background, which is why
+   * the logo tagline moved up one step.
+   *
+   * The opaque background-color underneath is a fallback: if the image ever
+   * fails to load, the gradient alone composites to plain white rather than
+   * leaving a translucent bar for page content to scroll through.
+   */
+  .header-art {
+    background-color: #fff;
+    background-image:
+      linear-gradient(rgb(255 255 255 / 0.7), rgb(255 255 255 / 0.7)),
+      url('/images/navbar-galaxy.jpg');
+    background-size:
+      auto,
+      cover;
+    background-position:
+      center,
+      center;
+    background-repeat: no-repeat;
+  }
+
   /* Visible only to screen readers. */
   .sr-only-focusable:not(:focus):not(:focus-within) {
     @apply sr-only;

@@ -142,8 +142,11 @@ const isActive = (href: string) =>
         Home
       </a>
 
-      <!-- Services has a dropdown of the service families. -->
-      <div class="group relative">
+      <!-- Services has a dropdown of the service families. The panel sits below
+           the whole header, so a small hover-intent delay in the script at the
+           foot of this file bridges the gap to the pointer without a CSS
+           hover bridge that would sit over the search field. -->
+      <div class="group relative" data-mega>
         <a
           href="/services/"
           class:list={[
@@ -165,7 +168,8 @@ const isActive = (href: string) =>
               clip-rule="evenodd"></path></svg>
         </a>
         <div
-          class="bg-dark-wash invisible fixed top-20 right-4 left-4 mx-auto w-auto max-w-[58rem] rounded-2xl border border-ink-100 p-5 opacity-0 shadow-lift transition group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100"
+          data-mega-panel
+          class="bg-dark-wash invisible fixed top-[7.375rem] right-4 left-4 z-50 mx-auto w-auto max-w-[58rem] rounded-2xl border border-ink-100 p-5 opacity-0 shadow-lift transition group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100"
         >
 <div class="grid gap-6 lg:grid-cols-[minmax(0,1fr)_18rem]">
             <div>
@@ -398,8 +402,32 @@ const isActive = (href: string) =>
 
 <script is:inline>
   // Progressive enhancement only: the nav is a plain <nav> with real links
-  // before this runs. No framework, no hydration, ~15 lines.
+  // before this runs. No framework, no hydration.
   (function () {
+    // Hover intent for the Services mega menu. The panel hangs below the whole
+    // header, so the pointer crosses a gap that a plain :hover on the group
+    // cannot span. A short close delay keeps it open while a hand travels
+    // across - without a CSS bridge element, which would have to cover the
+    // search field and the nav row to catch the diagonal path.
+    document.querySelectorAll('[data-mega]').forEach(function (group) {
+      var panel = group.querySelector('[data-mega-panel]');
+      if (!panel) return;
+      var timer = null;
+      function open() {
+        clearTimeout(timer);
+        panel.style.visibility = 'visible';
+        panel.style.opacity = '1';
+      }
+      function close() {
+        timer = setTimeout(function () {
+          panel.style.visibility = '';
+          panel.style.opacity = '';
+        }, 700);
+      }
+      group.addEventListener('mouseenter', open);
+      group.addEventListener('mouseleave', close);
+    });
+
     var toggle = document.querySelector('[data-menu-toggle]');
     var menu = document.querySelector('[data-menu]');
     if (!toggle || !menu) return;

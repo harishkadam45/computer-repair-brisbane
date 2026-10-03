@@ -162,6 +162,13 @@
     scroll-behavior: smooth;
     -webkit-text-size-adjust: 100%;
     /*
+     * Tell the browser this is a dark surface so native widgets - the <select>
+     * option popups and scrollbars in the quote modal especially - render dark
+     * with light text. Without it the OS paints a white option list while the
+     * options inherit the field's white text, so the choices are invisible.
+     */
+    color-scheme: dark;
+    /*
      * The Services mega menu is an absolutely-positioned panel wider than the
      * nav item that owns it. While it is hidden (visibility:hidden) it still
      * contributes to the document's scroll width, which gives every page a

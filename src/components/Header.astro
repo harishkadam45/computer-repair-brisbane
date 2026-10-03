@@ -107,24 +107,16 @@ const isActive = (href: string) =>
   </div>
 
   <div class="container-page flex h-16 items-center justify-between gap-4 lg:h-20">
-    <a href="/" class="group flex shrink-0 items-center gap-2.5" aria-label={`${site.name} home`}>
+    <a href="/" class="group flex shrink-0 items-center" aria-label={`${site.name} home`}>
       <img
-        src={site.logo}
+        src="/images/Fix It Home Computer Repair.jpg"
         alt=""
-        width="40"
-        height="40"
-        class="size-10 rounded-xl"
+        width="960"
+        height="422"
+        class="h-10 w-auto rounded-lg"
         loading="eager"
         decoding="async"
       />
-      <span class="flex flex-col leading-none">
-        <span class="text-[0.98rem] font-extrabold tracking-tight text-white sm:text-lg">
-          {site.name}
-        </span>
-        <span class="mt-0.5 text-[0.68rem] font-medium tracking-wide text-white/60 uppercase">
-          {site.tagline}
-        </span>
-      </span>
     </a>
 
     <!-- Not shrink-0: this row is the one that can absorb a shortfall, which is

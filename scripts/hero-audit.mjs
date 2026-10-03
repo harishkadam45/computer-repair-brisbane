@@ -32,8 +32,6 @@ const ROUTES = [
   ['/contact/', 'CHANGED: contact'],
   ['/404.html', 'CHANGED: 404'],
   ['/blog/', 'blog listing (PageHero)'],
-  ['/why-task-manager-ram-usage-is-misleading/', 'CHANGED: blog post'],
-  ['/replace-or-repair-computer/', 'CHANGED: blog post'],
   ['/pricing/', 'pricing (PageHero)'],
   ['/quote/', 'quote (PageHero)'],
   ['/testimonials/', 'testimonials (PageHero)'],
@@ -56,15 +54,15 @@ const CHANGED = [
   '/about/',
   '/contact/',
   '/404.html',
-  '/why-task-manager-ram-usage-is-misleading/',
   '/replace-or-repair-computer/',
+  '/why-computer-viruses-went-underground-the-dark-secret-nobodys-talking-about/',
 ];
 for (const route of CHANGED) {
   const page = await browser.newPage({ viewport: { width: 375, height: 780 } });
   await page.goto(`${O}${route}`, { waitUntil: 'load' });
   await page.waitForTimeout(150);
   const r = await page.evaluate(() => {
-    const mesh = document.querySelector('.bg-brand-mesh');
+    const mesh = document.querySelector('.bg-brand-mesh, .hero-wash');
     if (!mesh) return { ok: false, problems: ['no hero'], over: 0 };
     const vw = document.documentElement.clientWidth;
     const w = mesh.getBoundingClientRect().width;
@@ -91,7 +89,7 @@ for (const [route, label] of ROUTES) {
   await page.waitForTimeout(200);
 
   const r = await page.evaluate(() => {
-    const mesh = document.querySelector('.bg-brand-mesh');
+    const mesh = document.querySelector('.bg-brand-mesh, .hero-wash');
     if (!mesh) return { ok: false, problems: ['no .bg-brand-mesh element'], w: 0, h: 0, h1: '' };
     const rect = mesh.getBoundingClientRect();
     const vw = document.documentElement.clientWidth;

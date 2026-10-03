@@ -124,7 +124,7 @@ const ctaTitle = `${family.title} in Brisbane - book ${site.technician.name}.`;
 
       <aside class="lg:col-span-4 min-w-0">
         <div class="sticky top-24 space-y-4">
-          <div class="rounded-card border border-ink-200 bg-white p-6">
+          <div class="rounded-card border border-ink-200 bg-white/[0.06] p-6">
             <h2 class="text-sm font-bold tracking-wide text-ink-500 uppercase">Nearby suburbs</h2>
             <ul class="mt-4 space-y-2 text-sm">
               {
@@ -132,7 +132,7 @@ const ctaTitle = `${family.title} in Brisbane - book ${site.technician.name}.`;
                   <li data-reveal>
                     <a
                       href={liveSuburbUrl(family, s)}
-                      class="link-underline text-brand-700"
+                      class="link-underline text-brand-300"
                     >
                       {family.title} {s.name}
                     </a>
@@ -142,7 +142,7 @@ const ctaTitle = `${family.title} in Brisbane - book ${site.technician.name}.`;
             </ul>
             <a
               href="/service-area/"
-              class="mt-4 inline-flex items-center gap-1.5 text-sm font-bold text-brand-700 hover:text-brand-800"
+              class="mt-4 inline-flex items-center gap-1.5 text-sm font-bold text-brand-300 hover:text-brand-300"
             >
               All {suburbs.length} suburbs
               <svg class="size-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
@@ -161,7 +161,7 @@ const ctaTitle = `${family.title} in Brisbane - book ${site.technician.name}.`;
                     <li>
                       <a
                         href={`/${f.slug}/`}
-                        class="text-brand-700 underline-offset-2 hover:underline"
+                        class="text-brand-300 underline-offset-2 hover:underline"
                       >
                         {f.title}
                       </a>

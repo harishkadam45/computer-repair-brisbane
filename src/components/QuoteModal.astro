@@ -38,7 +38,7 @@ const phoneDigits = site.phone.display.replace(/\D/g, '');
   aria-labelledby="quote-modal-title"
 >
   <div
-    class="relative mx-auto my-2 w-full max-w-2xl rounded-card border border-ink-200 bg-white shadow-lift"
+    class="relative mx-auto my-2 w-full max-w-2xl rounded-card border border-ink-200 bg-white/[0.06] shadow-lift"
   >
     {/*
       Corner placement without losing reachability.
@@ -74,7 +74,7 @@ const phoneDigits = site.phone.display.replace(/\D/g, '');
 
     <div data-quote-panel="form">
       <div class="border-b border-ink-100 px-6 pt-6 pb-5 sm:px-8">
-        <p class="text-xs font-bold tracking-wide text-brand-700 uppercase">
+        <p class="text-xs font-bold tracking-wide text-brand-300 uppercase">
           Flat ${rate} first hour · No call-out fee
         </p>
         <h2 id="quote-modal-title" class="mt-2 pr-10 text-h2">Request a quote</h2>
@@ -94,13 +94,13 @@ const phoneDigits = site.phone.display.replace(/\D/g, '');
               type="text"
               autocomplete="name"
               placeholder="e.g. Sam Nguyen"
-              class="mt-1.5 w-full rounded-xl border border-ink-200 bg-white px-3 py-2.5 text-sm text-ink-900 placeholder:text-ink-400 focus:border-brand-400 focus:outline-none"
+              class="mt-1.5 w-full rounded-xl border border-ink-200 bg-white/[0.06] px-3 py-2.5 text-sm text-ink-900 placeholder:text-ink-400 focus:border-brand-400 focus:outline-none"
             />
           </div>
 
           <div class="sm:col-span-1">
             <label for="q-phone" class="block text-sm font-semibold text-ink-900">
-              Mobile number <span class="text-brand-700">(required)</span>
+              Mobile number <span class="text-brand-300">(required)</span>
             </label>
             <input
               id="q-phone"
@@ -111,7 +111,7 @@ const phoneDigits = site.phone.display.replace(/\D/g, '');
               required
               aria-describedby="q-phone-hint"
               placeholder="04xx xxx xxx"
-              class="mt-1.5 w-full rounded-xl border border-ink-200 bg-white px-3 py-2.5 text-sm text-ink-900 placeholder:text-ink-400 focus:border-brand-400 focus:outline-none"
+              class="mt-1.5 w-full rounded-xl border border-ink-200 bg-white/[0.06] px-3 py-2.5 text-sm text-ink-900 placeholder:text-ink-400 focus:border-brand-400 focus:outline-none"
             />
             <p id="q-phone-hint" class="mt-1.5 text-xs text-ink-500">
               Australian mobile, starting with 04.
@@ -127,7 +127,7 @@ const phoneDigits = site.phone.display.replace(/\D/g, '');
               type="email"
               autocomplete="email"
               placeholder="e.g. sam@bigpond.com"
-              class="mt-1.5 w-full rounded-xl border border-ink-200 bg-white px-3 py-2.5 text-sm text-ink-900 placeholder:text-ink-400 focus:border-brand-400 focus:outline-none"
+              class="mt-1.5 w-full rounded-xl border border-ink-200 bg-white/[0.06] px-3 py-2.5 text-sm text-ink-900 placeholder:text-ink-400 focus:border-brand-400 focus:outline-none"
             />
             <p data-error-for="email" class="mt-1.5 hidden text-xs font-semibold text-red-700"></p>
           </div>
@@ -152,7 +152,7 @@ const phoneDigits = site.phone.display.replace(/\D/g, '');
                 aria-controls="q-suburb-list"
                 aria-autocomplete="list"
                 aria-describedby="q-suburb-status"
-                class="w-full rounded-xl border border-ink-200 bg-white px-3 py-2.5 text-sm text-ink-900 placeholder:text-ink-400 focus:border-brand-400 focus:outline-none"
+                class="w-full rounded-xl border border-ink-200 bg-white/[0.06] px-3 py-2.5 text-sm text-ink-900 placeholder:text-ink-400 focus:border-brand-400 focus:outline-none"
               />
               {/*
                 The list is a plain element rather than a <datalist>: datalist
@@ -166,7 +166,7 @@ const phoneDigits = site.phone.display.replace(/\D/g, '');
                 role="listbox"
                 aria-label="Matching suburbs"
                 hidden
-                class="absolute inset-x-0 top-full z-30 mt-1 max-h-64 overflow-y-auto overscroll-contain rounded-xl border border-ink-200 bg-white py-1 shadow-lift"
+                class="absolute inset-x-0 top-full z-30 mt-1 max-h-64 overflow-y-auto overscroll-contain rounded-xl border border-ink-200 bg-white/[0.06] py-1 shadow-lift"
               ></ul>
             </div>
             <p id="q-suburb-status" role="status" class="mt-1.5 text-xs text-ink-500">
@@ -179,7 +179,7 @@ const phoneDigits = site.phone.display.replace(/\D/g, '');
             <select
               id="q-device"
               name="device"
-              class="mt-1.5 w-full rounded-xl border border-ink-200 bg-white px-3 py-2.5 text-sm text-ink-900 focus:border-brand-400 focus:outline-none"
+              class="mt-1.5 w-full rounded-xl border border-ink-200 bg-white/[0.06] px-3 py-2.5 text-sm text-ink-900 focus:border-brand-400 focus:outline-none"
             >
               <option value="">Not sure</option>
               <option value="Laptop">Laptop</option>
@@ -196,7 +196,7 @@ const phoneDigits = site.phone.display.replace(/\D/g, '');
             <select
               id="q-contact"
               name="preferred_contact"
-              class="mt-1.5 w-full rounded-xl border border-ink-200 bg-white px-3 py-2.5 text-sm text-ink-900 focus:border-brand-400 focus:outline-none"
+              class="mt-1.5 w-full rounded-xl border border-ink-200 bg-white/[0.06] px-3 py-2.5 text-sm text-ink-900 focus:border-brand-400 focus:outline-none"
             >
               <option value="Phone call">Phone call</option>
               <option value="Email">Email</option>
@@ -211,7 +211,7 @@ const phoneDigits = site.phone.display.replace(/\D/g, '');
               name="brand"
               type="text"
               placeholder="e.g. HP, Dell, Lenovo, Apple"
-              class="mt-1.5 w-full rounded-xl border border-ink-200 bg-white px-3 py-2.5 text-sm text-ink-900 placeholder:text-ink-400 focus:border-brand-400 focus:outline-none"
+              class="mt-1.5 w-full rounded-xl border border-ink-200 bg-white/[0.06] px-3 py-2.5 text-sm text-ink-900 placeholder:text-ink-400 focus:border-brand-400 focus:outline-none"
             />
           </div>
 
@@ -222,7 +222,7 @@ const phoneDigits = site.phone.display.replace(/\D/g, '');
               name="model"
               type="text"
               placeholder="e.g. HP EliteBook 840 G8"
-              class="mt-1.5 w-full rounded-xl border border-ink-200 bg-white px-3 py-2.5 text-sm text-ink-900 placeholder:text-ink-400 focus:border-brand-400 focus:outline-none"
+              class="mt-1.5 w-full rounded-xl border border-ink-200 bg-white/[0.06] px-3 py-2.5 text-sm text-ink-900 placeholder:text-ink-400 focus:border-brand-400 focus:outline-none"
             />
           </div>
 
@@ -235,7 +235,7 @@ const phoneDigits = site.phone.display.replace(/\D/g, '');
               name="serial"
               type="text"
               placeholder="e.g. 5CD4321ABC"
-              class="mt-1.5 w-full rounded-xl border border-ink-200 bg-white px-3 py-2.5 text-sm text-ink-900 placeholder:text-ink-400 focus:border-brand-400 focus:outline-none"
+              class="mt-1.5 w-full rounded-xl border border-ink-200 bg-white/[0.06] px-3 py-2.5 text-sm text-ink-900 placeholder:text-ink-400 focus:border-brand-400 focus:outline-none"
             />
             <p class="mt-1.5 text-xs text-ink-500">
               Apple and some other brands quote better with it. Skip it if you cannot find it quickly
@@ -252,7 +252,7 @@ const phoneDigits = site.phone.display.replace(/\D/g, '');
               name="problem"
               rows="3"
               placeholder="A sentence is enough, e.g. &quot;it will not turn on&quot; or &quot;pop-ups on every page&quot;."
-              class="mt-1.5 w-full rounded-xl border border-ink-200 bg-white px-3 py-2.5 text-sm text-ink-900 placeholder:text-ink-400 focus:border-brand-400 focus:outline-none"
+              class="mt-1.5 w-full rounded-xl border border-ink-200 bg-white/[0.06] px-3 py-2.5 text-sm text-ink-900 placeholder:text-ink-400 focus:border-brand-400 focus:outline-none"
             ></textarea>
           </div>
 
@@ -266,7 +266,7 @@ const phoneDigits = site.phone.display.replace(/\D/g, '');
               type="file"
               multiple
               accept="image/*"
-              class="mt-1.5 w-full rounded-xl border border-ink-200 bg-white px-3 py-2 text-sm text-ink-600 file:mr-3 file:rounded-lg file:border-0 file:bg-ink-100 file:px-3 file:py-1.5 file:text-sm file:font-semibold file:text-ink-900"
+              class="mt-1.5 w-full rounded-xl border border-ink-200 bg-white/[0.06] px-3 py-2 text-sm text-ink-600 file:mr-3 file:rounded-lg file:border-0 file:bg-ink-100 file:px-3 file:py-1.5 file:text-sm file:font-semibold file:text-ink-900"
             />
             <p class="mt-1.5 text-xs text-ink-500">
               Up to 5 photos. Handy for a cracked screen or a strange error message.
@@ -283,7 +283,7 @@ const phoneDigits = site.phone.display.replace(/\D/g, '');
           </button>
           <p class="text-sm text-ink-500">Or call <a
               href={site.phone.href}
-              class="font-semibold text-brand-700 underline-offset-2 hover:underline"
+              class="font-semibold text-brand-300 underline-offset-2 hover:underline"
               >{site.phone.display}</a
             ></p>
         </div>
@@ -304,7 +304,7 @@ const phoneDigits = site.phone.display.replace(/\D/g, '');
     <div data-quote-panel="sent" hidden>
       <div class="px-6 py-10 text-center sm:px-8">
         <div
-          class="mx-auto flex size-14 items-center justify-center rounded-full bg-brand-50 text-brand-700"
+          class="mx-auto flex size-14 items-center justify-center rounded-full bg-brand-500/10 text-brand-300"
         >
           <svg class="size-7" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
             <path
@@ -327,7 +327,7 @@ const phoneDigits = site.phone.display.replace(/\D/g, '');
           <button
             type="button"
             data-quote-close
-            class="inline-flex items-center justify-center rounded-xl border border-ink-300 px-5 py-3 text-base font-bold text-ink-900 transition hover:border-brand-400 hover:bg-brand-50"
+            class="inline-flex items-center justify-center rounded-xl border border-ink-300 px-5 py-3 text-base font-bold text-ink-900 transition hover:border-brand-400 hover:bg-brand-500/10"
           >
             Close
           </button>
@@ -467,7 +467,7 @@ const phoneDigits = site.phone.display.replace(/\D/g, '');
         var meta = row.postcode ? row.postcode + ' · ' + row.region : row.region;
         html +=
           '<li id="q-suburb-opt-' + i + '" role="option" aria-selected="false" data-i="' + i +
-          '" class="flex cursor-pointer items-baseline justify-between gap-3 px-3 py-2 text-sm text-ink-900 hover:bg-brand-50 focus:bg-brand-50 focus:outline-none">' +
+          '" class="flex cursor-pointer items-baseline justify-between gap-3 px-3 py-2 text-sm text-ink-900 hover:bg-brand-500/10 focus:bg-brand-500/10 focus:outline-none">' +
           '<span class="font-medium">' + row.name + '</span>' +
           '<span class="shrink-0 text-xs text-ink-500">' + meta + '</span>' +
           '</li>';
@@ -487,12 +487,12 @@ const phoneDigits = site.phone.display.replace(/\D/g, '');
       var options = suburbList.querySelectorAll('[role="option"]');
       if (!options.length) return;
       if (suburbActive >= 0 && options[suburbActive]) {
-        options[suburbActive].classList.remove('bg-brand-50');
+        options[suburbActive].classList.remove('bg-brand-500/10');
         options[suburbActive].setAttribute('aria-selected', 'false');
       }
       suburbActive = (next + options.length) % options.length;
       var el = options[suburbActive];
-      el.classList.add('bg-brand-50');
+      el.classList.add('bg-brand-500/10');
       el.setAttribute('aria-selected', 'true');
       suburbInput.setAttribute('aria-activedescendant', el.id);
       // Keep the active row visible in a long list.

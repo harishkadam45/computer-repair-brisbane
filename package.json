@@ -24,6 +24,7 @@
     "audit:footer-align": "node scripts/footer-align-audit.mjs",
     "audit:icons": "node scripts/icon-audit.mjs",
     "audit:contrast": "node scripts/contrast-audit.mjs",
+    "audit:dark-wash": "node scripts/dark-wash-audit.mjs",
     "audit:interaction": "node scripts/interaction-audit.mjs",
     "audit:megamenu": "node scripts/mega-menu-travel.mjs",
     "audit:search": "node scripts/search-audit.mjs",

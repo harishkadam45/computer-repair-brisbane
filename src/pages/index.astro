@@ -259,7 +259,7 @@ const brands = ['HP', 'Dell', 'Lenovo', 'Apple', 'Asus', 'Acer', 'Toshiba', 'Son
   </section>
 
   <!-- ================= Trust bar ================= -->
-  <section class="border-b border-ink-100 bg-white" aria-label="Why choose us">
+  <section class="border-b border-ink-100" aria-label="Why choose us">
     <div class="container-page py-8">
       <ul class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
         {
@@ -282,7 +282,7 @@ const brands = ['HP', 'Dell', 'Lenovo', 'Apple', 'Asus', 'Acer', 'Toshiba', 'Son
             },
           ].map((item) => (
             <li class="flex gap-3.5">
-              <span class="flex size-10 shrink-0 items-center justify-center rounded-xl bg-brand-50 text-brand-600">
+              <span class="flex size-10 shrink-0 items-center justify-center rounded-xl bg-brand-500/10 text-brand-300">
                 <svg class="size-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                   <path d="M16.7 5.3a1 1 0 0 1 0 1.4l-7.5 7.5a1 1 0 0 1-1.4 0L3.3 9.7a1 1 0 1 1 1.4-1.4l3.8 3.8 6.8-6.8a1 1 0 0 1 1.4 0Z" />
                 </svg>
@@ -299,7 +299,7 @@ const brands = ['HP', 'Dell', 'Lenovo', 'Apple', 'Asus', 'Acer', 'Toshiba', 'Son
   </section>
 
 <!-- ================= Symptoms ================= -->
-  <section class="border-t border-ink-100 bg-white" aria-labelledby="symptoms-heading">
+  <section class="border-t border-ink-100" aria-labelledby="symptoms-heading">
     <div class="container-page py-16 sm:py-20">
       <div class="flex flex-wrap items-end justify-between gap-4">
         <div>
@@ -311,7 +311,7 @@ const brands = ['HP', 'Dell', 'Lenovo', 'Apple', 'Asus', 'Acer', 'Toshiba', 'Son
         </div>
         <a
           href="/services/"
-          class="inline-flex items-center gap-1.5 text-sm font-bold text-brand-700 hover:text-brand-800"
+          class="inline-flex items-center gap-1.5 text-sm font-bold text-brand-300 hover:text-brand-300"
         >
           All {services.length + families.length} services
           <svg class="size-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
@@ -326,13 +326,13 @@ const brands = ['HP', 'Dell', 'Lenovo', 'Apple', 'Asus', 'Acer', 'Toshiba', 'Son
             <li>
               <a
                 href={s.href}
-                class="group flex h-full flex-col rounded-card border border-ink-200 bg-white p-5 transition hover:-translate-y-0.5 hover:border-brand-300 hover:shadow-lift"
+                class="group flex h-full flex-col rounded-card border border-ink-200 bg-white/[0.06] p-5 transition hover:-translate-y-0.5 hover:border-brand-300 hover:shadow-lift"
               >
-                <h3 class="text-lg font-extrabold text-ink-900 transition group-hover:text-brand-700">
+                <h3 class="text-lg font-extrabold text-ink-900 transition group-hover:text-brand-300">
                   {s.title}
                 </h3>
                 <p class="mt-2 flex-1 text-sm leading-relaxed text-ink-600">{s.body}</p>
-                <span class="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-brand-700">
+                <span class="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-brand-300">
                   {s.cta}
                   <svg
                     class="size-4 transition group-hover:translate-x-0.5"
@@ -352,7 +352,7 @@ const brands = ['HP', 'Dell', 'Lenovo', 'Apple', 'Asus', 'Acer', 'Toshiba', 'Son
   </section>
 
   <!-- ================= Services ================= -->
-  <section class="border-t border-ink-100 bg-white" aria-labelledby="services-heading">
+  <section class="border-t border-ink-100" aria-labelledby="services-heading">
     <div class="container-page py-16 sm:py-20">
       <div class="flex flex-wrap items-end justify-between gap-4">
         <div>
@@ -364,7 +364,7 @@ const brands = ['HP', 'Dell', 'Lenovo', 'Apple', 'Asus', 'Acer', 'Toshiba', 'Son
         </div>
         <a
           href="/services/"
-          class="inline-flex items-center gap-1.5 text-sm font-bold text-brand-700 hover:text-brand-800"
+          class="inline-flex items-center gap-1.5 text-sm font-bold text-brand-300 hover:text-brand-300"
         >
           All {services.length + families.length} services
           <svg class="size-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
@@ -378,13 +378,13 @@ const brands = ['HP', 'Dell', 'Lenovo', 'Apple', 'Asus', 'Acer', 'Toshiba', 'Son
           families.map((f) => (
             <a
               href={`/${f.slug}/`}
-              class="group flex flex-col rounded-card border border-ink-200 bg-white p-5 transition hover:-translate-y-0.5 hover:border-brand-300 hover:shadow-lift"
+              class="group flex flex-col rounded-card border border-ink-200 bg-white/[0.06] p-5 transition hover:-translate-y-0.5 hover:border-brand-300 hover:shadow-lift"
             >
-              <span class="text-lg font-extrabold text-brand-700 transition group-hover:text-brand-800">
+              <span class="text-lg font-extrabold text-brand-300 transition group-hover:text-brand-300">
                 {f.title}
               </span>
               <p class="mt-2 flex-1 text-sm leading-relaxed text-ink-600">{f.summary}</p>
-              <span class="mt-4 text-sm font-semibold text-brand-700">{f.turnaround}</span>
+              <span class="mt-4 text-sm font-semibold text-brand-300">{f.turnaround}</span>
             </a>
           ))
         }
@@ -422,7 +422,7 @@ const brands = ['HP', 'Dell', 'Lenovo', 'Apple', 'Asus', 'Acer', 'Toshiba', 'Son
         </div>
 
         <div class="min-w-0 lg:col-span-7">
-          <div class="overflow-x-auto rounded-card border border-ink-200 bg-white">
+          <div class="overflow-x-auto rounded-card border border-ink-200 bg-white/[0.06]">
             <table class="w-full text-sm">
               <caption class="sr-only">
                 What this business charges against published competitor rates
@@ -432,7 +432,7 @@ const brands = ['HP', 'Dell', 'Lenovo', 'Apple', 'Asus', 'Acer', 'Toshiba', 'Son
                   <th scope="col" class="px-4 py-3.5 text-left font-bold text-ink-900 sm:px-5">
                     Service
                   </th>
-                  <th scope="col" class="px-3 py-3.5 text-right font-extrabold text-brand-700">
+                  <th scope="col" class="px-3 py-3.5 text-right font-extrabold text-brand-300">
                     {site.name.replace('Fix My Home Computer', 'Here')}
                   </th>
                   <th scope="col" class="px-3 py-3.5 text-right font-semibold text-ink-600 sm:px-5">
@@ -457,7 +457,7 @@ const brands = ['HP', 'Dell', 'Lenovo', 'Apple', 'Asus', 'Acer', 'Toshiba', 'Son
                       <th scope="row" class="px-4 py-3 text-left font-medium text-ink-800 sm:px-5">
                         {label}
                       </th>
-                      <td class="px-3 py-3 text-right font-extrabold text-brand-700 sm:px-4">
+                      <td class="px-3 py-3 text-right font-extrabold text-brand-300 sm:px-4">
                         ${ours}
                       </td>
                       <td class="px-3 py-3 text-right text-ink-500 sm:px-5">${geek}</td>
@@ -478,7 +478,7 @@ const brands = ['HP', 'Dell', 'Lenovo', 'Apple', 'Asus', 'Acer', 'Toshiba', 'Son
   </section>
 
   <!-- ================= Service area ================= -->
-  <section class="border-t border-ink-100 bg-white" aria-labelledby="area-heading">
+  <section class="border-t border-ink-100" aria-labelledby="area-heading">
     <div class="container-page py-16 sm:py-20">
       <div class="flex flex-wrap items-end justify-between gap-4">
         <div>
@@ -490,7 +490,7 @@ const brands = ['HP', 'Dell', 'Lenovo', 'Apple', 'Asus', 'Acer', 'Toshiba', 'Son
         </div>
         <a
           href="/service-area/"
-          class="inline-flex items-center gap-1.5 text-sm font-bold text-brand-700 hover:text-brand-800"
+          class="inline-flex items-center gap-1.5 text-sm font-bold text-brand-300 hover:text-brand-300"
         >
           Search your suburb
           <svg class="size-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
@@ -502,7 +502,7 @@ const brands = ['HP', 'Dell', 'Lenovo', 'Apple', 'Asus', 'Acer', 'Toshiba', 'Son
       <div class="mt-9 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {
           regions.slice(0, 6).map((r) => (
-            <div class="rounded-card border border-ink-200 bg-white p-5">
+            <div class="rounded-card border border-ink-200 bg-white/[0.06] p-5">
               <div class="flex items-baseline justify-between gap-3">
                 <h3 class="text-[0.98rem] font-bold text-ink-900">{r.region}</h3>
                 <span class="rounded-full bg-ink-100 px-2 py-0.5 text-xs font-semibold text-ink-600">
@@ -514,7 +514,7 @@ const brands = ['HP', 'Dell', 'Lenovo', 'Apple', 'Asus', 'Acer', 'Toshiba', 'Son
                   <li>
                     <a
                       href={liveSuburbUrl(computerRepairs, s)}
-                      class="text-ink-600 underline-offset-2 hover:text-brand-700 hover:underline"
+                      class="text-ink-600 underline-offset-2 hover:text-brand-300 hover:underline"
                     >
                       {s.name}
                     </a>
@@ -524,7 +524,7 @@ const brands = ['HP', 'Dell', 'Lenovo', 'Apple', 'Asus', 'Acer', 'Toshiba', 'Son
               {r.suburbs.length > 10 && (
                 <a
                   href="/service-area/"
-                  class="mt-3 inline-block text-sm font-semibold text-brand-700 hover:text-brand-800"
+                  class="mt-3 inline-block text-sm font-semibold text-brand-300 hover:text-brand-300"
                 >
                   + {r.suburbs.length - 10} more
                 </a>
@@ -564,14 +564,14 @@ const brands = ['HP', 'Dell', 'Lenovo', 'Apple', 'Asus', 'Acer', 'Toshiba', 'Son
           </div>
           <a
             href="/about/"
-            class="mt-7 inline-flex items-center gap-2 rounded-xl border-2 border-brand-500 px-6 py-3.5 text-base font-bold text-brand-700 transition hover:bg-brand-50"
+            class="mt-7 inline-flex items-center gap-2 rounded-xl border-2 border-brand-500 px-6 py-3.5 text-base font-bold text-brand-300 transition hover:bg-brand-500/10"
           >
             More about the service
           </a>
         </div>
 
         <div class="lg:col-span-5 min-w-0">
-          <div class="rounded-card border border-ink-200 bg-white p-6">
+          <div class="rounded-card border border-ink-200 bg-white/[0.06] p-6">
             <h3 class="text-sm font-bold tracking-wide text-ink-500 uppercase">Brands serviced</h3>
             <ul class="mt-4 flex flex-wrap gap-2">
               {
@@ -595,7 +595,7 @@ const brands = ['HP', 'Dell', 'Lenovo', 'Apple', 'Asus', 'Acer', 'Toshiba', 'Son
                 href={site.reviews.url}
                 rel="noopener nofollow"
                 target="_blank"
-                class="mt-2 inline-flex items-center gap-1.5 text-sm font-bold text-brand-700 hover:text-brand-800"
+                class="mt-2 inline-flex items-center gap-1.5 text-sm font-bold text-brand-300 hover:text-brand-300"
               >
                 Read the reviews
                 <svg class="size-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">

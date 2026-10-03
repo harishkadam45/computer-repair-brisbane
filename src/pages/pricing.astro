@@ -142,7 +142,7 @@ const jsonLd = schema.graph({
 
   <div class="container-page space-y-14 py-14 sm:space-y-16 sm:py-20">
     <!-- The headline rate, stated three ways so it cannot be misread. -->
-    <section aria-labelledby="rate-heading" class="rounded-hero border border-ink-200 bg-white p-7 shadow-lift sm:p-10">
+    <section aria-labelledby="rate-heading" class="rounded-hero border border-ink-200 bg-white/[0.06] p-7 shadow-lift sm:p-10">
       <h2 id="rate-heading" class="text-h2">The rate</h2>
       <p class="mt-5 text-5xl font-extrabold tracking-tight text-ink-900 sm:text-6xl">
         ${rate}
@@ -174,7 +174,7 @@ const jsonLd = schema.graph({
         These are what a straightforward job comes to at the flat rate. They are not a separate
         price list - there is no separate price list. Anything unusual gets quoted before I start.
       </p>
-      <div class="mt-8 overflow-hidden rounded-card border border-ink-200 bg-white">
+      <div class="mt-8 overflow-hidden rounded-card border border-ink-200 bg-white/[0.06]">
         <table class="w-full text-sm">
           <caption class="sr-only">Indicative cost and duration for common computer repair jobs</caption>
           <thead>
@@ -198,7 +198,7 @@ const jsonLd = schema.graph({
                     {row.job}
                   </th>
                   <td class="px-3 py-3.5 text-ink-600 sm:px-6">{row.time}</td>
-                  <td class="px-4 py-3.5 text-right font-bold text-brand-700 sm:px-6">{row.cost}</td>
+                  <td class="px-4 py-3.5 text-right font-bold text-brand-300 sm:px-6">{row.cost}</td>
                 </tr>
               ))
             }
@@ -240,7 +240,7 @@ const jsonLd = schema.graph({
       </p>
 
       <div class="mt-8 overflow-x-auto">
-        <div class="min-w-full overflow-hidden rounded-card border border-ink-200 bg-white sm:min-w-0">
+        <div class="min-w-full overflow-hidden rounded-card border border-ink-200 bg-white/[0.06] sm:min-w-0">
           <table class="w-full text-sm">
             <caption class="sr-only">
               This business's charges against published rates from Geek Squad and Gizmo
@@ -250,7 +250,7 @@ const jsonLd = schema.graph({
                 <th scope="col" class="px-4 py-3.5 text-left font-bold text-ink-900 sm:px-6">
                   Service
                 </th>
-                <th scope="col" class="px-3 py-3.5 text-right font-extrabold text-brand-700 sm:px-4">
+                <th scope="col" class="px-3 py-3.5 text-right font-extrabold text-brand-300 sm:px-4">
                   Here
                 </th>
                 <th scope="col" class="px-3 py-3.5 text-right font-semibold text-ink-600 sm:px-6">
@@ -268,7 +268,7 @@ const jsonLd = schema.graph({
                     <th scope="row" class="px-4 py-3 text-left font-medium text-ink-800 sm:px-6">
                       {label}
                     </th>
-                    <td class="px-3 py-3 text-right font-extrabold text-brand-700 sm:px-4">
+                    <td class="px-3 py-3 text-right font-extrabold text-brand-300 sm:px-4">
                       ${ours}
                     </td>
                     <td class="px-3 py-3 text-right text-ink-500 sm:px-6">${geek}</td>

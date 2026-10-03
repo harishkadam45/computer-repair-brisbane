@@ -94,10 +94,10 @@ const jsonLd = schema.graph({
   </div>
 
   <article>
-    <section class="border-b border-ink-100 bg-brand-mesh">
+    <section class="border-b border-ink-100 hero-wash">
       <div class="container-page py-12 sm:py-16">
     <header class="mx-auto max-w-3xl">
-      <p class="text-sm font-bold tracking-wide text-brand-700 uppercase">Blog</p>
+      <p class="text-sm font-bold tracking-wide text-brand-300 uppercase">Blog</p>
       <h1 class="mt-3 text-h1">{post.title}</h1>
       <p class="mt-4 flex flex-wrap items-center gap-x-3 gap-y-1 text-[0.95rem] text-ink-500">
         <time datetime={isoDate(post.date)}>{formatDate(post.date)}</time>
@@ -124,9 +124,9 @@ const jsonLd = schema.graph({
           aria-label="More articles"
         >
           {older ? (
-            <a href={older.path} class="group rounded-card border border-ink-200 bg-white p-5 transition hover:border-brand-300">
+            <a href={older.path} class="group rounded-card border border-ink-200 bg-white/[0.06] p-5 transition hover:border-brand-300">
               <span class="block text-xs font-bold tracking-wide text-ink-500 uppercase">Older</span>
-              <span class="mt-1.5 block font-bold text-ink-900 group-hover:text-brand-700">
+              <span class="mt-1.5 block font-bold text-ink-900 group-hover:text-brand-300">
                 {older.title}
               </span>
             </a>
@@ -136,10 +136,10 @@ const jsonLd = schema.graph({
           {newer && (
             <a
               href={newer.path}
-              class="group rounded-card border border-ink-200 bg-white p-5 text-right transition hover:border-brand-300"
+              class="group rounded-card border border-ink-200 bg-white/[0.06] p-5 text-right transition hover:border-brand-300"
             >
               <span class="block text-xs font-bold tracking-wide text-ink-500 uppercase">Newer</span>
-              <span class="mt-1.5 block font-bold text-ink-900 group-hover:text-brand-700">
+              <span class="mt-1.5 block font-bold text-ink-900 group-hover:text-brand-300">
                 {newer.title}
               </span>
             </a>
@@ -157,7 +157,7 @@ const jsonLd = schema.graph({
               <li>
                 <a
                   href={p.path}
-                  class="block rounded-card border border-ink-200 bg-white p-4 transition hover:border-brand-300"
+                  class="block rounded-card border border-ink-200 bg-white/[0.06] p-4 transition hover:border-brand-300"
                 >
                   <span class="block text-sm text-ink-500">
                     <time datetime={isoDate(p.date)}>{formatDate(p.date)}</time>

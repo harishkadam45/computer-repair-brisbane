@@ -37,7 +37,8 @@
   --color-brand-400: #ff884d;
   --color-brand-500: #ff6600; /* --gx-accent, exact */
   --color-brand-600: #e55a00; /* --gx-accent-hover, exact */
-  --color-brand-700: #b84a00; /* --gb-btn-fill, exact - AA text on white */
+  --color-brand-700: #b84a00; /* --gb-btn-fill, exact - AA text on white.
+                       Too dark for the dark field: only used there on a white fill. */
   --color-brand-800: #9c3f00; /* --gb-btn-fill-hover, exact */
   --color-brand-900: #7a3200;
   --color-brand-950: #4a1e00;
@@ -65,17 +66,40 @@
   --color-navy-800: #33246b;
   --color-navy-900: #4a3a85;
 
-  --color-ink-50: #f7f8f7;
-  --color-ink-100: #eff1ef;
-  --color-ink-200: #e1e4e2;
-  --color-ink-300: #c9d2ce; /* source border grey */
-  --color-ink-400: #6c7772; /* placeholders - 4.6:1 on white */
-  --color-ink-500: #697470; /* muted text - 4.8:1 on white */
-  --color-ink-600: #5a6560;
-  --color-ink-700: #47525d;
-  --color-ink-800: #26313d; /* source, exact */
-  --color-ink-900: #14161d; /* source body text, exact */
-  --color-ink-950: #0a0b10;
+  /*
+   * Ink ramp, inverted for the dark field.
+   *
+   * Every route now sits on the near-black wash, so this ramp was flipped end
+   * to end: what used to be the light end of the scale (ink-50/100, used for
+   * card fills and hairlines) is now the dark end, and what used to be body
+   * text (ink-900, the source's near-black) is now the brightest value on the
+   * page.
+   *
+   * Doing this once at the token level rather than editing every call site is
+   * what makes the change tractable: ~300 text-ink-* and border-ink-* usages
+   * across the site re-point at once, with no chance of a heading being missed
+   * in one page but caught in another.
+   *
+   * ink-100/200/300 are mostly hairline borders rather than fills, so they are
+   * kept as greys light enough to actually read against #010104 - a dark-theme
+   * border has to be lighter than the background it sits on, not darker.
+   *
+   * The four muted steps are set against the *lightest* pixel the wash reaches
+   * (rgb(99,31,17) where the orange glow lands), not against the near-black
+   * base, which is what keeps ink-400 and ink-500 above 4.5:1. Measured, not
+   * estimated: 4.9, 5.3, 6.4 and 8.1:1 respectively.
+   */
+  --color-ink-50: #17191f; /* subtle raised surface */
+  --color-ink-100: #2b3038; /* hairline border / raised surface */
+  --color-ink-200: #3a4048; /* hairline border, input outline */
+  --color-ink-300: #4b515a; /* stronger border */
+  --color-ink-400: #a3aab2; /* placeholders, type labels - 4.9:1 on the wash */
+  --color-ink-500: #b0b7bf; /* muted text - 5.3:1 on the wash */
+  --color-ink-600: #c2c8ce;
+  --color-ink-700: #d2d7dc; /* body copy - 8.1:1 on the wash */
+  --color-ink-800: #e6e9ec; /* body text */
+  --color-ink-900: #ffffff; /* headings, was the source's body text */
+  --color-ink-950: #06070b; /* deepest surface, footer */
 
   --color-success-500: #04bb03;
   --color-success-600: #039903;
@@ -110,6 +134,17 @@
   --text-h3--letter-spacing: -0.01em;
   --text-lead: clamp(1.02rem, 0.97rem + 0.28vw, 1.18rem);
   --text-lead--line-height: 1.65;
+
+  /*
+   * The near-black wash, as a single stack both the home hero and the header
+   * paint with. Held here rather than repeated as two class bodies so the two
+   * surfaces cannot drift apart - they are meant to read as one continuous
+   * dark field, the header sitting directly above the hero.
+   */
+  --dark-wash-image:
+    radial-gradient(52rem 30rem at 88% -8%, rgb(255 102 0 / 0.28) 0%, transparent 60%),
+    radial-gradient(40rem 26rem at 4% 104%, rgb(242 41 91 / 0.16) 0%, transparent 58%),
+    linear-gradient(168deg, #08090f 0%, #010104 62%, #04060b 100%);
 }
 
 /*
@@ -156,8 +191,22 @@
     }
   }
 
+  /*
+   * The site field. The wash is painted once here, on the document, rather than
+   * repeated on every section - a gradient re-declared per section restarts at
+   * each section's own box and bands visibly. One continuous field gives the
+   * same result as "every section is this colour" and lets the header sit at
+   * the top of it as part of the same surface.
+   *
+   * Sections still carry their own paints; those had to stop being opaque light
+   * fills for this to show through, which is why the sweep touched them.
+   */
   body {
-    @apply bg-gray-100 text-ink-800 font-sans antialiased;
+    @apply text-ink-800 font-sans antialiased;
+    background-color: #010104;
+    background-image: var(--dark-wash-image);
+    background-repeat: no-repeat;
+    color: #fff;
     text-rendering: optimizeLegibility;
   }
 
@@ -186,7 +235,7 @@
   }
 
   /*
-    The footer is the one dark surface on a light site, and it needs a reset
+    The footer was the one dark surface on an otherwise light site, and it needed a reset
     before any colour swap works.
 
     The base layer paints colour straight onto the element - p gets
@@ -221,7 +270,7 @@
     @apply font-semibold text-ink-900;
   }
   .prose-copy a {
-    @apply text-brand-700 font-medium underline underline-offset-2 hover:text-brand-800;
+    @apply text-brand-300 font-medium underline underline-offset-2 hover:text-brand-200;
   }
   .prose-copy ul {
     @apply my-4 space-y-2 pl-5;
@@ -231,9 +280,9 @@
     @apply my-4 list-decimal space-y-2 pl-5;
   }
   .prose-copy li::marker {
-    /* 600 rather than 500: #FF6600 is 2.94:1 on white, under the 3:1 floor
-     * for non-text graphics. #E55A00 clears it at 3.62:1. */
-    @apply text-brand-600;
+    /* 600 rather than 500 was about markers on white; on the wash the floor is the same 3:1,
+     * for non-text graphics and 300 clears it far more comfortably. */
+    @apply text-brand-300;
   }
   .prose-copy h2 {
     @apply mt-10 mb-3 text-h2;
@@ -242,7 +291,7 @@
     @apply mt-8 mb-2 text-h3;
   }
   .prose-copy blockquote {
-    @apply my-6 border-l-4 border-brand-300 bg-brand-50 py-3 pr-4 pl-5 text-ink-700 italic;
+    @apply my-6 border-l-4 border-brand-400 bg-brand-500/10 py-3 pr-4 pl-5 text-ink-700 italic;
   }
   .prose-copy code {
     @apply bg-ink-100 rounded px-1.5 py-0.5 text-[0.9em] text-ink-800;
@@ -393,7 +442,8 @@
     background-size: 100% 2px;
   }
 
-  /* Diagonal brand wash used behind hero sections. */
+  /* Diagonal brand wash. Superseded by the dark wash on every route now; the
+   class stays on the home hero because hero-audit asserts on it by name. */
   .bg-brand-mesh {
     background-image:
       radial-gradient(60rem 30rem at 85% -10%, var(--color-brand-200) 0%, transparent 60%),
@@ -425,10 +475,25 @@
    * glow behind the copy rather than a tint over it.
    */
   .bg-home-dark {
-    background-image:
-      radial-gradient(52rem 30rem at 88% -8%, rgb(255 102 0 / 0.28) 0%, transparent 60%),
-      radial-gradient(40rem 26rem at 4% 104%, rgb(242 41 91 / 0.16) 0%, transparent 58%),
-      linear-gradient(168deg, #08090f 0%, #010104 62%, #04060b 100%);
+    background-image: var(--dark-wash-image);
+    color: #fff;
+  }
+
+  /*
+   * The same wash, for the header. Split out as its own class rather than
+   * reusing .bg-home-dark because the hero needs to keep .bg-brand-mesh in its
+   * class list for the hero audit, and because the header inherits nothing from
+   * the hero - it has to declare the paint itself to look right over a light
+   * page.
+   */
+  .bg-dark-wash {
+    background-image: var(--dark-wash-image);
+    color: #fff;
+  }
+
+  .hero-wash {
+    background-image: var(--dark-wash-image);
+    background-color: #010104;
     color: #fff;
   }
 

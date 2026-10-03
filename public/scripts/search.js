@@ -110,7 +110,7 @@
         html +=
           '<li><a href="' +
           h.u +
-          '" class="flex items-baseline justify-between gap-3 px-4 py-2.5 hover:bg-brand-50">' +
+          '" class="flex items-baseline justify-between gap-3 px-4 py-2.5 hover:bg-brand-500/10">' +
           '<span class="text-sm font-semibold text-ink-900">' +
           h.t +
           '</span><span class="shrink-0 text-xs text-ink-400">' +
@@ -120,7 +120,7 @@
       html +=
         '<li><a href="/search/?q=' +
         encodeURIComponent(q) +
-        '" class="block px-4 py-2.5 text-center text-sm font-semibold text-brand-700 hover:bg-brand-50">All results</a></li>';
+        '" class="block px-4 py-2.5 text-center text-sm font-semibold text-brand-300 hover:bg-brand-500/10">All results</a></li>';
       results.innerHTML = '<ul class="py-1">' + html + '</ul>';
       results.hidden = false;
       input.setAttribute('aria-expanded', 'true');
@@ -160,8 +160,8 @@
         active += e.key === 'ArrowDown' ? 1 : -1;
         if (active < 0) active = links.length - 1;
         if (active >= links.length) active = 0;
-        for (var i = 0; i < links.length; i++) links[i].classList.remove('bg-brand-50');
-        links[active].classList.add('bg-brand-50');
+        for (var i = 0; i < links.length; i++) links[i].classList.remove('bg-brand-500/10');
+        links[active].classList.add('bg-brand-500/10');
         links[active].focus();
       }
     });
@@ -233,9 +233,9 @@
             '</p>'
           : '';
         html +=
-          '<li class="rounded-card border border-ink-200 bg-white p-5">' +
+          '<li class="rounded-card border border-ink-200 bg-white/[0.06] p-5">' +
           '<div class="flex flex-wrap items-baseline justify-between gap-2">' +
-          '<a href="' + h.u + '" class="text-lg font-bold text-ink-900 hover:text-brand-700">' + h.t + '</a>' +
+          '<a href="' + h.u + '" class="text-lg font-bold text-ink-900 hover:text-brand-300">' + h.t + '</a>' +
           '<span class="text-xs font-semibold text-ink-400">' + (LABELS[h.ty] || '') + '</span>' +
           '</div>' + d + '</li>';
       }

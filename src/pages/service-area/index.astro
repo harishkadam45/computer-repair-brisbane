@@ -138,7 +138,7 @@ const jsonLd = schema.graph({
             {POPULAR.map((s) => (
               <a
                 href={liveSuburbUrl(computerRepairs, s)}
-                class="rounded-xl border border-brand-200 bg-brand-50 px-4 py-2.5 text-sm font-semibold text-brand-800 transition hover:border-brand-400 hover:bg-brand-100"
+                class="rounded-xl border border-brand-500/25 bg-brand-500/10 px-4 py-2.5 text-sm font-semibold text-brand-300 transition hover:border-brand-400 hover:bg-brand-100"
               >
                 Computer repairs {s.name}
               </a>
@@ -158,7 +158,7 @@ const jsonLd = schema.graph({
             </h2>
             <a
               href={`/service-area/${regionSlug(r.region)}/`}
-              class="text-sm font-bold text-brand-700 hover:text-brand-800"
+              class="text-sm font-bold text-brand-300 hover:text-brand-300"
             >
               {r.suburbs.length} suburbs in {r.region} →
             </a>
@@ -169,7 +169,7 @@ const jsonLd = schema.graph({
               <li>
                 <a
                   href={liveSuburbUrl(computerRepairs, s)}
-                  class="text-ink-700 underline-offset-2 hover:text-brand-700 hover:underline"
+                  class="text-ink-700 underline-offset-2 hover:text-brand-300 hover:underline"
                 >
                   {s.name}
                 </a>
@@ -192,9 +192,9 @@ const jsonLd = schema.graph({
           families.map((f) => (
             <a
               href={`/${f.slug}/`}
-              class="rounded-card border border-ink-200 bg-white p-5 transition hover:-translate-y-0.5 hover:border-brand-300 hover:shadow-lift"
+              class="rounded-card border border-ink-200 bg-white/[0.06] p-5 transition hover:-translate-y-0.5 hover:border-brand-300 hover:shadow-lift"
             >
-              <h3 class="text-[0.98rem] font-extrabold text-brand-700">{f.title}</h3>
+              <h3 class="text-[0.98rem] font-extrabold text-brand-300">{f.title}</h3>
               <p class="mt-2 text-sm leading-relaxed text-ink-600">{f.summary}</p>
             </a>
           ))

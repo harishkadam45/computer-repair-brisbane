@@ -164,13 +164,13 @@ const jsonLd = schema.graph({
           families.map((f) => (
             <a
               href={`/${f.slug}/`}
-              class="group rounded-card border border-ink-200 bg-white p-6 transition hover:-translate-y-0.5 hover:border-brand-300 hover:shadow-lift"
+              class="group rounded-card border border-ink-200 bg-white/[0.06] p-6 transition hover:-translate-y-0.5 hover:border-brand-300 hover:shadow-lift"
             >
-              <h3 class="text-xl font-extrabold text-brand-600 transition group-hover:text-brand-700">
+              <h3 class="text-xl font-extrabold text-brand-300 transition group-hover:text-brand-300">
                 {f.title}
               </h3>
               <p class="mt-2.5 text-[0.95rem] leading-relaxed text-ink-600">{f.summary}</p>
-              <p class="mt-4 inline-flex items-center gap-1.5 text-sm font-bold text-brand-700">
+              <p class="mt-4 inline-flex items-center gap-1.5 text-sm font-bold text-brand-300">
                 {f.turnaround}
                 <svg class="size-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                   <path d="M4 10a1 1 0 0 1 1-1h9.2l-3.6-3.6a1 1 0 1 1 1.4-1.4l5.3 5.3a1 1 0 0 1 0 1.4l-5.3 5.3a1 1 0 1 1-1.4-1.4L14.2 11H5a1 1 0 0 1-1-1Z" />

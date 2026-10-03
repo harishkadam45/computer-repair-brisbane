@@ -85,14 +85,14 @@ const jsonLd = schema.graph({
             {featured.map((p) => (
               <a
                 href={p.path}
-                class="group flex flex-col rounded-card border border-ink-200 bg-white p-6 transition hover:border-brand-300"
+                class="group flex flex-col rounded-card border border-ink-200 bg-white/[0.06] p-6 transition hover:border-brand-300"
               >
                 <time class="text-sm text-ink-500" datetime={isoDate(p.date)}>
                   {formatDate(p.date)}
                 </time>
-                <h3 class="mt-2 text-h3 group-hover:text-brand-700">{p.title}</h3>
+                <h3 class="mt-2 text-h3 group-hover:text-brand-300">{p.title}</h3>
                 <p class="mt-2.5 text-[0.95rem] leading-relaxed text-ink-600">{p.excerpt}</p>
-                <span class="mt-4 inline-flex items-center gap-1.5 text-sm font-bold text-brand-700">
+                <span class="mt-4 inline-flex items-center gap-1.5 text-sm font-bold text-brand-300">
                   Read
                   <svg class="size-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                     <path d="M4 10a1 1 0 0 1 1-1h9.2l-3.6-3.6a1 1 0 1 1 1.4-1.4l5.3 5.3a1 1 0 0 1 0 1.4l-5.3 5.3a1 1 0 1 1-1.4-1.4L14.2 11H5a1 1 0 0 1-1-1Z" />
@@ -131,7 +131,7 @@ const jsonLd = schema.graph({
                         {formatDate(p.date).replace(/ \d{4}$/, '')}
                       </time>
                       <span>
-                        <span class="font-semibold text-ink-900 group-hover:text-brand-700">
+                        <span class="font-semibold text-ink-900 group-hover:text-brand-300">
                           {p.title}
                         </span>
                         <span class="mt-1 block text-[0.92rem] leading-relaxed text-ink-500">

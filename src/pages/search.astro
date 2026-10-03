@@ -30,7 +30,7 @@ const featured = [
 ---
 
 <BaseLayout title={title} description={description} path={path} noindex={true}>
-  <section class="border-b border-ink-100 bg-brand-mesh">
+  <section class="border-b border-ink-100 hero-wash">
     <div class="container-page py-10 sm:py-14">
       <h1 class="text-h1">Search</h1>
       <p class="mt-2 max-w-2xl text-lead text-ink-600">
@@ -52,7 +52,7 @@ const featured = [
             type="search"
             placeholder="Try virus, data recovery, brendale…"
             autocomplete="off"
-            class="w-full rounded-xl border border-ink-200 bg-white py-3.5 pr-4 pl-4 text-lg text-ink-900 shadow-sm transition focus:border-brand-400 focus:outline-none"
+            class="w-full rounded-xl border border-ink-200 bg-white/[0.06] py-3.5 pr-4 pl-4 text-lg text-ink-900 shadow-sm transition focus:border-brand-400 focus:outline-none"
             aria-describedby="search-page-status"
           />
         </div>
@@ -67,7 +67,7 @@ const featured = [
   </section>
 
   <!-- Static fallback: always useful, and the only content without JS. -->
-  <section class="border-t border-ink-100 bg-white">
+  <section class="border-t border-ink-100">
     <div class="container-page py-12 sm:py-16">
       <h2 class="text-h2">Or browse by service</h2>
       <p class="mt-2 max-w-2xl text-ink-600">
@@ -86,7 +86,7 @@ const featured = [
                     <li>
                       <a
                         href={`/${s.slug}/`}
-                        class="inline-flex min-h-11 items-center py-1 text-brand-700 underline-offset-4 hover:underline"
+                        class="inline-flex min-h-11 items-center py-1 text-brand-300 underline-offset-4 hover:underline"
                       >
                         {s.title}
                       </a>
@@ -116,7 +116,7 @@ const featured = [
     </div>
   </section>
 
-  <section class="border-t border-ink-100 bg-white">
+  <section class="border-t border-ink-100">
     <div class="container-page py-12 sm:py-16">
       <h2 class="text-h2">Popular services</h2>
       <ul class="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
@@ -125,7 +125,7 @@ const featured = [
             <li>
               <a
                 href={`/${s.slug}/`}
-                class="flex min-h-11 items-center rounded-card border border-ink-200 px-4 py-3 font-semibold text-ink-900 transition hover:border-brand-400 hover:text-brand-700"
+                class="flex min-h-11 items-center rounded-card border border-ink-200 px-4 py-3 font-semibold text-ink-900 transition hover:border-brand-400 hover:text-brand-300"
               >
                 {s.title}
               </a>

@@ -495,6 +495,7 @@
    */
   .bg-dark-wash {
     background-image: var(--dark-wash-image);
+    background-color: #010104;
     color: #fff;
   }
 

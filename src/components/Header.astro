@@ -107,17 +107,17 @@ const isActive = (href: string) =>
   </div>
 
   <div class="container-page flex h-16 items-center justify-between gap-4 lg:h-20">
-    <a href="/" class="group flex shrink-0 items-center" aria-label={`${site.name} home`}>
+    <div class="flex shrink-0 items-center">
       <img
         src="/images/Logo_big.png"
-        alt=""
+        alt={site.name}
         width="378"
         height="220"
         class="h-10 w-auto rounded-lg"
         loading="eager"
         decoding="async"
       />
-    </a>
+    </div>
 
     <!-- Not shrink-0: this row is the one that can absorb a shortfall, which is
          why search lives in the utility bar above. At 1024px the nav is already

@@ -1,0 +1,174 @@
+---
+/**
+ * Human-readable index of the site, standing in for the XML sitemap.
+ *
+ * /sitemap-index.xml is generated from the build output and has to stay XML:
+ * crawlers fetch that URL and nothing else. The footer was pointing people at it
+ * directly, so a human clicking "Sitemap" got a wall of markup. This page is the
+ * same list of places in the site, laid out as links - useful for finding a page
+ * by hand, and it gives the footer a link a person can actually follow.
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
+import CallToAction from '../../components/CallToAction.astro';
+import { site } from '../../data/site';
+import { families, services } from '../../data/services';
+import * as schema from '../../lib/schema';
+
+const path = '/sitemap/';
+const title = `Sitemap | ${site.name}`;
+const description =
+  `Every part of ${site.name} in one list: service families, individual repairs, ` +
+  `pricing, the service area and the blog. A readable version of the site's XML sitemap.`;
+
+const trail = [
+  { name: 'Home', path: '/' },
+  { name: 'Sitemap', path },
+];
+
+/** pc-repairs-brisbane is a suburb-matrix page, not a service; the footer lists it separately. */
+const serviceLinks = services.filter((s) => s.slug !== 'pc-repairs-brisbane');
+
+const MAIN = [
+  { name: 'Home', path: '/' },
+  { name: 'Pricing', path: '/pricing/' },
+  { name: 'Service area', path: '/service-area/' },
+  { name: 'Request a quote', path: '/quote/' },
+  { name: 'About Robert', path: '/about/' },
+  { name: 'Reviews', path: '/testimonials/' },
+  { name: 'Blog', path: '/blog/' },
+  { name: 'Contact', path: '/contact/' },
+  { name: 'Search', path: '/search/' },
+  { name: 'RSS feed', path: '/rss/' },
+];
+
+const jsonLd = schema.graph({
+  path,
+  name: title,
+  description,
+  extra: [schema.breadcrumbList(trail)],
+});
+---
+
+<BaseLayout title={title} description={description} path={path} schema={jsonLd}>
+  <div class="container-page pt-5 sm:pt-6">
+    <Breadcrumb trail={trail} />
+  </div>
+
+  <section class="border-b border-ink-100 hero-wash">
+    <div class="container-page py-14 sm:py-20">
+      <div class="max-w-3xl">
+        <p
+          class="inline-flex items-center gap-2 rounded-full bg-brand-500/10 px-3.5 py-1.5 text-xs font-bold tracking-wide text-brand-300 uppercase ring-1 ring-brand-200"
+        >
+          Every page
+        </p>
+        <h1 class="mt-5 text-h1">Sitemap</h1>
+        <p class="mt-6 text-lead text-ink-700">
+          The whole site in one list, so you can get to a page without hunting for it. If you were
+          looking for the XML version that search engines read, it is at
+          <a href="/sitemap-index.xml" class="font-semibold text-brand-300 underline underline-offset-2">
+            /sitemap-index.xml
+          </a> - it opens as markup, which is why this page exists.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <div class="container-page pt-14 pb-14 sm:pt-20 sm:pb-20">
+    <div class="max-w-3xl">
+      <div
+        class="rounded-card border border-ink-200 bg-white/[0.06] p-6 transition duration-200 hover:-translate-y-0.5 hover:border-brand-300 hover:shadow-lift"
+      >
+        <h2 class="text-h3">Main pages</h2>
+        <ul class="mt-4 grid gap-x-6 gap-y-1 sm:grid-cols-2">
+          {
+            MAIN.map((l) => (
+              <li class="border-b border-ink-100 last:border-0 sm:[&:nth-last-child(2)]:border-0">
+                <a
+                  href={l.path}
+                  class="-mx-2 flex items-center justify-between gap-3 rounded-lg px-2 py-2.5 text-ink-700 transition hover:bg-brand-500/10 hover:text-brand-300"
+                >
+                  {l.name}
+                  <svg class="size-4 shrink-0" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                    <path d="M4 10a1 1 0 0 1 1-1h9.2l-3.6-3.6a1 1 0 1 1 1.4-1.4l5.3 5.3a1 1 0 0 1 0 1.4l-5.3 5.3a1 1 0 1 1-1.4-1.4L14.2 11H5a1 1 0 0 1-1-1Z"></path>
+                  </svg>
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+
+    <div class="mt-12">
+      <h2 class="text-h2">Service families</h2>
+      <div class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {
+          families.map((f) => (
+            <a
+              href={`/${f.slug}/`}
+              data-reveal
+              class="group flex flex-col rounded-card border border-ink-200 bg-white/[0.06] p-5 transition duration-200 hover:-translate-y-0.5 hover:border-brand-300 hover:shadow-lift"
+            >
+              <h3 class="text-[1.05rem] font-bold text-ink-900 transition group-hover:text-brand-300">
+                {f.title}
+              </h3>
+              <p class="mt-2 flex-1 text-sm leading-relaxed text-ink-600">{f.summary}</p>
+              <span class="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-brand-300">
+                Open
+                <svg
+                  class="size-4 transition group-hover:translate-x-0.5"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  aria-hidden="true"
+                >
+                  <path d="M4 10a1 1 0 0 1 1-1h9.2l-3.6-3.6a1 1 0 1 1 1.4-1.4l5.3 5.3a1 1 0 0 1 0 1.4l-5.3 5.3a1 1 0 1 1-1.4-1.4L14.2 11H5a1 1 0 0 1-1-1Z"></path>
+                </svg>
+              </span>
+            </a>
+          ))
+        }
+      </div>
+    </div>
+
+    <div class="mt-12">
+      <h2 class="text-h2">Individual repairs</h2>
+      <div class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {
+          serviceLinks.map((s) => (
+            <a
+              href={`/${s.slug}/`}
+              class="group flex items-center justify-between gap-3 rounded-card border border-ink-200 bg-white/[0.06] px-5 py-4 transition duration-200 hover:-translate-y-0.5 hover:border-brand-300 hover:shadow-lift"
+            >
+              <span class="text-[0.95rem] font-bold text-ink-900 transition group-hover:text-brand-300">
+                {s.shortTitle}
+              </span>
+              <svg
+                class="size-4 shrink-0 text-brand-300 transition group-hover:translate-x-0.5"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+                aria-hidden="true"
+              >
+                <path d="M4 10a1 1 0 0 1 1-1h9.2l-3.6-3.6a1 1 0 1 1 1.4-1.4l5.3 5.3a1 1 0 0 1 0 1.4l-5.3 5.3a1 1 0 1 1-1.4-1.4L14.2 11H5a1 1 0 0 1-1-1Z"></path>
+              </svg>
+            </a>
+          ))
+        }
+      </div>
+      <p class="mt-6 text-sm text-ink-500">
+        Suburb pages are not listed individually - there are several hundred. Use the
+        <a href="/service-area/" class="font-semibold text-brand-300 underline underline-offset-2">
+          service area search
+        </a> to find yours.
+      </p>
+    </div>
+  </div>
+
+  <div class="container-page pb-16 sm:pb-20">
+    <CallToAction
+      title="Cannot find what you need?"
+      body="Call and describe the problem. You will get a straight answer about whether it is fixable and what it will cost, before anything is booked."
+    />
+  </div>
+</BaseLayout>

@@ -1,0 +1,168 @@
+---
+/**
+ * Human-readable front page for the RSS feed.
+ *
+ * /rss.xml has to stay raw XML: every page advertises it with
+ * <link rel="alternate" type="application/rss+xml">, and a reader handed HTML at
+ * that URL stops subscribing. What was actually wrong is that the footer linked
+ * people straight at it, so anyone clicking "RSS" landed on a wall of markup.
+ *
+ * This is the human face of the same feed - what it is, how to subscribe, and
+ * the posts in date order - with the raw file one clearly labelled link away for
+ * anyone who does want to paste it into a reader.
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
+import CallToAction from '../../components/CallToAction.astro';
+import { site } from '../../data/site';
+import { posts, formatDate } from '../../data/posts';
+import * as schema from '../../lib/schema';
+
+const path = '/rss/';
+const title = `RSS feed | ${site.name}`;
+const description =
+  `Subscribe to ${site.name} by RSS. Every article on the blog in one feed, ` +
+  `newest first, with dates and summaries. Or read the ${posts.length} articles ` +
+  `here without a feed reader.`;
+
+const trail = [
+  { name: 'Home', path: '/' },
+  { name: 'RSS feed', path },
+];
+
+/** Enough to be useful on the page itself; the rest are one click away. */
+const SHOWN = 20;
+const recent = posts.slice(0, SHOWN);
+const rest = posts.length - recent.length;
+
+const jsonLd = schema.graph({
+  path,
+  name: title,
+  description,
+  extra: [schema.breadcrumbList(trail)],
+});
+---
+
+<BaseLayout title={title} description={description} path={path} schema={jsonLd}>
+  <div class="container-page pt-5 sm:pt-6">
+    <Breadcrumb trail={trail} />
+  </div>
+
+  <section class="border-b border-ink-100 hero-wash">
+    <div class="container-page py-14 sm:py-20">
+      <div class="max-w-3xl">
+        <p
+          class="inline-flex items-center gap-2 rounded-full bg-brand-500/10 px-3.5 py-1.5 text-xs font-bold tracking-wide text-brand-300 uppercase ring-1 ring-brand-200"
+        >
+          Subscribe
+        </p>
+        <h1 class="mt-5 text-h1">The RSS feed</h1>
+        <p class="mt-6 text-lead text-ink-700">
+          Every article on the blog, newest first, in one feed. Point any feed reader at it and
+          new posts turn up on their own - no account, no newsletter signup, and nothing to
+          unsubscribe from later. The {posts.length} articles are also listed below if you would
+          rather just read them here.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <div class="container-page pt-14 pb-14 sm:pt-20 sm:pb-20">
+    <div class="max-w-3xl">
+      <div
+        class="rounded-card border border-ink-200 bg-white/[0.06] p-6 transition duration-200 hover:-translate-y-0.5 hover:border-brand-300 hover:shadow-lift"
+      >
+        <h2 class="text-h3">Add it to a reader</h2>
+        <p class="mt-3 text-ink-700">
+          Most readers take the address as a paste. Some have a "subscribe" button that wants the
+          same address. Either way it is this:
+        </p>
+        <p class="mt-4 rounded-xl border border-ink-200 bg-ink-50 px-4 py-3 font-mono text-sm break-all text-ink-800">
+          {site.url}/rss.xml
+        </p>
+        <div class="mt-6 flex flex-wrap gap-3">
+          <a
+            href="/rss.xml"
+            class="inline-flex items-center gap-2 rounded-xl bg-brand-500 px-5 py-3 text-sm font-bold text-brand-950 shadow-cta transition hover:bg-brand-400"
+          >
+            Open the raw feed
+            <svg class="size-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+              <path d="M4 10a1 1 0 0 1 1-1h9.2l-3.6-3.6a1 1 0 1 1 1.4-1.4l5.3 5.3a1 1 0 0 1 0 1.4l-5.3 5.3a1 1 0 1 1-1.4-1.4L14.2 11H5a1 1 0 0 1-1-1Z"></path>
+            </svg>
+          </a>
+          <a
+            href="/blog/"
+            class="inline-flex items-center gap-2 rounded-xl border border-ink-300 px-5 py-3 text-sm font-bold text-ink-900 transition hover:border-brand-400 hover:bg-brand-500/10"
+          >
+            Browse the blog instead
+          </a>
+        </div>
+        <p class="mt-5 text-sm text-ink-500">
+          The raw feed opens as XML, which is what a reader wants and a person usually does not.
+          This page is the same content, readable.
+        </p>
+      </div>
+    </div>
+
+    <div class="mt-14 max-w-3xl">
+      <h2 class="text-h2">Latest {recent.length} articles</h2>
+      <div class="mt-8 grid gap-4 sm:grid-cols-2">
+        {
+          recent.map((p) => (
+            <a
+              href={p.path}
+              data-reveal
+              class="group flex flex-col rounded-card border border-ink-200 bg-white/[0.06] p-5 transition duration-200 hover:-translate-y-0.5 hover:border-brand-300 hover:shadow-lift"
+            >
+              <time datetime={p.date} class="text-xs font-medium tracking-wide text-ink-500 uppercase">
+                {formatDate(p.date)}
+              </time>
+              <h3 class="mt-2 text-[1.05rem] font-bold text-ink-900 transition group-hover:text-brand-300">
+                {p.title}
+              </h3>
+              <p class="mt-2 flex-1 text-sm leading-relaxed text-ink-600">{p.excerpt}</p>
+              <span class="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-brand-300">
+                Read the article
+                <svg
+                  class="size-4 transition group-hover:translate-x-0.5"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  aria-hidden="true"
+                >
+                  <path d="M4 10a1 1 0 0 1 1-1h9.2l-3.6-3.6a1 1 0 1 1 1.4-1.4l5.3 5.3a1 1 0 0 1 0 1.4l-5.3 5.3a1 1 0 1 1-1.4-1.4L14.2 11H5a1 1 0 0 1-1-1Z"></path>
+                </svg>
+              </span>
+            </a>
+          ))
+        }
+      </div>
+
+      {
+        rest > 0 && (
+          <div class="mt-8 rounded-card border border-ink-200 bg-white/[0.06] p-6">
+            <p class="text-ink-700">
+              That is the {recent.length} most recent of {posts.length} articles. The feed carries
+              all of them.
+            </p>
+            <a
+              href="/blog/"
+              class="mt-4 inline-flex items-center gap-1.5 text-sm font-bold text-brand-300"
+            >
+              See all {posts.length} articles
+              <svg class="size-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                <path d="M4 10a1 1 0 0 1 1-1h9.2l-3.6-3.6a1 1 0 1 1 1.4-1.4l5.3 5.3a1 1 0 0 1 0 1.4l-5.3 5.3a1 1 0 1 1-1.4-1.4L14.2 11H5a1 1 0 0 1-1-1Z"></path>
+              </svg>
+            </a>
+          </div>
+        )
+      }
+    </div>
+  </div>
+
+  <div class="container-page pb-16 sm:pb-20">
+    <CallToAction
+      title="Rather just talk to a person?"
+      body="No account needed, no feed to keep up with. Describe the problem and you will get a straight answer about whether it is fixable and what it will cost."
+    />
+  </div>
+</BaseLayout>

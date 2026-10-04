@@ -58,6 +58,18 @@ export default defineConfig({
    */
   integrations: [sitemap()],
 
+  /**
+   * /testimonials/ is gone. The reviews it pointed at have been taken off the
+   * site, so the page had nothing left to say - and a page that exists only to
+   * send people somewhere else is worse than a redirect.
+   *
+   * The guarantees that were on it are what the card grid above the footer and
+   * /pricing/ carry now, which is where the redirect points.
+   */
+  redirects: {
+    '/testimonials': '/pricing',
+  },
+
   /** Ship the small critical CSS inline; the rest becomes a cached file. */
   build: {
     inlineStylesheets: 'auto',

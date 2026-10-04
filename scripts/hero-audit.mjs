@@ -34,7 +34,7 @@ const ROUTES = [
   ['/blog/', 'blog listing (PageHero)'],
   ['/pricing/', 'pricing (PageHero)'],
   ['/quote/', 'quote (PageHero)'],
-  ['/testimonials/', 'testimonials (PageHero)'],
+
   ['/services/', 'services (PageHero)'],
   ['/service-area/', 'service-area (PageHero)'],
   ['/service-area/brisbane-north/', 'region (PageHero)'],

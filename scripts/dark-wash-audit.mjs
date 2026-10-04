@@ -59,7 +59,7 @@ const MIME = {
 };
 const ROUTES = [
   '/', '/pricing/', '/services/', '/contact/', '/quote/', '/about/',
-  '/testimonials/', '/blog/', '/search/?q=laptop', '/laptop-repairs/',
+ '/blog/', '/search/?q=laptop', '/laptop-repairs/',
   '/laptop-repairs-brendale/', '/service-area/', '/service-area/brisbane-north/',
   '/replace-or-repair-computer/', '/computer-repairs/',
 ];

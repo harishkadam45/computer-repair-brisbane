@@ -66,7 +66,6 @@ const emitted = new Set([
   '/quote/',
   '/services/',
   '/service-area/',
-  '/testimonials/',
   ...families.map((f) => `/${f.slug}/`),
   ...standaloneServices.map((s) => `/${s.slug}/`),
   ...posts.map((p) => p.path),

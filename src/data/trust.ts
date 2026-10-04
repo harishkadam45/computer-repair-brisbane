@@ -7,7 +7,7 @@
  * invent any (see src/data/reviews.ts for why), so the reassurance on offer has
  * to come from terms that can actually be checked.
  *
- * Shared by /testimonials/ and the card grid above the footer on the homepage,
+ * Used by the card grid above the footer on the homepage and the pricing page,
  * so the two can never drift apart.
  */
 import type { IconName } from './services';

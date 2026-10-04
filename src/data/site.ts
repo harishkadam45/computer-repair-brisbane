@@ -120,13 +120,16 @@ export const site = {
     reviewCount: '',
   },
 
-  /** Third-party review profile, linked in the footer and on /testimonials. */
-  reviews: {
-    url: 'https://www.wordofmouth.com.au/reviews/zoo-computer-repairs',
-    label: 'Read our reviews on Word of Mouth',
-    /** Source label used in schema.aggregateRating and Review nodes. */
-    publisher: 'Word of Mouth',
-  },
+  /**
+   * The third-party review profile was removed from the site on request, so
+   * there is no review URL, label or publisher any more. The block came out
+   * with it rather than being left behind as dead config pointing at a page the
+   * business no longer sends visitors to.
+   *
+   * `aggregateRating` above stays, deliberately blank: it is a separate
+   * question from where reviews are displayed, and it emits nothing until it
+   * holds real figures.
+   */
 
   /** The hosted quote form. Opened in a new tab; the site has no backend. */
   quoteForm: {

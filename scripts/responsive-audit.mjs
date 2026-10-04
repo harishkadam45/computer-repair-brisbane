@@ -29,7 +29,7 @@ const ROUTES = [
   '/blog/',
   '/why-task-manager-ram-usage-is-misleading/',
   '/about/',
-  '/testimonials/',
+
   '/search/',
 ];
 

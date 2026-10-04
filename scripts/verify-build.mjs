@@ -70,6 +70,16 @@ function toPath(href) {
 for (const [abs, urlPath] of files) {
   const html = await readFile(abs, 'utf8');
 
+  /**
+   * A redirect stub is not a page, so it is exempt from the canonical rule.
+   * Astro emits one for every `redirects` entry as
+   * `<meta name="robots" content="noindex">` plus a canonical pointing at the
+   * destination, which is exactly right: the stub must not be indexed, and it
+   * canonicalises to where it is sending people rather than to itself. Scoring
+   * that as "canonical does not match" reported a correct build as broken.
+   */
+  const isRedirectStub = /<meta\s+name="robots"\s+content="noindex"/i.test(html);
+
   // ---- 1. Canonical must be this page's own URL. -------------------------
   const canonical = html.match(
     /<link\s+rel="canonical"\s+href="([^"]+)"/i,
@@ -80,12 +90,12 @@ for (const [abs, urlPath] of files) {
     const canonPath = toPath(canonical);
     if (canonPath === null) {
       problems.push(`${urlPath} canonical is off-origin: ${canonical}`);
-    } else if (canonPath !== urlPath) {
+    } else if (canonPath !== urlPath && !isRedirectStub) {
       problems.push(
         `${urlPath}\n    served at : ${urlPath}\n    canonical: : ${canonPath}`,
       );
     }
-  } else if (!urlPath.startsWith('/404')) {
+  } else if (!urlPath.startsWith('/404') && !isRedirectStub) {
     problems.push(`${urlPath} has no canonical tag`);
   }
 

@@ -21,7 +21,7 @@ const ROUTES = [
   '/quote/',
   '/blog/',
   '/about/',
-  '/testimonials/',
+
   '/search/',
 ];
 

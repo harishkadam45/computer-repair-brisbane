@@ -1,5 +1,5 @@
 /**
- * Customer reviews, newest first.
+ * Customer reviews for the review cards above the footer on the homepage.
  *
  * EMPTY ON PURPOSE. Do not type a review into this file from memory, and do not
  * let a generator write one. A testimonial has to be a real customer's words,
@@ -16,14 +16,18 @@
  *    reading it, and worse than nothing to the business if it is ever checked.
  *
  * HOW TO FILL IT IN: open site.reviews.url (the Word of Mouth profile), copy
- * each review across verbatim, and record the date shown on the platform. Keep
+ * six reviews across verbatim, and record the date shown on the platform. Keep
  * the wording exactly as published - trimmed or tidied quotes stop being the
- * customer's words. Add them newest first.
+ * customer's words. Order them newest first, which is the order the section
+ * renders them in.
  *
- * Once this array has entries, the review section on the homepage starts
- * rendering them, and `site.aggregateRating` can be filled in to match (rating
- * value and count must be the real figures from the profile, or the schema is
- * worse than no schema at all).
+ * Until this array has entries the review section is skipped entirely, so the
+ * homepage never shows a heading with nothing under it. Add six and the grid
+ * appears on its own.
+ *
+ * Once it has entries, `site.aggregateRating` can be filled in to match - but
+ * only with the real rating value and count from the profile. A made-up number
+ * in the schema is worse than no schema at all.
  */
 export interface Review {
   /**

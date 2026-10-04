@@ -1,20 +1,19 @@
 ﻿---
 /**
- * Customer review cards.
+ * Customer review cards, homepage only.
  *
- * Structure follows a standard review block: a centred heading, an uppercase
- * "Latest reviews" label, a three-up card grid, and a centred link to the rest.
- * Each card is a star rating, the review text, then the reviewer and date
- * separated by a hairline. Cards carry the same hover treatment as the rest of
- * the site, and the palette is the site's own - only the stars stay Google gold,
- * because that colour is a rating convention rather than a brand choice.
+ * A three-up card grid: 5 stars and the Google mark on the top row, the review
+ * text in the middle, then the reviewer and date separated by a hairline. Six
+ * cards, so it lands as two rows of three on desktop and stacks to one column
+ * on a phone. Cards carry the same hover treatment as the rest of the site and
+ * the palette is the site's own - only the stars stay Google gold, because that
+ * colour is a rating convention rather than a brand choice.
  *
- * The cards come from src/data/reviews.ts, which is empty until real reviews are
- * copied off the review platform. While it is empty this renders an honest
- * pointer to that platform rather than placeholder quotes. Never fill it with
- * invented reviews: see the note at the top of that file.
+ * Cards come from src/data/reviews.ts, which is empty until real reviews are
+ * copied off the review platform. The whole section is skipped while it is
+ * empty, so the homepage never shows a heading with nothing under it. Never fill
+ * it with invented reviews: see the note at the top of that file.
  */
-import { site } from '../data/site';
 import { reviews, formatReviewDate } from '../data/reviews';
 
 interface Props {
@@ -24,157 +23,97 @@ interface Props {
   body?: string;
   /** Cards to show. Six makes two rows of three. */
   limit?: number;
-  /** Where the closing link goes. */
-  moreHref?: string;
-  moreLabel?: string;
 }
 
 const {
-  title = `What Brisbane customers say`,
-  body = `Real reviews from the homes and small businesses ${site.technician.name} has been out to.`,
+  title = 'What Brisbane customers say',
+  body = 'Real reviews from the homes and small businesses the work has been done for.',
   limit = 6,
-  moreHref = '/testimonials/',
-  moreLabel = 'Read more reviews',
 } = Astro.props;
 
 const shown = reviews.slice(0, limit);
-const hasReviews = shown.length > 0;
-
-const ARROW =
-  'M4 10a1 1 0 0 1 1-1h9.2l-3.6-3.6a1 1 0 1 1 1.4-1.4l5.3 5.3a1 1 0 0 1 0 1.4l-5.3 5.3a1 1 0 1 1-1.4-1.4L14.2 11H5a1 1 0 0 1-1-1Z';
 ---
 
-<section
-  class="border-t border-ink-100 bg-ink-50 py-16 sm:py-20"
-  aria-labelledby="reviews-heading"
->
-  <div class="container-page">
-    <div class="mx-auto max-w-3xl text-center">
-      <p
-        class="inline-flex items-center gap-2 rounded-full bg-brand-500/10 px-3.5 py-1.5 text-xs font-bold tracking-wide text-brand-300 uppercase ring-1 ring-brand-200"
-      >
-        Customer reviews
-      </p>
-      <h2 id="reviews-heading" class="mt-5 text-h2">{title}</h2>
-      <p class="mt-4 text-lead text-ink-700">{body}</p>
-    </div>
-
-    {
-      hasReviews ? (
-        <>
-          <h3 class="mt-12 text-center text-xs font-bold tracking-[0.15em] text-ink-500 uppercase">
-            Latest reviews
-          </h3>
-
-          <div class="mx-auto mt-6 grid max-w-5xl gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {shown.map((r) => (
-              <article
-                data-reveal
-                class="group flex flex-col gap-4 rounded-card border border-ink-200 bg-white/[0.06] p-6 shadow-card transition duration-200 hover:-translate-y-0.5 hover:border-brand-300 hover:shadow-lift"
-              >
-                <div class="flex items-center justify-between gap-3">
-                  <span
-                    class="inline-flex gap-0.5"
-                    role="img"
-                    aria-label={`Rated ${r.rating} out of 5`}
-                  >
-                    {Array.from({ length: 5 }).map((_, i) => (
-                      <svg
-                        class="size-4"
-                        viewBox="0 0 24 24"
-                        fill={i < r.rating ? '#FBBC04' : '#3a4048'}
-                        aria-hidden="true"
-                      >
-                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-                      </svg>
-                    ))}
-                  </span>
-
-                  <svg class="size-5 shrink-0" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                    <path
-                      d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
-                      fill="#4285F4"
-                    />
-                    <path
-                      d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
-                      fill="#34A853"
-                    />
-                    <path
-                      d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
-                      fill="#FBBC05"
-                    />
-                    <path
-                      d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
-                      fill="#EA4335"
-                    />
-                  </svg>
-                </div>
-
-                <p class="flex-1 text-[0.95rem] leading-relaxed text-ink-700">{r.quote}</p>
-
-                <div class="flex items-baseline justify-between gap-3 border-t border-ink-100 pt-4">
-                  <span class="text-sm font-bold text-ink-900">
-                    {r.name}
-                    {r.context && <span class="font-normal text-ink-500"> &middot; {r.context}</span>}
-                  </span>
-                  <time datetime={r.date} class="shrink-0 text-xs text-ink-500">
-                    {formatReviewDate(r.date)}
-                  </time>
-                </div>
-              </article>
-            ))}
-          </div>
-        </>
-      ) : (
-        <div class="mx-auto mt-12 max-w-3xl">
-          <div
-            class="rounded-card border border-ink-200 bg-white/[0.06] p-6 shadow-card transition duration-200 hover:-translate-y-0.5 hover:border-brand-300 hover:shadow-lift sm:p-8"
-          >
-            <h3 class="text-h3">The reviews live on {site.reviews.publisher}</h3>
-            <p class="mt-3 text-ink-700">
-              Every review is left by a real customer on {site.reviews.publisher}, against a
-              profile anyone can open and check. They are not copied onto this page, because a
-              review you cannot trace back to a real person is worth nothing - and inventing one
-              would be a legal problem, not a marketing one.
-            </p>
-            <div class="mt-6 flex flex-wrap gap-3">
-              <a
-                href={site.reviews.url}
-                rel="noopener nofollow"
-                target="_blank"
-                class="inline-flex items-center gap-2 rounded-xl bg-brand-500 px-5 py-3 text-sm font-bold text-brand-950 shadow-cta transition hover:bg-brand-400"
-              >
-                Read the reviews on {site.reviews.publisher}
-                <svg class="size-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                  <path d={ARROW} />
-                </svg>
-              </a>
-              <a
-                href="/testimonials/"
-                class="inline-flex items-center gap-2 rounded-xl border border-ink-300 px-5 py-3 text-sm font-bold text-ink-900 transition hover:border-brand-400 hover:bg-brand-500/10"
-              >
-                Why the flat rate matters
-              </a>
-            </div>
-          </div>
+{
+  shown.length > 0 && (
+    <section
+      class="border-t border-ink-100 bg-ink-50 py-16 sm:py-20"
+      aria-labelledby="reviews-heading"
+    >
+      <div class="container-page">
+        <div class="mx-auto max-w-3xl text-center">
+          <p class="inline-flex items-center gap-2 rounded-full bg-brand-500/10 px-3.5 py-1.5 text-xs font-bold tracking-wide text-brand-300 uppercase ring-1 ring-brand-200">
+            Customer reviews
+          </p>
+          <h2 id="reviews-heading" class="mt-5 text-h2">
+            {title}
+          </h2>
+          <p class="mt-4 text-lead text-ink-700">{body}</p>
         </div>
-      )
-    }
 
-    {
-      hasReviews && (
-        <p class="mt-8 text-center">
-          <a
-            href={moreHref}
-            class="inline-flex items-center gap-1.5 text-sm font-bold text-brand-300 transition hover:text-brand-400"
-          >
-            {moreLabel}
-            <svg class="size-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-              <path d={ARROW} />
-            </svg>
-          </a>
-        </p>
-      )
-    }
-  </div>
-</section>
+        <h3 class="mt-12 text-center text-xs font-bold tracking-[0.15em] text-ink-500 uppercase">
+          Latest reviews
+        </h3>
+
+        <div class="mx-auto mt-6 grid max-w-5xl gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {shown.map((r) => (
+            <article
+              data-reveal
+              class="group flex flex-col gap-4 rounded-card border border-ink-200 bg-white/[0.06] p-6 shadow-card transition duration-200 hover:-translate-y-0.5 hover:border-brand-300 hover:shadow-lift"
+            >
+              <div class="flex items-center justify-between gap-3">
+                <span
+                  class="inline-flex gap-0.5"
+                  role="img"
+                  aria-label={`Rated ${r.rating} out of 5`}
+                >
+                  {Array.from({ length: 5 }).map((_, i) => (
+                    <svg
+                      class="size-4"
+                      viewBox="0 0 24 24"
+                      fill={i < r.rating ? '#FBBC04' : '#3a4048'}
+                      aria-hidden="true"
+                    >
+                      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                    </svg>
+                  ))}
+                </span>
+
+                <svg class="size-5 shrink-0" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path
+                    d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                    fill="#4285F4"
+                  />
+                  <path
+                    d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                    fill="#34A853"
+                  />
+                  <path
+                    d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
+                    fill="#FBBC05"
+                  />
+                  <path
+                    d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+                    fill="#EA4335"
+                  />
+                </svg>
+              </div>
+
+              <p class="flex-1 text-[0.95rem] leading-relaxed text-ink-700">{r.quote}</p>
+
+              <div class="flex items-baseline justify-between gap-3 border-t border-ink-100 pt-4">
+                <span class="text-sm font-bold text-ink-900">
+                  {r.name}
+                  {r.context && <span class="font-normal text-ink-500"> &middot; {r.context}</span>}
+                </span>
+                <time datetime={r.date} class="shrink-0 text-xs text-ink-500">
+                  {formatReviewDate(r.date)}
+                </time>
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}

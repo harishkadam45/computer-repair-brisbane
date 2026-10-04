@@ -10,6 +10,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import ServiceCard from '../components/ServiceCard.astro';
 import FaqList from '../components/FaqList.astro';
 import CallToAction from '../components/CallToAction.astro';
+import ReviewCards from '../components/ReviewCards.astro';
 import { site } from '../data/site';
 import { services, families } from '../data/services';
 import { suburbsByRegion, suburbs } from '../lib/suburbs';
@@ -634,4 +635,7 @@ const brands = ['HP', 'Dell', 'Lenovo', 'Apple', 'Asus', 'Acer', 'Toshiba', 'Son
   <div class="container-page pb-16 sm:pb-20">
     <CallToAction />
   </div>
+
+  <!-- Homepage only: the review block sits above the footer and nowhere else. -->
+  <ReviewCards />
 </BaseLayout>

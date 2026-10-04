@@ -148,15 +148,20 @@
 
   /*
    * The header's variant of the same stack: identical near-black base, but the
-   * top-right glow is a light blue rather than the brand orange. Held separately
+   * glows are the logo's own blues instead of the brand orange. Held separately
    * instead of editing --dark-wash-image, because the home hero, the section
    * washes and the Services panel all paint that shared stack and were not meant
-   * to change. Position and size are unchanged, so the glow reads the same shape
-   * and the header keeps the same near-black field under the orange pills.
+   * to change. Position and size are unchanged, so the header keeps the same
+   * near-black field under the orange pills.
+   *
+   * #00acee and #2e78bd are sampled from public/images/Logo_big.png itself: the
+   * logo's sky blue covers 5.6% of its pixels at full saturation, and #2e78bd is
+   * the darker blue it sits next to. Matching the logo is the point, so the
+   * header reads as the same mark as the one in the bar.
    */
   --header-wash-image:
-    radial-gradient(52rem 30rem at 88% -8%, rgb(96 165 250 / 0.28) 0%, transparent 60%),
-    radial-gradient(40rem 26rem at 4% 104%, rgb(242 41 91 / 0.16) 0%, transparent 58%),
+    radial-gradient(52rem 30rem at 88% -8%, rgb(0 172 238 / 0.28) 0%, transparent 60%),
+    radial-gradient(40rem 26rem at 4% 104%, rgb(46 120 189 / 0.16) 0%, transparent 58%),
     linear-gradient(168deg, #08090f 0%, #010104 62%, #04060b 100%);
 }
 

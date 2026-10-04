@@ -26,7 +26,7 @@ const path = Astro.url.pathname;
 /*
  * Shared styling for the two utility-bar actions.
  *
- * Both are the same orange pill at the same size, so the class list lives in
+ * Both are the same blue pill at the same size, so the class list lives in
  * one constant. Duplicated as two literals they had already drifted - the pill
  * carried 600 weight and 12px of vertical padding while the link beside it was
  * 400 weight with none, which made the phone read as a large button and the
@@ -37,7 +37,7 @@ const path = Astro.url.pathname;
  * pills stay the same height whatever the label.
  */
 const utilityPill =
-  'flex items-center gap-1.5 rounded-xl bg-brand-500 px-3.5 py-1 text-[0.8125rem] leading-5 font-semibold whitespace-nowrap text-white shadow-cta transition hover:bg-brand-600';
+  'flex items-center gap-1.5 rounded-xl bg-brand-500 px-3.5 py-1 text-[0.8125rem] leading-5 font-semibold whitespace-nowrap text-brand-950 shadow-cta transition hover:bg-brand-400';
 
 /** Grouped for the dropdown, minus any slug that no longer resolves. */
 const megaGroups = serviceGroups
@@ -50,7 +50,7 @@ const isActive = (href: string) =>
   href === '/' ? path === '/' : path === href || path.startsWith(href);
 ---
 
-<header class="bg-header-wash sticky top-0 z-50 border-b border-white/12">
+<header class="bg-dark-wash sticky top-0 z-50 border-b border-white/12">
   <!-- Utility bar: the two things people need on every page, above the fold.
        Transparent, so the header's wash runs through both rows. -->
   <div class="hidden border-b border-white/12 sm:block">
@@ -386,7 +386,7 @@ const isActive = (href: string) =>
 <a
           href={site.quoteForm.url}
           data-quote-open
-          class="mt-4 block rounded-xl bg-brand-500 px-4 py-3 text-center text-sm font-semibold text-white"
+          class="mt-4 block rounded-xl bg-brand-500 px-4 py-3 text-center text-sm font-semibold text-brand-950"
         >
           Get a free quote
         </a>

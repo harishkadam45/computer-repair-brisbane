@@ -3,45 +3,40 @@
 /*
  * Design tokens.
  *
- * The palette is taken from geeksperth.com.au, so the two sites read as one
- * brand. Their published tokens are reproduced exactly:
+ * The brand ramp is built around the site's own logo,
+ * public/images/Logo_big.png. Sampling that file gives #00ACEE as the sky blue
+ * it is mostly drawn in (5.6% of its pixels, fully saturated) and #2E78BD as the
+ * deeper blue beside it, so the colours here are the ones the mark actually
+ * uses rather than an approximation of them.
  *
- *   --gx-accent         #FF6600   primary, buttons and links
- *   --gx-accent-hover   #E55A00
- *   --gb-btn-fill       #B84A00   deep fill
- *   --gb-btn-fill-hover #9C3F00
- *   #F2295B             the pink their CTA gradient fades to
- *   #0D003B             navy used for dark sections and dropdowns
- *   #FBBC04             gold, used for their review stars
- *   #FFF5F0 / #FFE8DC / #FFF3EC   peach tints for soft surfaces
+ * Every step is one hue (196.6deg) at the logo's own saturation, walked up and
+ * down in lightness. The original orange ramp was built the same way around
+ * #FF6600, so the step-for-step relationships carry over and the existing
+ * utilities (bg-brand-500, text-ink-700, ...) keep working untouched.
  *
- * Everything else is a ramp built around those anchors so the existing
- * utilities (bg-brand-500, text-ink-700, …) keep working untouched - the
- * recolour is this block and nothing else.
+ * Token names are unchanged. That matters for readability: the components refer
+ * to brand-500 or ink-700, never to a hex, so no .astro file had to be edited to
+ * recolour the site.
  *
- * Token names are unchanged from the previous blue palette. That matters for
- * readability: the components refer to brand-500 or ink-700, never to a hex,
- * so no .astro file had to be edited to make the whole site orange.
- *
- * Known accessibility tradeoff: white text on #FF6600 is 2.94:1, under the
- * WCAG AA 4.5:1 minimum for normal-size text. This is a deliberate match to
- * the source brand, which makes the same tradeoff on its own buttons. Link
- * and body text deliberately use the darker brand-700 (#B84A00, 4.89:1)
- * instead of brand-500 so text stays readable while fills stay vivid.
+ * Text on the brand fill is dark, not white. White on #00ACEE is 2.58:1, worse
+ * than the 2.94:1 the old orange buttons already sat at, so brand-500 fills
+ * carry brand-950 text at 5.2:1 and hover goes lighter (brand-400, 7.1:1) to
+ * keep the dark text readable. brand-700 keeps white text: 4.96:1 passes AA and
+ * it is only ever used on the white CTA button.
  */
 @theme {
-  --color-brand-50: #fff5f0; /* source tint */
-  --color-brand-100: #ffe8dc; /* source tint */
-  --color-brand-200: #ffcfb4;
-  --color-brand-300: #ffaa80;
-  --color-brand-400: #ff884d;
-  --color-brand-500: #ff6600; /* --gx-accent, exact */
-  --color-brand-600: #e55a00; /* --gx-accent-hover, exact */
-  --color-brand-700: #b84a00; /* --gb-btn-fill, exact - AA text on white.
-                       Too dark for the dark field: only used there on a white fill. */
-  --color-brand-800: #9c3f00; /* --gb-btn-fill-hover, exact */
-  --color-brand-900: #7a3200;
-  --color-brand-950: #4a1e00;
+  --color-brand-50: #f2fbfe;
+  --color-brand-100: #def4fd;
+  --color-brand-200: #b9e8fa;
+  --color-brand-300: #88d8f7;
+  --color-brand-400: #58c9f4; /* hover for the dark-text brand-500 fills */
+  --color-brand-500: #00acee; /* logo sky blue, exact */
+  --color-brand-600: #0d91c4;
+  --color-brand-700: #0b78a4; /* AA white text (4.96:1). Only used as text on a
+                       white fill, or as a white-text button fill. */
+  --color-brand-800: #0a6c92;
+  --color-brand-900: #085572;
+  --color-brand-950: #053345; /* text on a brand-500/400 fill: 5.2:1 */
 
   --color-accent-50: #fff0f4;
   --color-accent-100: #ffdce6;
@@ -85,9 +80,9 @@
    * border has to be lighter than the background it sits on, not darker.
    *
    * The four muted steps are set against the *lightest* pixel the wash reaches
-   * (rgb(99,31,17) where the orange glow lands), not against the near-black
-   * base, which is what keeps ink-400 and ink-500 above 4.5:1. Measured, not
-   * estimated: 4.9, 5.3, 6.4 and 8.1:1 respectively.
+   * (about rgb(6,55,77) where the blue glow lands), not against the near-black
+   * base, which is what keeps ink-400 and ink-500 above 4.5:1. Measured against
+   * the darker blue wash: 5.0, 5.4, 6.5 and 8.2:1 respectively.
    */
   --color-ink-50: #17191f; /* subtle raised surface */
   --color-ink-100: #2b3038; /* hairline border / raised surface */
@@ -117,7 +112,7 @@
 
   --shadow-card: 0 1px 2px rgb(20 22 29 / 0.04), 0 4px 16px rgb(20 22 29 / 0.06);
   --shadow-lift: 0 8px 30px rgb(20 22 29 / 0.1);
-  --shadow-cta: 0 6px 18px rgb(255 102 0 / 0.35);
+  --shadow-cta: 0 6px 18px rgb(0 172 238 / 0.35);
 
   /* Fluid type scale - no breakpoints needed for the display sizes. */
   --text-display: clamp(2.1rem, 1.4rem + 3.1vw, 3.5rem);
@@ -136,30 +131,17 @@
   --text-lead--line-height: 1.65;
 
   /*
-   * The near-black wash, as a single stack both the home hero and the header
-   * paint with. Held here rather than repeated as two class bodies so the two
-   * surfaces cannot drift apart - they are meant to read as one continuous
-   * dark field, the header sitting directly above the hero.
+   * The near-black wash, as a single stack the header, the home hero and the
+   * section washes all paint with. Held here rather than repeated as class
+   * bodies so the surfaces cannot drift apart - they are meant to read as one
+   * continuous dark field, the header sitting directly above the hero.
+   *
+   * The two glows are the logo's own blues: #00acee, which is 5.6% of
+   * Logo_big.png's pixels at full saturation, and #2e78bd, the deeper blue it
+   * sits beside. Both are held back to a low alpha so they read as glow behind
+   * the copy rather than a tint over it.
    */
   --dark-wash-image:
-    radial-gradient(52rem 30rem at 88% -8%, rgb(255 102 0 / 0.28) 0%, transparent 60%),
-    radial-gradient(40rem 26rem at 4% 104%, rgb(242 41 91 / 0.16) 0%, transparent 58%),
-    linear-gradient(168deg, #08090f 0%, #010104 62%, #04060b 100%);
-
-  /*
-   * The header's variant of the same stack: identical near-black base, but the
-   * glows are the logo's own blues instead of the brand orange. Held separately
-   * instead of editing --dark-wash-image, because the home hero, the section
-   * washes and the Services panel all paint that shared stack and were not meant
-   * to change. Position and size are unchanged, so the header keeps the same
-   * near-black field under the orange pills.
-   *
-   * #00acee and #2e78bd are sampled from public/images/Logo_big.png itself: the
-   * logo's sky blue covers 5.6% of its pixels at full saturation, and #2e78bd is
-   * the darker blue it sits next to. Matching the logo is the point, so the
-   * header reads as the same mark as the one in the bar.
-   */
-  --header-wash-image:
     radial-gradient(52rem 30rem at 88% -8%, rgb(0 172 238 / 0.28) 0%, transparent 60%),
     radial-gradient(40rem 26rem at 4% 104%, rgb(46 120 189 / 0.16) 0%, transparent 58%),
     linear-gradient(168deg, #08090f 0%, #010104 62%, #04060b 100%);
@@ -472,17 +454,17 @@
   .bg-brand-mesh {
     background-image:
       radial-gradient(60rem 30rem at 85% -10%, var(--color-brand-200) 0%, transparent 60%),
-      radial-gradient(45rem 25rem at 5% 0%, var(--color-accent-100) 0%, transparent 55%),
+      radial-gradient(45rem 25rem at 5% 0%, var(--color-brand-100) 0%, transparent 55%),
       linear-gradient(180deg, var(--color-brand-50) 0%, #fff 85%);
   }
 
-  /* The two glows were hardcoded to the old blue (rgb(20 109 213)) and cyan
-   (rgb(0 151 207)) and would have stayed blue after the token swap. They are
-   now the brand orange and the source pink. */
+  /* The two glows were hardcoded, so a token swap left them behind. They are the
+   logo's own two blues, matching the header wash so the CTA card and the bar
+   above it read as one field. */
   .bg-hero-dark {
     background-image:
-      radial-gradient(50rem 28rem at 90% 0%, rgb(255 102 0 / 0.55) 0%, transparent 62%),
-      radial-gradient(38rem 24rem at 0% 100%, rgb(242 41 91 / 0.32) 0%, transparent 58%),
+      radial-gradient(50rem 28rem at 90% 0%, rgb(0 172 238 / 0.55) 0%, transparent 62%),
+      radial-gradient(38rem 24rem at 0% 100%, rgb(46 120 189 / 0.32) 0%, transparent 58%),
       linear-gradient(160deg, var(--color-navy-500) 0%, var(--color-navy-700) 100%);
   }
 
@@ -491,12 +473,12 @@
    *
    * Declared after .bg-brand-mesh on purpose. Both are single-class utilities at
    * the same specificity, so source order is what decides - putting this first
-   * would simply lose, and the pale peach wash would show through.
+   * would simply lose, and the pale blue wash would show through.
    *
    * The home hero keeps the .bg-brand-mesh class because the hero audit asserts
    * on it by name across all routes; this overrides the paint only. The base is
    * near-black rather than the navy used by .bg-hero-dark, matching the
-   * reference art, and the orange glow is pulled well back so it reads as a
+   * reference art, and the blue glow is pulled well back so it reads as a
    * glow behind the copy rather than a tint over it.
    */
   .bg-home-dark {
@@ -513,13 +495,6 @@
    */
   .bg-dark-wash {
     background-image: var(--dark-wash-image);
-    background-color: #010104;
-    color: #fff;
-  }
-
-  /* The header's own wash, so the blue glow stays confined to the header. */
-  .bg-header-wash {
-    background-image: var(--header-wash-image);
     background-color: #010104;
     color: #fff;
   }

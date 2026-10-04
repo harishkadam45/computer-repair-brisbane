@@ -147,14 +147,14 @@ const faqs = [
             class:list={[
               'group flex min-w-0 flex-col rounded-card border p-6 transition',
               m.primary
-                ? 'border-brand-500 bg-brand-500 shadow-cta hover:bg-brand-600'
+                ? 'border-brand-500 bg-brand-500 shadow-cta hover:bg-brand-400'
                 : 'border-ink-200 bg-white/[0.06] hover:-translate-y-0.5 hover:border-brand-300 hover:shadow-lift',
             ]}
           >
             <span
               class:list={[
                 'text-xs font-bold tracking-wide uppercase',
-                m.primary ? 'text-white' : 'text-ink-500',
+                m.primary ? 'text-brand-950' : 'text-ink-500',
               ]}
             >
               {m.label}
@@ -162,7 +162,7 @@ const faqs = [
             <span
               class:list={[
                 'mt-2 font-extrabold break-words',
-                m.primary ? 'text-xl text-white' : 'text-lg text-brand-300',
+                m.primary ? 'text-xl text-brand-950' : 'text-lg text-brand-300',
               ]}
             >
               {m.value}
@@ -170,7 +170,7 @@ const faqs = [
             <span
               class:list={[
                 'mt-2.5 flex-1 text-sm leading-relaxed',
-                m.primary ? 'text-white' : 'text-ink-600',
+                m.primary ? 'text-brand-950' : 'text-ink-600',
               ]}
             >
               {m.note}
@@ -178,7 +178,7 @@ const faqs = [
             <span
               class:list={[
                 'mt-4 text-sm font-bold',
-                m.primary ? 'text-white' : 'text-brand-300',
+                m.primary ? 'text-brand-950' : 'text-brand-300',
               ]}
             >
               {m.href.startsWith('http') ? 'Opens in a new tab →' : '→'}

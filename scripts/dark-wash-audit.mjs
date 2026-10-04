@@ -65,8 +65,12 @@ const ROUTES = [
 ];
 const WIDTHS = [390, 768, 1280];
 
-/** Colours already accepted as deliberate by contrast-audit.mjs. */
-const KNOWN_WHITE_ON_ORANGE = 'rgb(255, 102, 0)';
+/*
+ * There is deliberately no "known failure" list here any more. The old one
+ * whitelisted white text on the orange button fill (2.94:1); that fill is now
+ * the logo blue and carries dark text at 5.2:1 instead, so nothing needs
+ * excusing and any failure below is a real one.
+ */
 
 const server = createServer(async (req, res) => {
   let rel = decodeURIComponent(new URL(req.url, ORIGIN).pathname);
@@ -213,13 +217,7 @@ for (const route of ROUTES) {
         checks++;
         continue;
       }
-      // White on the orange button/pill is long-standing and already
-      // whitelisted in contrast-audit.mjs.
-      if (r.color === 'rgb(255, 255, 255)' && r.bg === 'rgb(255, 102, 0)') {
-        note(warns, `${r.color} on ${r.bg} (${ratio}:1)`, r.text);
-        continue;
-      }
-      note(failures, `${r.color} on ${r.bg} = ${ratio}:1 (need ${r.need})  <-  ${r.surface}  ${route}`, r.html);
+note(failures, `${r.color} on ${r.bg} = ${ratio}:1 (need ${r.need})  <-  ${r.surface}  ${route}`, r.html);
     }
     await page.close();
   }

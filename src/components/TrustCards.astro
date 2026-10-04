@@ -1,0 +1,76 @@
+---
+/**
+ * The guarantees, as cards above the footer on the homepage.
+ *
+ * Six cards in a three-up grid, two rows on desktop, stacking to two columns on
+ * a tablet and one on a phone. Each is one of the commercial promises from
+ * src/data/trust.ts - the same six /testimonials/ sets out in full.
+ *
+ * Why promises and not reviews: this site has no review data and will not
+ * invent any, because publishing a fake testimonial is unlawful under the
+ * Australian Consumer Law (see src/data/reviews.ts for the longer note). These
+ * are the next best thing and they are better in one respect - every one is a
+ * term the customer can hold the business to, where a review is only an opinion.
+ */
+import Icon from './Icon.astro';
+import { promises } from '../data/trust';
+import { site } from '../data/site';
+
+interface Props {
+  /** Heading. Keep it about what is guaranteed, not about the business. */
+  title?: string;
+  /** One line under the heading. */
+  body?: string;
+  /** Cards to show. Six makes two rows of three. */
+  limit?: number;
+}
+
+const {
+  title = 'What you can rely on, before you book',
+  body = `No reviews are collected on this site, so rather than pretend otherwise here is what is actually guaranteed: the price, the call-out fee, and what happens if the job cannot be done.`,
+  limit = 6,
+} = Astro.props;
+
+const shown = promises.slice(0, limit);
+---
+
+<section class="border-t border-ink-100 bg-ink-50 py-16 sm:py-20" aria-labelledby="trust-heading">
+  <div class="container-page">
+    <div class="mx-auto max-w-3xl text-center">
+      <p
+        class="inline-flex items-center gap-2 rounded-full bg-brand-500/10 px-3.5 py-1.5 text-xs font-bold tracking-wide text-brand-300 uppercase ring-1 ring-brand-200"
+      >
+        Written guarantees
+      </p>
+      <h2 id="trust-heading" class="mt-5 text-h2">{title}</h2>
+      <p class="mt-4 text-lead text-ink-700">{body}</p>
+    </div>
+
+    <div class="mx-auto mt-12 grid max-w-5xl gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      {
+        shown.map((p) => (
+          <article
+            data-reveal
+            class="group flex flex-col gap-4 rounded-card border border-ink-200 bg-white/[0.06] p-6 shadow-card transition duration-200 hover:-translate-y-0.5 hover:border-brand-300 hover:shadow-lift"
+          >
+            <span class="inline-flex size-11 items-center justify-center rounded-xl bg-brand-500/10 text-brand-300 ring-1 ring-brand-200">
+              <Icon name={p.icon} class="size-5" />
+            </span>
+            <h3 class="text-[1.05rem] font-bold text-ink-900">{p.h}</h3>
+            <p class="text-[0.95rem] leading-relaxed text-ink-600">{p.p}</p>
+          </article>
+        ))
+      }
+    </div>
+
+    <p class="mt-8 text-center text-sm text-ink-500">
+      Flat $${site.pricing.flatRate} for the first hour, no call-out fee.
+      <a
+        href="/testimonials/"
+        class="font-semibold text-brand-300 underline underline-offset-2 transition hover:text-brand-400"
+      >
+        Read the full terms
+      </a>
+    </p>
+  </div>
+</section>

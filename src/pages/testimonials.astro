@@ -21,6 +21,7 @@ import PageHero from '../components/PageHero.astro';
 import FaqList from '../components/FaqList.astro';
 import CallToAction from '../components/CallToAction.astro';
 import { site } from '../data/site';
+import { promises } from '../data/trust';
 import * as schema from '../lib/schema';
 
 const path = '/testimonials/';
@@ -40,33 +41,6 @@ const trail = [
  * facts about the business, not testimonials, and they are the reason people
  * feel safe booking.
  */
-const PROMISES = [
-  {
-    h: 'The price is the price',
-    p: `A flat $${rate} for the first hour and 15-minute blocks after that. No call-out fee, and no surcharge for evenings, weekends or public holidays. If a job is quoted at two hours, that is what it costs.`,
-  },
-  {
-    h: 'If it cannot be fixed, you do not pay',
-    p: 'That covers the diagnosis too. If the fault is beyond repair, or beyond what is worth spending money on, you are told and there is no charge. A business that only makes money from completed work has no reason to invent faults.',
-  },
-  {
-    h: 'Parts at cost, agreed first',
-    p: 'You are told the part and the price before anything is ordered. No markup, and no fitting a part that is not worth fitting on a machine of that age.',
-  },
-  {
-    h: 'The same person who answers the phone',
-    p: `It is a one-person business. ${site.technician.name} is the person who turns up, does the work and explains it afterwards - no call centre, no junior tech, no upsell.`,
-  },
-  {
-    h: 'If something I did stops working, I come back',
-    p: 'That is not a marketing line, it is just what has to be true when the alternative is that you have to find someone else and explain what happened. Anything I did that fails is fixed at no charge.',
-  },
-  {
-    h: 'No obligation on a quote',
-    p: 'A quote is a cost estimate, not a commitment. If it is more than you want to spend, or you want a second opinion, that is completely fine and you owe nothing.',
-  },
-];
-
 const faqs = [
   {
     q: 'Where are your reviews?',
@@ -149,7 +123,7 @@ const jsonLd = schema.graph({
       </p>
       <div class="mt-8 grid gap-x-8 gap-y-8 sm:grid-cols-2 lg:grid-cols-3">
         {
-          PROMISES.map((p) => (
+          promises.map((p) => (
             <div class="rounded-card border border-ink-200 bg-white/[0.06] p-6">
               <h3 class="text-[1.05rem] font-bold text-ink-900">{p.h}</h3>
               <p class="mt-2.5 text-[0.95rem] leading-relaxed text-ink-600">{p.p}</p>

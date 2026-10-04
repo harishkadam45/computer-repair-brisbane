@@ -10,7 +10,6 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import ServiceCard from '../components/ServiceCard.astro';
 import FaqList from '../components/FaqList.astro';
 import CallToAction from '../components/CallToAction.astro';
-import ReviewCards from '../components/ReviewCards.astro';
 import { site } from '../data/site';
 import { services, families } from '../data/services';
 import { suburbsByRegion, suburbs } from '../lib/suburbs';
@@ -636,6 +635,10 @@ const brands = ['HP', 'Dell', 'Lenovo', 'Apple', 'Asus', 'Acer', 'Toshiba', 'Son
     <CallToAction />
   </div>
 
-  <!-- Homepage only: the review block sits above the footer and nowhere else. -->
-  <ReviewCards />
+  <!--
+    Review cards are built and ready but not published yet: <ReviewCards /> above
+    the footer. It renders nothing until src/data/reviews.ts holds real reviews
+    copied off the review platform, so turning it on later is a one-line change
+    here rather than a rebuild of the section.
+  -->
 </BaseLayout>

@@ -145,6 +145,19 @@
     radial-gradient(52rem 30rem at 88% -8%, rgb(255 102 0 / 0.28) 0%, transparent 60%),
     radial-gradient(40rem 26rem at 4% 104%, rgb(242 41 91 / 0.16) 0%, transparent 58%),
     linear-gradient(168deg, #08090f 0%, #010104 62%, #04060b 100%);
+
+  /*
+   * The header's variant of the same stack: identical near-black base, but the
+   * top-right glow is a light blue rather than the brand orange. Held separately
+   * instead of editing --dark-wash-image, because the home hero, the section
+   * washes and the Services panel all paint that shared stack and were not meant
+   * to change. Position and size are unchanged, so the glow reads the same shape
+   * and the header keeps the same near-black field under the orange pills.
+   */
+  --header-wash-image:
+    radial-gradient(52rem 30rem at 88% -8%, rgb(96 165 250 / 0.28) 0%, transparent 60%),
+    radial-gradient(40rem 26rem at 4% 104%, rgb(242 41 91 / 0.16) 0%, transparent 58%),
+    linear-gradient(168deg, #08090f 0%, #010104 62%, #04060b 100%);
 }
 
 /*
@@ -495,6 +508,13 @@
    */
   .bg-dark-wash {
     background-image: var(--dark-wash-image);
+    background-color: #010104;
+    color: #fff;
+  }
+
+  /* The header's own wash, so the blue glow stays confined to the header. */
+  .bg-header-wash {
+    background-image: var(--header-wash-image);
     background-color: #010104;
     color: #fff;
   }

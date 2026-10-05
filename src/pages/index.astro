@@ -10,7 +10,9 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import ServiceCard from '../components/ServiceCard.astro';
 import FaqList from '../components/FaqList.astro';
 import CallToAction from '../components/CallToAction.astro';
-import TrustCards from '../components/TrustCards.astro';
+import ReviewCarousel from '../components/ReviewCarousel.astro';
+import BrandCarousel from '../components/BrandCarousel.astro';
+import { brands } from '../data/brands';
 import { site } from '../data/site';
 import { services, families } from '../data/services';
 import { suburbsByRegion, suburbs } from '../lib/suburbs';
@@ -132,8 +134,11 @@ const jsonLd = schema.graph({
   ],
 });
 
-/** Brands listed on the legacy site, kept because customers search for them. */
-const brands = ['HP', 'Dell', 'Lenovo', 'Apple', 'Asus', 'Acer', 'Toshiba', 'Sony', 'Compaq', 'IBM'];
+/**
+ * Brands serviced come from src/data/brands.ts (see the import above), so the
+ * list under "About" and the marquee cannot drift apart. It is the same set the
+ * legacy site published - kept because customers search for these names by brand.
+ */
 ---
 
 <BaseLayout
@@ -186,11 +191,10 @@ const brands = ['HP', 'Dell', 'Lenovo', 'Apple', 'Asus', 'Acer', 'Toshiba', 'Son
               Call {site.phone.display}
             </a>
 <a
-    href={site.quoteForm.url}
-    data-quote-open
+    href="/contact/"
     class="inline-flex items-center justify-center rounded-xl border-2 border-white/35 px-7 py-4 text-lg font-bold text-white transition hover:bg-white/10"
   >
-              Get a free quote
+              General Enquiry
             </a>
           </div>
 
@@ -298,6 +302,9 @@ const brands = ['HP', 'Dell', 'Lenovo', 'Apple', 'Asus', 'Acer', 'Toshiba', 'Son
       </ul>
     </div>
   </section>
+
+  <!-- ================= Brands we repair ================= -->
+  <BrandCarousel />
 
 <!-- ================= Symptoms ================= -->
   <section class="border-t border-ink-100" aria-labelledby="symptoms-heading">
@@ -448,10 +455,10 @@ const brands = ['HP', 'Dell', 'Lenovo', 'Apple', 'Asus', 'Acer', 'Toshiba', 'Son
                 {
                   [
                     ['Basic computer training', 150, 160, 160],
-                    ['Data migration / backup', 129, 229, 229],
-                    ['Virus & spyware removal', 129, 149, 149],
-                    ['Software installation', 89, 129, 129],
-                    ['Add computer to network', 79, 89, 89],
+                    ['Data migration / backup', 150, 229, 229],
+                    ['Virus & spyware removal', 150, 149, 149],
+                    ['Software installation', 150, 129, 129],
+                    ['Add computer to network', 150, 89, 89],
                     ['Wireless network + router setup', 150, 149, 149],
                   ].map(([label, ours, geek, gizmo]) => (
 <tr class="transition hover:bg-white/[0.06]">
@@ -591,7 +598,7 @@ const brands = ['HP', 'Dell', 'Lenovo', 'Apple', 'Asus', 'Acer', 'Toshiba', 'Son
               {
                 brands.map((b) => (
                   <li class="rounded-lg border border-ink-200 bg-ink-50 px-3 py-1.5 text-sm font-semibold text-ink-700">
-                    {b}
+                    {b.name}
                   </li>
                 ))
               }
@@ -623,6 +630,6 @@ const brands = ['HP', 'Dell', 'Lenovo', 'Apple', 'Asus', 'Acer', 'Toshiba', 'Son
     <CallToAction />
   </div>
 
-  <!-- Homepage only: the guarantees sit above the footer and nowhere else. -->
-  <TrustCards />
+  <!-- Homepage only: the review carousel sits above the footer and nowhere else. -->
+  <ReviewCarousel />
 </BaseLayout>

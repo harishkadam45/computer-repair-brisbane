@@ -14,7 +14,6 @@
  */
 import Icon from './Icon.astro';
 import { promises } from '../data/trust';
-import { site } from '../data/site';
 
 interface Props {
   /** Heading. Keep it about what is guaranteed, not about the business. */
@@ -62,15 +61,5 @@ const shown = promises.slice(0, limit);
         ))
       }
     </div>
-
-    <p class="mt-8 text-center text-sm text-ink-500">
-      Flat $${site.pricing.flatRate} for the first hour, no call-out fee.
-      <a
-        href="/pricing/"
-        class="font-semibold text-brand-300 underline underline-offset-2 transition hover:text-brand-400"
-      >
-        Read the full terms
-      </a>
-    </p>
   </div>
 </section>

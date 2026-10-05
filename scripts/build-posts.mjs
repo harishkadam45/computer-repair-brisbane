@@ -121,10 +121,21 @@ function toText(html, max = 200) {
   return `${text.slice(0, text.lastIndexOf(' ', max))}…`;
 }
 
+/**
+ * Featured images, resolved to local paths by
+ * .migration/localise-featured-images.mjs. The API only hands back a
+ * featured_media id, never a URL, so the mapping is read from the manifest
+ * rather than refetched - this script must stay runnable offline.
+ */
+const FEATURED = JSON.parse(
+  await readFile(path.join(root, '.migration', 'featured-image-manifest.json'), 'utf8'),
+);
+
 const posts = raw
   .map((p) => {
     const body = dedash(repairMojibake(clean(p.content?.rendered)));
     const excerptRaw = dedash(toText(clean(p.excerpt?.rendered)) || toText(body));
+    const art = FEATURED[p.slug] ?? null;
     return {
       slug: p.slug,
       title: dedash(repairMojibake(p.title?.rendered?.trim() ?? '')),
@@ -136,6 +147,9 @@ const posts = raw
       body,
       words: toText(body, 1e9).split(/\s+/).filter(Boolean).length,
       categories: p.categories ?? [],
+      /** Local path to the card art, or null. See Post.image in src/data/posts.ts. */
+      image: art?.path ?? null,
+      imageAlt: art?.alt ?? '',
     };
   })
   .sort((a, b) => (a.date < b.date ? 1 : -1));
@@ -145,6 +159,11 @@ await writeFile(OUT, JSON.stringify(posts, null, 2), 'utf8');
 const totalWords = posts.reduce((n, p) => n + p.words, 0);
 console.log(`Wrote ${posts.length} posts -> ${path.relative(root, OUT)}`);
 console.log(`  total ${totalWords.toLocaleString('en-AU')} words, median ${posts[Math.floor(posts.length / 2)]?.words} words/post`);
+console.log(
+  `  ${posts.filter((p) => p.image).length} posts have a featured image, ` +
+    `${posts.filter((p) => !p.image && /<img[\s>]/i.test(p.body)).length} fall back to a body image, ` +
+    `${posts.filter((p) => !p.image && !/<img[\s>]/i.test(p.body)).length} have none`,
+);
 
 const residual = posts.filter((p) => /dslc-|sharedaddy|jp-relatedposts|<style|<script/i.test(p.body));
 console.log(`  ${residual.length} posts still contain theme markup`);

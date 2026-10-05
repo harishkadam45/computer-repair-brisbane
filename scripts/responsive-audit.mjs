@@ -31,6 +31,8 @@ const ROUTES = [
   '/about/',
 
   '/search/',
+  '/privacy-policy/',
+  '/terms/',
 ];
 
 const VIEWPORTS = [

@@ -103,26 +103,70 @@ for (const w of [320, 375, 414, 640, 768, 1023]) {
   await page.close();
 }
 
-// Desktop must keep the centred four-column layout intact.
-for (const w of [1024, 1280, 1440]) {
+/*
+ * Desktop must keep every footer block on one row with equal gaps, and every
+ * link column must line up with its own heading.
+ *
+ * These used to assert centred headings. They are now left-aligned at every
+ * width: centring the Services two-column grid left a ragged edge on both sides
+ * that read as misalignment, most obviously on an iPad Mini at 1024 and a
+ * Surface Pro 10 at 1366 - the widths that trip the lg breakpoint. The centred
+ * tier was also the reason those devices looked wrong, since the old rule made
+ * the narrowest "desktop" width the trigger.
+ *
+ * Note what is NOT asserted here: the columns do not line up with the page
+ * gutter at these widths, and must not be made to. From lg up the blocks are a
+ * justify-between row, so only the first block touches the gutter and the rest
+ * are spaced by leftover width. What has to hold is that each column's own list
+ * starts where its own heading starts. The gutter check belongs to the stacked
+ * tier above, and is correct there.
+ */
+for (const w of [1024, 1280, 1366, 1440]) {
   const page = await browser.newPage({ viewport: { width: w, height: 900 } });
   await page.goto(`${O}/`, { waitUntil: 'load' });
+  await page.evaluate(() => document.fonts?.ready);
   await page.waitForTimeout(250);
   const r = await page.evaluate(() => {
-    const row = [...document.querySelector('footer').querySelectorAll('div')].find((d) => String(d.className).includes('lg:justify-between'));
+    const footer = document.querySelector('footer');
+    const row = [...footer.querySelectorAll('div')].find((d) => String(d.className).includes('lg:justify-between'));
     const rects = [...row.children].map((c) => c.getBoundingClientRect());
     const gaps = [];
     for (let i = 1; i < rects.length; i++) if (Math.abs(rects[i].top - rects[i - 1].top) < 2) gaps.push(Math.round(rects[i].left - rects[i - 1].right));
-    const centered = [...document.querySelectorAll('footer h2')].every((h) => getComputedStyle(h).textAlign === 'center');
-    return { gaps, equal: gaps.length === 3 && Math.max(...gaps) - Math.min(...gaps) <= 1, rows: new Set(rects.map((x) => Math.round(x.top))).size, centered };
+
+    const cols = [...footer.querySelectorAll('h2')].map((h) => {
+      const n = h.nextElementSibling;
+      const headLeft = Math.round(h.getBoundingClientRect().left);
+      const links = n?.tagName === 'UL' ? [...n.querySelectorAll('a')] : [...(n?.children ?? [])];
+      const lefts = links.map((a) => Math.round(a.getBoundingClientRect().left));
+      return {
+        text: h.textContent.trim(),
+        align: getComputedStyle(h).textAlign,
+        listAlign: n?.tagName === 'UL' ? getComputedStyle(n).textAlign : null,
+        headLeft,
+        firstCol: lefts.length ? Math.min(...lefts) : null,
+      };
+    });
+
+    return {
+      gaps,
+      equal: gaps.length === 3 && Math.max(...gaps) - Math.min(...gaps) <= 1,
+      rows: new Set(rects.map((x) => Math.round(x.top))).size,
+      cols,
+      over: document.documentElement.scrollWidth > document.documentElement.clientWidth + 1,
+    };
   });
   console.log(`\n=== ${w}px desktop ===`);
   say(r.rows === 1, 'footer blocks on one row', `rows=${r.rows}`);
   say(r.equal, 'equal gaps preserved', `[${r.gaps.join(', ')}]`);
-  say(r.centered, 'desktop column headings still centred');
+  for (const c of r.cols) {
+    say(c.align === 'left', `${c.text} heading is left-aligned`, `text-align:${c.align}`);
+    if (c.listAlign !== null) say(c.listAlign === 'left', `${c.text} list text is left-aligned`, `text-align:${c.listAlign}`);
+    say(c.firstCol !== null && Math.abs(c.firstCol - c.headLeft) <= 1, `${c.text} content lines up with its heading`, `${c.firstCol} vs ${c.headLeft}`);
+  }
+  say(!r.over, 'no horizontal overflow');
   await page.close();
 }
 
-console.log(bad === 0 ? '\nPASS: footer flush left on mobile, centred four-column layout intact on desktop.' : `\n${bad} check(s) failed.`);
+console.log(bad === 0 ? '\nPASS: footer flush left when stacked, columns aligned to their headings on desktop.' : `\n${bad} check(s) failed.`);
 await browser.close();
 server.close();

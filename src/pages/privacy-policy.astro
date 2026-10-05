@@ -1,0 +1,190 @@
+---
+/**
+ * Privacy Policy.
+ *
+ * Written from what the site actually does, not from a generic template, and
+ * every claim in it was checked against the codebase before being written:
+ *
+ *   - No analytics, tag manager, ad pixel or tracking script is loaded. Grep
+ *     for gtag/analytics/plausible/posthog/clarity/fbq returns nothing.
+ *   - No cookies are set or read. document.cookie appears nowhere.
+ *   - The only client-side storage is one localStorage flag on the blog index
+ *     (blog:archive-open), which never leaves the browser.
+ *   - There is no backend. site.quoteForm.endpoint is deliberately empty, so the
+ *     quote modal hands the answers to the visitor's own email client.
+ *
+ * That audit matters: a privacy policy that overstates collection is worse than
+ * no policy, and one that understates it is worse still. Anything that could not
+ * be verified is a TODO(client) below rather than a sentence that sounds
+ * authoritative but might be wrong.
+ *
+ * TODO(client) before this goes live: confirm the ABN, the retention period, and
+ * who the web host is (this is a static build with no adapter, so the provider
+ * cannot be read from astro.config.mjs). None of the three are stated on the
+ * page yet, and the Privacy Principles do want the host named.
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
+import CallToAction from '../components/CallToAction.astro';
+import { site } from '../data/site';
+import * as schema from '../lib/schema';
+
+const path = '/privacy-policy/';
+const title = `Privacy Policy | ${site.name}`;
+const description =
+  `How ${site.name} handles your personal information: what this website collects, ` +
+  `what it does not, and how to ask us to correct or delete it.`;
+
+/** Set once at publication. Do not regenerate on every build. */
+const lastUpdated = '4 October 2026';
+
+const trail = [
+  { name: 'Home', path: '/' },
+  { name: 'Privacy Policy', path },
+];
+
+const jsonLd = schema.graph({
+  path,
+  name: title,
+  description,
+  extra: [schema.breadcrumbList(trail)],
+});
+---
+
+<BaseLayout title={title} description={description} path={path} schema={jsonLd}>
+  <div class="container-page pt-5 sm:pt-6">
+    <Breadcrumb trail={trail} />
+  </div>
+
+  <section class="border-b border-ink-100 hero-wash">
+    <div class="container-page py-14 sm:py-20">
+      <div class="max-w-3xl">
+        <p
+          class="inline-flex items-center gap-2 rounded-full bg-brand-500/10 px-3.5 py-1.5 text-xs font-bold tracking-wide text-brand-300 uppercase ring-1 ring-brand-200"
+        >
+          The short version
+        </p>
+        <h1 class="mt-5 text-h1">Privacy Policy</h1>
+        <p class="mt-6 text-lead text-ink-700">
+          This site does not track you. There are no analytics, no advertising pixels and no cookies.
+          The only information we ever hold is what you choose to send us when you ask for a quote or
+          get in touch, and we use it to do the job.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <div class="container-page pt-14 pb-14 sm:pt-20 sm:pb-20">
+    <div class="prose-copy mx-auto max-w-3xl">
+      <p class="text-sm text-ink-500">Last updated: {lastUpdated}</p>
+
+      <h2>Who we are</h2>
+      <p>
+        This website is operated by <strong>{site.legalName}</strong>, trading as
+        <strong>{site.name}</strong>. We are a one-person computer repair business servicing
+        {site.serviceAreas.join(', ')} and surrounding suburbs.
+      </p>
+      <p>
+        You can reach us on <a href={site.phone.href}>{site.phone.display}</a> or by email at
+        <a href={site.email.href}>{site.email.display}</a>. Postal address details and our ABN are
+        available on request.
+      </p>
+
+      <h2>What this website collects</h2>
+      <p>
+        Nothing, on its own. Simply reading this site does not send us anything about you.
+      </p>
+      <ul>
+        <li><strong>No cookies.</strong> This site sets none, and reads none.</li>
+        <li>
+          <strong>No analytics or advertising.</strong> We do not run Google Analytics, a tag
+          manager, or any advertising pixel. There is no third-party tracking script on any page.
+        </li>
+        <li>
+          <strong>No profiling.</strong> We do not build a profile of you, and we do not sell or
+          share your information with advertisers.
+        </li>
+        <li>
+          <strong>No third-party embeds.</strong> Maps, chat widgets, social media buttons and
+          video players are not embedded here, because an embedded widget can collect data before
+          you interact with it.
+        </li>
+      </ul>
+
+      <h2>The one thing stored on your device</h2>
+      <p>
+        The blog page remembers whether you have opened the full archive, so you are not asked
+        again. That is a single flag kept in your browser's local storage under the key
+        <code>blog:archive-open</code>. It never leaves your device, is not linked to an account, and
+        holds nothing about you. Clearing your browser data removes it. It also works with
+        JavaScript disabled, in which case the archive simply opens every time.
+      </p>
+
+      <h2>What we collect if you contact us</h2>
+      <p>
+        If you ask for a quote or send us a message, we hold whatever you send us: typically your
+        name, a phone number or email address, and a description of the problem. We use it for one
+        reason, which is to quote for and carry out your repair.
+      </p>
+      <p>How it reaches us depends on which page you use:</p>
+      <ul>
+        <li>
+          <strong>The quote form</strong> opens on a third-party form host. Your answers go
+          directly to that provider and then to our inbox.
+        </li>
+        <li>
+          <strong>The in-page quote box</strong> has no server behind it. Pressing send opens your
+          own email application with your answers filled in, and nothing is transmitted by this
+          website.
+        </li>
+      </ul>
+      <p>
+        We do not add you to a marketing list, and we do not sell or share your details with anyone
+        for their own purposes. We will disclose information only where Australian law lawfully
+        requires it.
+      </p>
+
+      <h2>Our web host</h2>
+      <p>
+        This site is a static build, so the pages you are reading are files served by the company
+        that hosts this domain. Our host necessarily has access to the technical connection
+        information any web server receives, such as your IP address and the browser you used. Name
+        the provider and link its own policy here once it is confirmed.
+      </p>
+
+      <h2>How long we keep it</h2>
+      <p>
+        We keep enquiry records only as long as they are needed to quote for and complete your work,
+        plus whatever period tax and business records law requires us to keep them. We do not keep
+        enquiry details indefinitely. TODO(client): confirm a concrete retention period with an
+        accountant so this states a number rather than a principle.
+      </p>
+
+      <h2>Your rights</h2>
+      <p>
+        Under the Australian Privacy Principles you can ask us to give you a copy of the personal
+        information we hold about you, correct it if it is wrong, or delete it. We will answer within
+        a reasonable time and normally at no charge. Email
+        <a href={site.email.href}>{site.email.display}</a> and we will deal with it.
+      </p>
+      <p>
+        If you are not happy with how we have handled your information you can complain to the Office
+        of the Australian Information Commissioner at
+        <a href="https://www.oaic.gov.au/privacy" rel="noopener nofollow" target="_blank">oaic.gov.au/privacy</a>.
+      </p>
+
+      <h2>Changes to this policy</h2>
+      <p>
+        If this policy changes we will update the date at the top of the page. Anything material will
+        be posted here rather than hidden behind a new URL.
+      </p>
+    </div>
+  </div>
+
+  <div class="container-page pb-16 sm:pb-20">
+    <CallToAction
+      title="Questions about your information?"
+      body="Ask before you hand anything over. We will tell you exactly what we hold and why, in plain English."
+    />
+  </div>
+</BaseLayout>

@@ -1,0 +1,267 @@
+---
+/**
+ * Review carousel. Homepage only, directly above the footer.
+ *
+ * Card design and layout follow the reference at skybridgeit.com: a centred
+ * header, and cards built as a figure - stars, blockquote, then a footer with a
+ * round initials badge, the name and a secondary line. What is kept from this
+ * site is the colour and the dark theme.
+ *
+ * The one structural idea worth stealing outright is how the track is sized.
+ * `--per` is how many cards fit at the current breakpoint, and every card's
+ * basis is derived from it, so the row is exact by construction. The previous
+ * version hard-coded a percentage per breakpoint and was 4px too wide at every
+ * desktop size, which cropped the third card; a formula that consumes its own
+ * gap cannot drift like that.
+ *
+ * The reviews are real. They come from this business's own independent-review
+ * profile and the aggregate rating is that profile's, which matters because the
+ * section sat empty until there was something genuine to put in it - invented
+ * testimonials are unlawful under the Australian Consumer Law.
+ *
+ * The source is neither named nor linked. An earlier pass carried a "read all N
+ * reviews" link out to the profile and the user asked for the third-party review
+ * links to come off the site, then for the source note to go as well. Provenance
+ * lives in `src/data/reviews.ts`, which is where anyone editing this needs to
+ * look anyway.
+ */
+import { reviews, business, formatReviewDate } from '../data/reviews';
+
+interface Props {
+  title?: string;
+  body?: string;
+}
+
+const { title = 'What customers say', body } = Astro.props;
+
+/** "David H." -> "DH". The platform shows one name and an initial only. */
+const initials = (name: string): string =>
+  name
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0]?.toUpperCase() ?? '')
+    .join('');
+---
+
+<section class="border-t border-ink-100 bg-ink-50 py-16 sm:py-20" aria-labelledby="reviews-heading">
+  <div class="container-page">
+    <div class="mx-auto max-w-3xl text-center">
+      <p
+        class="inline-flex items-center gap-2 rounded-full bg-brand-500/10 px-3.5 py-1.5 text-xs font-bold tracking-wide text-brand-300 uppercase ring-1 ring-brand-200"
+      >
+        Customer reviews
+      </p>
+      <h2 id="reviews-heading" class="mt-5 text-h2">{title}</h2>
+      <p class="mt-4 text-lead text-ink-700">
+        {body ?? `Every review here was left by a customer and published word for word.`}
+      </p>
+
+      <p class="mt-6 inline-flex flex-wrap items-center justify-center gap-x-3 gap-y-1">
+        <span class="text-4xl font-extrabold text-ink-900">{business.rating}</span>
+        <span class="sr-only">out of 5,</span>
+        <span class="inline-flex gap-0.5" role="img" aria-label={`${business.rating} out of 5`}>
+          {
+            Array.from({ length: 5 }).map(() => (
+              <svg class="size-4" viewBox="0 0 24 24" fill="#FBBC04" aria-hidden="true">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+              </svg>
+            ))
+          }
+        </span>
+        <span class="text-sm text-ink-600">from {business.count} customer reviews</span>
+      </p>
+    </div>
+
+    <div class="review-carousel mt-12" data-review-carousel>
+      <ul
+        class="review-track flex snap-none gap-6 overflow-x-auto pb-2"
+        data-review-track
+        tabindex="0"
+        role="group"
+        aria-roledescription="carousel"
+        aria-label="Customer reviews, scrollable"
+      >
+          {
+            reviews.map((r, i) => (
+              <li
+                class="review-card shrink-0"
+                role="group"
+                aria-roledescription="slide"
+                aria-label={`${i + 1} of ${reviews.length}`}
+              >
+                <figure class="flex h-full w-full flex-col rounded-[28px] border border-ink-200 bg-white/[0.06] p-7 shadow-card transition duration-300 hover:-translate-y-1 hover:border-brand-300/60 hover:shadow-lift sm:p-8">
+                  <div
+                    class="mb-5 flex items-center gap-1"
+                    role="img"
+                    aria-label={`Rated ${r.rating} out of 5`}
+                  >
+                    {Array.from({ length: 5 }).map((_, s) => (
+                      <svg
+                        class="size-[18px]"
+                        viewBox="0 0 24 24"
+                        fill={s < r.rating ? '#FBBC04' : '#3a4048'}
+                        aria-hidden="true"
+                      >
+                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                      </svg>
+                    ))}
+                  </div>
+
+                  <blockquote class="flex-1 text-[0.95rem] leading-relaxed text-ink-700 sm:text-base">
+                    <p>&ldquo;{r.quote}&rdquo;</p>
+                  </blockquote>
+
+                  <figcaption class="mt-7 flex min-h-[4.5rem] items-center gap-4 border-t border-ink-100 pt-6">
+                    <span
+                      class="flex size-12 shrink-0 items-center justify-center rounded-full bg-brand-500/15 text-sm font-bold text-brand-300 ring-1 ring-brand-400/30"
+                      aria-hidden="true"
+                    >
+                      {initials(r.name)}
+                    </span>
+                    <span class="min-w-0">
+                      <span class="block font-bold text-ink-900">{r.name}</span>
+                      <span class="block text-sm text-ink-500">
+                        <time datetime={r.date}>{formatReviewDate(r.date)}</time>
+                      </span>
+                    </span>
+                  </figcaption>
+                </figure>
+              </li>
+            ))
+          }
+        </ul>
+    </div>
+  </div>
+</section>
+
+<style>
+  /*
+   * `--per` is the number of cards that fit at this breakpoint. The basis is
+   * derived from it rather than hard-coded, so the row is exact by construction:
+   * there is no percentage to drift out of step with the gap. 1.5rem matches the
+   * `gap-6` on the track, and every card has to agree with it or the last one in
+   * the row gets cropped.
+   */
+  .review-track {
+    --per: 1;
+  }
+  .review-card {
+    flex: 0 0 calc((100% - (var(--per) - 1) * 1.5rem) / var(--per));
+  }
+
+  @media (width >= 768px) {
+    .review-track {
+      --per: 2;
+    }
+  }
+  @media (width >= 1024px) {
+    .review-track {
+      --per: 3;
+    }
+  }
+</style>
+
+<script>
+  /**
+   * Auto-advancing review track. Advances every 3s and loops.
+   *
+   * Steps are counted in whole cards rather than measured off scrollLeft. The
+   * cards are an exact fraction of the viewport, so a viewport of scrolling is
+   * not the same thing as a card boundary and measuring pixels left the last
+   * card unreachable at some widths. `per` comes from the same `--per` the CSS
+   * uses to size the cards, so the two cannot disagree.
+   */
+  const ROTATE_MS = 3000;
+
+  function initCarousel(root: HTMLElement) {
+    const track = root.querySelector<HTMLElement>('[data-review-track]');
+    if (!track) return;
+
+    const cards = Array.from(track.children) as HTMLElement[];
+    if (cards.length < 2) return;
+
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+    /** Cards per view, read back off the CSS so JS and layout cannot drift. */
+    const per = (): number => {
+      const raw = getComputedStyle(track).getPropertyValue('--per');
+      const n = parseInt(raw, 10);
+      return Number.isFinite(n) && n > 0 ? n : 1;
+    };
+
+    /** Distance between one card and the next, gap included. */
+    const stride = (): number => {
+      const a = cards[0].getBoundingClientRect();
+      const b = cards[1].getBoundingClientRect();
+      return b.left - a.left || a.width;
+    };
+
+    const goTo = (page: number) => {
+      const max = Math.max(0, track.scrollWidth - track.clientWidth);
+      const left = Math.max(0, Math.min(max, page * stride()));
+      track.scrollTo({ left, behavior: reduceMotion.matches ? 'auto' : 'smooth' });
+    };
+
+    const advance = () => {
+      const max = Math.max(0, track.scrollWidth - track.clientWidth);
+      // Wrap on the pixel position. The last screen is partial whenever the
+      // card count is not a multiple of `per`, so its index is never reached
+      // and testing the index meant the loop never closed.
+      if (track.scrollLeft >= max - 4) goTo(0);
+      // A step is a whole screen, not a whole card. Stepping one card at a time
+      // crawled the row at a third of the speed on desktop and took 36s to
+      // cross it.
+      else goTo(Math.round(track.scrollLeft / stride()) + per());
+    };
+
+    let timer: number | undefined;
+
+    const start = () => {
+      if (timer !== undefined) return;
+      if (reduceMotion.matches) return;
+      // Interval, not timeout: the rotation is unconditional, so it keeps its
+      // cadence across a resize that changes how many cards fit.
+      timer = window.setInterval(advance, ROTATE_MS);
+    };
+
+    const stop = () => {
+      if (timer === undefined) return;
+      window.clearInterval(timer);
+      timer = undefined;
+    };
+
+    // Someone reaching for the track is reading it, not waiting for it.
+    root.addEventListener('mouseenter', stop);
+    root.addEventListener('mouseleave', start);
+
+    // Same for keyboard: tabbing into the region should not move it underneath.
+    root.addEventListener('focusin', stop);
+    root.addEventListener('focusout', (e) => {
+      if (!root.contains((e as FocusEvent).relatedTarget as Node | null)) start();
+    });
+
+    // A manual swipe means take over. Just clearing the interval here meant one
+    // touch anywhere on the track killed rotation for the rest of the page's
+    // life, so restart once they have stopped.
+    let resumeTimer: number | undefined;
+    const takeover = () => {
+      stop();
+      window.clearTimeout(resumeTimer);
+      resumeTimer = window.setTimeout(start, 1200);
+    };
+    track.addEventListener('pointerdown', takeover);
+    track.addEventListener('wheel', takeover, { passive: true });
+
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) stop();
+      else start();
+    });
+
+    start();
+  }
+
+  document
+    .querySelectorAll<HTMLElement>('[data-review-carousel]')
+    .forEach((el) => initCarousel(el));
+</script>

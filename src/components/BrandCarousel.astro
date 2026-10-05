@@ -1,0 +1,225 @@
+---
+/**
+ * Brand marquee. Homepage only, directly below the trust bar.
+ *
+ * Two rows of brand tiles scrolling in opposite directions, in the style of the
+ * "tools we build with" band: continuous motion, edges faded out with a mask,
+ * one row reversed, and hover or focus to pause.
+ *
+ * "We repair all major brands" does nothing as prose, so this puts the names in
+ * front of the reader in each manufacturer's own colour.
+ *
+ * Two things are done differently from the reference this is based on, both
+ * because they cost nothing here:
+ *
+ *  1. No JavaScript at all. The reference clones the tile list on the client to
+ *     get a seamless loop; here the second copy is rendered in the markup, so
+ *     the marquee runs with scripting disabled and there is no clone-then-measure
+ *     flash on load. The duplicate is aria-hidden, so it is not announced twice.
+ *  2. No will-change. An animated transform is composited anyway, and pinning
+ *     the hint leaves a promoted layer alive for the life of the page.
+ *
+ * The tiles are tinted in each brand's own colour and the wordmarks are type, not
+ * logo artwork. Logos are drawn for a light background - Samsung-scale navies
+ * would vanish into this dark page - and every trademarked logo file is licensed
+ * property that should not be scraped off the internet onto a client's commercial
+ * page. A light tile is also what makes the row read as a brand wall rather than a
+ * list of coloured words.
+ */
+import { brands, brandsFootnote, splitRows } from '../data/brands';
+
+interface Props {
+  title?: string;
+  body?: string;
+}
+
+const { title = 'We repair all major brands', body } = Astro.props;
+const rows = splitRows(brands);
+---
+
+<!--
+  No background of its own: the band's job is to show the page wash, the same
+  surface the trust bar above it sits on. Painting a section colour here would
+  cover the continuous field the wash depends on - global.css paints it once on
+  the document precisely so sections do not each lay their own.
+-->
+<section aria-labelledby="brands-heading">
+  <div class="container-page py-16 sm:py-20">
+    <div class="max-w-3xl">
+      <h2 id="brands-heading" class="text-h2">{title}</h2>
+      <p class="mt-4 text-lead text-ink-700">
+        {
+          body ??
+            'Laptops, desktops and monitors across every make and model. Parts, boards and ' +
+              'manufacturer diagnostics are the same whether the badge says HP or IBM, so nothing ' +
+              'here gets sent away for being unfamiliar.'
+        }
+      </p>
+    </div>
+
+    <div class="mt-10 space-y-4 sm:space-y-5">
+      {
+        rows.map((row, rowIndex) => (
+          <div
+            class="brand-row"
+            role="group"
+            aria-label={rowIndex === 0 ? 'Laptop and desktop brands' : 'Laptop and desktop brands, continued'}
+          >
+            <ul class="brand-track" style={`--marquee-duration:${42 + rowIndex * 4}s`} data-reverse={rowIndex % 2 === 1 ? '' : undefined}>
+              {row.map((b) => (
+                <li class="brand-card" style={`--brand:${b.color};--mark:${b.mark ?? b.color};--tint:${b.tint};--tint-hover:${b.tintHover}`}>
+                  {/*
+                    The wordmark is text, so it has to clear contrast like text. At
+                    24px bold WCAG asks 3:1 rather than 4.5:1, which is why two
+                    brands use a darkened shade of their colour - see src/data/brands.ts.
+                  */}
+                  <span class="block text-2xl leading-none font-extrabold tracking-tight">
+                    {b.name}
+                  </span>
+                  {/*
+                    ink-400 is tuned for the dark wash and is only 2.35:1 on a white
+                    tile. The tiles invert the page, so this label needs the darkest
+                    of the muted ink steps instead - ink-300 is 8:1 on white.
+                  */}
+                  <span class="mt-2 block text-[0.72rem] leading-snug font-semibold tracking-wide text-ink-300 uppercase">
+                    {b.kind}
+                  </span>
+                </li>
+              ))}
+              {/* The second copy is what makes -50% loop seamlessly. */}
+              {row.map((b) => (
+                <li class="brand-card" data-clone aria-hidden="true" style={`--brand:${b.color};--mark:${b.mark ?? b.color};--tint:${b.tint};--tint-hover:${b.tintHover}`}>
+                  <span class="block text-2xl leading-none font-extrabold tracking-tight">
+                    {b.name}
+                  </span>
+                  <span class="mt-2 block text-[0.72rem] leading-snug font-semibold tracking-wide text-ink-300 uppercase">
+                    {b.kind}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))
+      }
+    </div>
+
+    <p class="mt-8 max-w-2xl text-sm leading-relaxed text-ink-500">{brandsFootnote}</p>
+  </div>
+</section>
+
+<style>
+  /*
+   * The edge fade. Without it the tiles pop out of existence at the container
+   * edge, which reads as a glitch rather than as motion. Both properties are
+   * needed: mask-image is the standard, -webkit-mask-image is still what Safari
+   * and the older Chromium builds honour.
+   */
+  .brand-row {
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(90deg, #0000, #000 6% 94%, #0000);
+    mask-image: linear-gradient(90deg, #0000, #000 6% 94%, #0000);
+  }
+
+  /*
+   * width: max-content lets the row be as wide as its tiles need, which is what
+   * makes a percentage-based translate meaningful: -50% is exactly one copy of
+   * the tile set, so the seam lands on a gap and the loop is invisible.
+   */
+  .brand-track {
+    display: flex;
+    gap: 1rem;
+    width: max-content;
+    animation: brand-marquee var(--marquee-duration, 42s) linear infinite;
+  }
+
+  .brand-track[data-reverse] {
+    animation-direction: reverse;
+  }
+
+  /* Stop moving the moment a reader reaches for it. */
+  .brand-row:hover .brand-track,
+  .brand-row:focus-within .brand-track {
+    animation-play-state: paused;
+  }
+
+  /*
+   * Reduced motion does not mean "a slower loop" - it means no loop. Collapse to
+   * a static, centred grid and drop the duplicate copy so the brand names are
+   * simply there to be read. The global clamp in global.css neutralises the
+   * duration; setting the name to none here is what actually stops it.
+   */
+  @media (prefers-reduced-motion: reduce) {
+    .brand-track {
+      animation: none;
+      flex-wrap: wrap;
+      justify-content: center;
+      width: auto;
+    }
+    .brand-track [data-clone] {
+      display: none;
+    }
+    /*
+     * Drop the edge fade with the motion. The mask exists to hide tiles entering
+     * and leaving; on a static wrapped grid there is no entry or exit, so it
+     * would just fade the outermost tiles for no reason.
+     */
+    .brand-row {
+      -webkit-mask-image: none;
+      mask-image: none;
+    }
+  }
+
+  /*
+   * The tile carries the brand colour as a pale tint, and the wordmark carries
+   * the colour itself at full strength on top.
+   *
+   * A solid brand fill is the obvious version of this and it does not work: white
+   * type on Acer's green is 2.9:1, so half the row would ship as unreadable text.
+   * Tinting toward white keeps every wordmark clear of the 3:1 that large text
+   * asks for while the card still reads as that brand's colour.
+   *
+   * The tint arrives as a literal --tint rather than a color-mix() here, because
+   * the oklab mix was solved in a browser but a color-mix() in the stylesheet
+   * reads as an opaque background to scripts/audit-contrast.mjs, which then skips
+   * these tiles. src/data/brands.ts explains the provenance.
+   */
+  .brand-card {
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 13.5rem;
+    min-height: 7rem;
+    padding: 1.25rem;
+    background-color: var(--tint);
+    /* --mark, not --brand: two brands need a darker wordmark to stay readable
+       on their own tint. See the `mark` field in src/data/brands.ts. */
+    color: var(--mark);
+    border-radius: var(--radius-card, 0.875rem);
+    /* A ring in the brand colour keeps each tile's edge crisp against the wash. */
+    box-shadow:
+      inset 0 0 0 1px color-mix(in oklab, var(--brand) 34%, transparent),
+      0 1px 2px rgb(0 0 0 / 0.25);
+    transition:
+      background-color 0.2s ease,
+      box-shadow 0.2s ease;
+  }
+
+  /* Deepen rather than lift: a hover that changed the fill lightness enough to
+     notice would move the wordmark's contrast with it. */
+  .brand-card:hover {
+    background-color: var(--tint-hover);
+    box-shadow:
+      inset 0 0 0 1px color-mix(in oklab, var(--brand) 55%, transparent),
+      0 10px 24px rgb(0 0 0 / 0.4);
+  }
+
+  @keyframes brand-marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+</style>

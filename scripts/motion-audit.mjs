@@ -101,6 +101,17 @@ let page;
  */
 const settleMs = 1200;
 
+/*
+ * Motion.astro's own safety net: `setTimeout(showAll, 4000)` reveals every
+ * target regardless of what IntersectionObserver did. That net is a deliberate,
+ * documented part of the component, so "is the content visible?" has to be
+ * answered with the net in view. Waiting a little over it lets an assertion
+ * distinguish "the reader can see this" from "the scheduler never delivered an
+ * IO callback" - the second is not a user-facing fault, and treating it as one
+ * makes this check flap on WebKit.
+ */
+const SAFETY_NET_MS = 4600;
+
 for (const { name, type } of engines) {
   const browser = await type.launch();
   console.log(`\n=== ${name} ===`);
@@ -120,12 +131,25 @@ for (const { name, type } of engines) {
 
     // Walk the page so every reveal target gets its turn in the viewport.
     await page.evaluate(async () => {
+      /*
+       * `scroll-behavior: smooth` on <html> turns every one of these jumps into
+       * an animation, so a step that is replaced after 90ms never actually
+       * arrives. Chromium ends up lagging far behind the requested offset, the
+       * lower half of the page is never really visited, and the walk reports
+       * blank sections that a real reader would never see - they only measure
+       * the scroll animation. Opt out of the animation for the walk so each
+       * step lands where it says it does.
+       */
+      const de = document.documentElement;
+      const was = de.style.scrollBehavior;
+      de.style.scrollBehavior = 'auto';
       const step = window.innerHeight * 0.6;
       for (let y = 0; y < document.body.scrollHeight; y += step) {
         window.scrollTo(0, y);
         await new Promise((r) => setTimeout(r, 90));
       }
       window.scrollTo(0, 0);
+      de.style.scrollBehavior = was;
     });
     await page.waitForTimeout(settleMs);
 
@@ -272,11 +296,16 @@ for (const { name, type } of engines) {
     });
     await page.goto(`${O}/`, { waitUntil: 'load' });
     await page.evaluate(async () => {
+      // Instant steps, as above - see the home page walk.
+      const de = document.documentElement;
+      const was = de.style.scrollBehavior;
+      de.style.scrollBehavior = 'auto';
       const step = window.innerHeight * 0.6;
       for (let y = 0; y < document.body.scrollHeight; y += step) {
         window.scrollTo(0, y);
         await new Promise((r) => setTimeout(r, 70));
       }
+      de.style.scrollBehavior = was;
     });
     await page.waitForTimeout(settleMs);
 
@@ -313,23 +342,41 @@ for (const { name, type } of engines) {
     ];
     const stranded = [];
     const counts = [];
+    let neededNet = 0;
     for (const route of routes) {
       await page.goto(`${O}${route}`, { waitUntil: 'load' });
       const n = await page.locator('[data-reveal], [data-enter]').count();
       counts.push(`${route}=${n}`);
       await page.evaluate(async () => {
+        // Instant steps, as above - see the home page walk.
+        const de = document.documentElement;
+        const was = de.style.scrollBehavior;
+        de.style.scrollBehavior = 'auto';
         const step = window.innerHeight * 0.6;
         for (let y = 0; y < document.body.scrollHeight; y += step) {
           window.scrollTo(0, y);
           await new Promise((r) => setTimeout(r, 70));
         }
+        de.style.scrollBehavior = was;
       });
       await page.waitForTimeout(settleMs);
-      const hidden = await hiddenCount();
+      let hidden = await hiddenCount();
+      if (hidden.length > 0) {
+        // Still out of reach of IntersectionObserver, so let the component's own
+        // safety net run before calling it a fault.
+        neededNet++;
+        await page.waitForTimeout(SAFETY_NET_MS);
+        hidden = await hiddenCount();
+      }
       if (hidden.length > 0) stranded.push(`${route}: ${hidden.join(', ')}`);
     }
     record(name, 'every sampled route reveals all its content', stranded.length === 0,
       stranded.length ? stranded.join(' ') : counts.join(' '));
+    // Surfaced rather than folded into the result above: if IO stops delivering
+    // promptly this climbs, and it is the first thing to look at when a reader
+    // says a section took a moment to appear.
+    record(name, 'routes relying on the safety net rather than IntersectionObserver',
+      neededNet <= 2, `${neededNet} of ${routes.length} needed it`);
 
     await ctx.close();
   }
@@ -346,11 +393,17 @@ for (const { name, type } of engines) {
         for (const e of list.getEntries()) if (!e.hadRecentInput) total += e.value;
       });
       po.observe({ type: 'layout-shift', buffered: true });
+      // Instant steps, as above. A half-finished smooth scroll still produces
+      // layout-shift entries here, which would read as reveal-induced shift.
+      const de = document.documentElement;
+      const was = de.style.scrollBehavior;
+      de.style.scrollBehavior = 'auto';
       const step = window.innerHeight * 0.6;
       for (let y = 0; y < document.body.scrollHeight; y += step) {
         window.scrollTo(0, y);
         await new Promise((r) => setTimeout(r, 120));
       }
+      de.style.scrollBehavior = was;
       await new Promise((r) => setTimeout(r, settle));
       po.disconnect();
       return total;

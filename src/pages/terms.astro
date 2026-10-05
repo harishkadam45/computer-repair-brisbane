@@ -1,0 +1,216 @@
+---
+/**
+ * Terms and Conditions.
+ *
+ * The commercial numbers here are read from src/data/site.ts rather than typed
+ * in twice, so a price change on the pricing page cannot drift away from the
+ * terms. Everything stated is either from that file or checked against the code.
+ *
+ * TODO(client) - these are the gaps, and they are the parts that actually need a
+ * decision from a human before this page is relied on:
+ *
+ *   1. Warranty period on labour. The page says the period is stated on the
+ *      quote and invoice rather than naming one, because a number here would be
+ *      a promise nobody has agreed to yet.
+ *   2. Cancellation / failed-call-out fees. Not published anywhere on the site.
+ *   3. The liability and data-loss wording. This is the highest-risk section on
+ *      the page. Repairs routinely involve hard drives, and a blanket "not
+ *      liable for data loss" line is common but should be drafted deliberately.
+ *      It currently says back up first and that we do not warrant data recovery.
+ *   4. Entity type and ABN, which should match whatever is on the ABN register.
+ *
+ * Get these reviewed before publishing, ideally by an Australian legal
+ * professional. Nothing on this page should be treated as legal advice.
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
+import CallToAction from '../components/CallToAction.astro';
+import { site } from '../data/site';
+import * as schema from '../lib/schema';
+
+const path = '/terms/';
+const title = `Terms and Conditions | ${site.name}`;
+const description =
+  `The terms ${site.name} works under: pricing and billing, what we ask of you, ` +
+  `warranty on repairs, and how cancellations and disputes are handled.`;
+
+const lastUpdated = '4 October 2026';
+
+const trail = [
+  { name: 'Home', path: '/' },
+  { name: 'Terms and Conditions', path },
+];
+
+const jsonLd = schema.graph({
+  path,
+  name: title,
+  description,
+  extra: [schema.breadcrumbList(trail)],
+});
+---
+
+<BaseLayout title={title} description={description} path={path} schema={jsonLd}>
+  <div class="container-page pt-5 sm:pt-6">
+    <Breadcrumb trail={trail} />
+  </div>
+
+  <section class="border-b border-ink-100 hero-wash">
+    <div class="container-page py-14 sm:py-20">
+      <div class="max-w-3xl">
+        <p
+          class="inline-flex items-center gap-2 rounded-full bg-brand-500/10 px-3.5 py-1.5 text-xs font-bold tracking-wide text-brand-300 uppercase ring-1 ring-brand-200"
+        >
+          The small print
+        </p>
+        <h1 class="mt-5 text-h1">Terms and Conditions</h1>
+        <p class="mt-6 text-lead text-ink-700">
+          Plain-English terms for how we work. The prices below are the same ones on our pricing page,
+          and if a quote you have been given differs from what is written here, we will honour the
+          quote.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <div class="container-page pt-14 pb-14 sm:pt-20 sm:pb-20">
+    <div class="prose-copy mx-auto max-w-3xl">
+      <p class="text-sm text-ink-500">Last updated: {lastUpdated}</p>
+
+      <h2>1. Who we are</h2>
+      <p>
+        These terms apply to work carried out by <strong>{site.legalName}</strong>, trading as
+        <strong>{site.name}</strong> ({site.legalName} and {site.name} together, "we"). We are a
+        one-person business operating across {site.serviceAreas.join(', ')} and surrounding suburbs.
+        Contact us on <a href={site.phone.href}>{site.phone.display}</a> or
+        <a href={site.email.href}>{site.email.display}</a>.
+      </p>
+
+      <h2>2. What these terms cover</h2>
+      <p>
+        They cover work we do on your computer or related equipment, whether booked as a one-off or
+        as ongoing support. Booking any work means you accept these terms. Where these terms and a
+        written quote conflict, the quote wins.
+      </p>
+
+      <h2>3. Quotes and pricing</h2>
+      <ul>
+        <li>
+          The standard onsite rate is <strong>${site.pricing.flatRate}</strong> for the usual job
+          list. {site.pricing.gstNote}
+        </li>
+        <li>There is no call-out fee. You pay for the visit whether or not we fix anything.</li>
+        <li>There is no weekend or public holiday surcharge.</li>
+        <li>
+          Work after the first hour is billed in increments of {site.pricing.billingIncrement}.
+        </li>
+        <li>Parts are charged at cost with no mark-up. You are told before any part is fitted.</li>
+        <li>
+          Work outside the standard list is quoted before it starts. We will not exceed the quoted
+          price without asking you first.
+        </li>
+      </ul>
+      <p>
+        Prices assume the machine is accessible and the fault is in software or a standard
+        replaceable component. Hardware-level work such as a failed drive, liquid damage or a
+        motherboard fault will be quoted separately and may be uneconomic; we will say so rather
+        than start it.
+      </p>
+
+      <h2>4. Booking and cancellations</h2>
+      <p>
+        Bookings are available {site.hours.note} Specific times are agreed by phone or email.
+      </p>
+      <p>
+        Please give us as much notice as possible if you need to move or cancel. Where a visit has
+        been arranged and we have already turned up, or could not have taken another job because of
+        the short notice, you may be charged for the visit. Insert the cancellation window and any
+        fee once they are agreed.
+      </p>
+
+      <h2>5. What we need from you</h2>
+      <ul>
+        <li>Access to the machine and a working power outlet at the booked time.</li>
+        <li>Any password needed to get at the fault, given to us directly rather than written on a note.</li>
+        <li>Your permission before we change settings, install software or remove anything.</li>
+        <li>
+          <strong>A backup of anything you cannot lose.</strong> More on this below.
+        </li>
+      </ul>
+      <p>
+        If we cannot complete the work because we cannot get access, or because the problem turns
+        out to be different from what was described, we still charge for the visit.
+      </p>
+
+      <h2>6. Your data and backups</h2>
+      <p>
+        Please back up your data before we start. Repair work sometimes involves replacing or
+        reinstalling a drive, and sometimes the fault has already cost you data before we arrive.
+      </p>
+      <p>
+        We take every reasonable care with your files while they are with us. We do not offer a data
+        recovery guarantee, because the outcome of a recovery attempt depends on the state of the
+        drive rather than on anything we control. If your files are irreplaceable, tell us before we
+        begin and we will discuss the risk.
+      </p>
+
+      <h2>7. Warranty on repairs</h2>
+      <p>
+        The warranty period for labour is stated on your quote and your invoice. If the same fault
+        returns within that period, the labour to fix it again is free. Parts fitted carry the
+        manufacturer's own warranty, and we will help you claim it.
+      </p>
+      <p>
+        The warranty does not cover a different fault, damage caused after the work was done,
+        deliberate or accidental changes made by someone else, or equipment that has been dropped,
+        opened or liquid damaged since we attended.
+      </p>
+
+      <h2>8. Our liability</h2>
+      <p>
+        We are responsible for carrying out the work we agree to do with reasonable care and skill. We
+        are not responsible for indirect or consequential loss, including lost profits or lost data.
+        A liability cap needs adding here and should be reviewed before this page is relied on.
+      </p>
+
+      <h2>9. Cancellation and refunds</h2>
+      <p>
+        If we cannot attend, or we cannot carry out work we have quoted for, you are not charged. If
+        you have paid in advance and we cannot complete the work, the advance is refunded. For
+        changes of mind after work has been carried out, call us and we will sort it out fairly.
+      </p>
+
+      <h2>10. This website</h2>
+      <p>
+        Content on this site is general information about computer problems and our services. It is
+        not advice about your particular machine, and no repair is authorised on the basis of
+        something written here. Descriptions of faults are written by whoever reported them to us
+        and are not guaranteed to be technically accurate.
+      </p>
+      <p>
+        Trade marks mentioned belong to their owners. We repair the brands we service but are not
+        affiliated with, endorsed by, or spokespeople for any of them. Product names are used to
+        describe the work, not to imply a connection.
+      </p>
+
+      <h2>11. Changes to these terms</h2>
+      <p>
+        We may update these terms as our business changes. The date at the top shows when they were
+        last changed, and the terms that applied at the time of your repair are the ones that apply
+        to that repair.
+      </p>
+
+      <h2>12. Governing law</h2>
+      <p>
+        These terms are governed by the laws of Queensland, Australia, and the courts of Queensland
+        have jurisdiction over any dispute arising from them.
+      </p>
+    </div>
+  </div>
+
+  <div class="container-page pb-16 sm:pb-20">
+    <CallToAction
+      title="Something here unclear?"
+      body="Ask before booking. We would much rather explain a term up front than argue about it afterwards."
+    />
+  </div>
+</BaseLayout>

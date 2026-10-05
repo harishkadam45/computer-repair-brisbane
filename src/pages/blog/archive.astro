@@ -1,0 +1,109 @@
+---
+/**
+ * The full blog archive at /blog/archive/.
+ *
+ * /blog/ shows the six newest posts and hides the rest behind one button, which
+ * needs JavaScript. Cloning that markup out of a <template> is what keeps a
+ * first visit from downloading every image in the archive - a hidden subtree
+ * still gets fetched by Firefox and Safari - so the fallback for readers without
+ * JavaScript cannot be the same page.
+ *
+ * Hence this one: static, complete, no script, everything by year. It is also
+ * the honest URL for "all the articles" - worth having on its own rather than
+ * something only reachable by clicking.
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
+import PageHero from '../../components/PageHero.astro';
+import CallToAction from '../../components/CallToAction.astro';
+import BlogCard from '../../components/BlogCard.astro';
+import { site } from '../../data/site';
+import { posts } from '../../data/posts';
+import { clampDescription } from '../../lib/seo';
+import * as schema from '../../lib/schema';
+
+const path = '/blog/archive/';
+const title = `All ${posts.length} Articles | Blog Archive | ${site.name}`;
+const description = clampDescription(
+  `Every one of the ${posts.length} articles on the ${site.name} blog, newest first and grouped ` +
+    `by year. Computer repair advice from ${site.technician.name} in Brisbane.`,
+);
+
+const trail = [
+  { name: 'Home', path: '/' },
+  { name: 'Blog', path: '/blog/' },
+  { name: 'Archive', path },
+];
+
+const byYear = new Map<string, typeof posts>();
+for (const post of posts) {
+  const year = post.date.slice(0, 4);
+  if (!byYear.has(year)) byYear.set(year, []);
+  byYear.get(year)!.push(post);
+}
+const years = [...byYear.entries()].sort((a, b) => Number(b[0]) - Number(a[0]));
+
+const totalWords = Math.round(posts.reduce((n, p) => n + p.words, 0) / 1000);
+
+const jsonLd = schema.graph({
+  path,
+  name: title,
+  description,
+  extra: [
+    schema.breadcrumbList(trail),
+    schema.itemList({
+      name: 'Computer repair articles',
+      path,
+      items: posts.map((p) => ({ name: p.title, path: p.path })),
+    }),
+  ],
+});
+---
+
+<BaseLayout title={title} description={description} path={path} schema={jsonLd}>
+  <div class="container-page pt-5 sm:pt-6">
+    <Breadcrumb trail={trail} />
+  </div>
+
+  <PageHero
+    eyebrow={`${posts.length} articles · ${totalWords}k words · 2017 to ${years[0][0]}`}
+    title="Every article, by year"
+    intro={[
+      `The whole archive, newest first. Nothing is hidden here and nothing needs JavaScript - ` +
+        `if you would rather start with just the latest, `,
+      `the blog home page shows the six newest and lets you open the rest when you want it.`,
+    ]}
+    icon="support"
+  />
+
+  <div class="container-page space-y-10 py-14 sm:space-y-12 sm:py-20">
+    {
+      years.map(([year, list]) => (
+        <section aria-labelledby={`y-${year}`}>
+          <h2
+            id={`y-${year}`}
+            class="flex items-baseline gap-3 text-sm font-bold tracking-wide text-ink-900 uppercase"
+          >
+            {year}
+            <span class="text-xs font-semibold tracking-normal text-ink-500 normal-case">
+              {list.length} article{list.length === 1 ? '' : 's'}
+            </span>
+          </h2>
+
+          <div class="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {list.map((p) => (
+              <BlogCard post={p} />
+            ))}
+          </div>
+        </section>
+      ))
+    }
+  </div>
+
+  <div class="container-page pb-14 sm:pb-20">
+    <CallToAction
+      title="Rather just have it fixed?"
+      body={`Flat $${site.pricing.flatRate} for the first hour, no call-out fee, and no surcharge at the weekend. Call ${site.phone.display} and describe the fault - you will get a straight answer on cost.`}
+    />
+  </div>
+</BaseLayout>

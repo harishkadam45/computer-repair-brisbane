@@ -27,7 +27,7 @@ const serviceLinks = services.filter((s) => s.slug !== 'pc-repairs-brisbane');
 const year = new Date().getFullYear();
 ---
 
-<footer class="site-footer mt-10 border-t border-white/15 bg-black text-white sm:mt-24">
+<footer class="site-footer border-t border-white/15 bg-black text-white">
   <div class="container-page py-14">
     {/*
       Flex with space-between, not a grid of fixed column widths.
@@ -53,6 +53,20 @@ const year = new Date().getFullYear();
       need 889px of the 960px available, which leaves 23.6px per gap. A 24px
       floor is a hair too big and dropped the last block onto a second line
       for a single pixel of shortfall.
+
+      The link columns are left-aligned at every width rather than centred from
+      lg up. Services is a two-column grid, so centring it left a ragged edge on
+      both sides that read as misalignment, and it was most obvious on an iPad
+      Mini at 1024 and a Surface Pro 10 at 1366 - the widths that trip the lg
+      breakpoint. Left-aligning means both navs line up on the same gutter as
+      the brand and company blocks above them.
+
+      The credit line carries mb-4 while the bottom bar is still stacked. Its
+      only neighbour below is the Servicing/Sitemap/RSS row, separated by the
+      bar's own gap-3 - 12px, which is too tight for two distinct text blocks.
+      At sm the bar becomes a flex row, nothing sits under the credit, and the
+      margin is dropped rather than left as dead space beside it. Verified at
+      360/375/414/480/639/640/768/834/1024/1280/1440.
     */}
     <div
       class="flex flex-col gap-10 lg:flex-row lg:flex-wrap lg:justify-between lg:gap-x-4 lg:gap-y-10"
@@ -123,10 +137,10 @@ const year = new Date().getFullYear();
 
       <!-- Service families + core services -->
       <nav class="min-w-0" aria-labelledby="f-services">
-        <h2 id="f-services" class="text-left text-sm font-bold tracking-wide text-white uppercase lg:text-center">
+        <h2 id="f-services" class="text-left text-sm font-bold tracking-wide text-white uppercase">
           Repairs
         </h2>
-        <ul class="mt-4 space-y-2.5 text-left text-sm lg:text-center">
+        <ul class="mt-4 space-y-2.5 text-left text-sm">
           {
             families.map((f) => (
               <li>
@@ -156,13 +170,10 @@ const year = new Date().getFullYear();
       </nav>
 
       <nav class="min-w-0" aria-labelledby="f-services2">
-        <h2
-          id="f-services2"
-          class="text-left text-sm font-bold tracking-wide text-white uppercase lg:text-center"
-        >
+        <h2 id="f-services2" class="text-left text-sm font-bold tracking-wide text-white uppercase">
           Services
         </h2>
-        <ul class="mt-4 grid grid-cols-1 gap-x-4 gap-y-2.5 text-left text-sm sm:grid-cols-2 lg:text-center">
+        <ul class="mt-4 grid grid-cols-1 gap-x-4 gap-y-2.5 text-left text-sm sm:grid-cols-2">
           {
             serviceLinks.map((s) => (
               <li>
@@ -177,15 +188,15 @@ const year = new Date().getFullYear();
 
       <!-- Company + trust -->
       <div class="min-w-0">
-        <h2 class="text-left text-sm font-bold tracking-wide text-white uppercase lg:text-center">Company</h2>
-        <ul class="mt-4 space-y-2.5 text-left text-sm lg:text-center">
+        <h2 class="text-left text-sm font-bold tracking-wide text-white uppercase">Company</h2>
+        <ul class="mt-4 space-y-2.5 text-left text-sm">
           <li><a href="/about/" class="text-white/75 transition hover:text-brand-400">About Robert</a></li>
           <li><a href="/blog/" class="text-white/75 transition hover:text-brand-400">Blog</a></li>
           <li><a href="/contact/" class="text-white/75 transition hover:text-brand-400">Contact</a></li>
         </ul>
 
-        <h2 class="mt-8 text-left text-sm font-bold tracking-wide text-white uppercase lg:text-center">Follow</h2>
-        <div class="mt-4 flex justify-start gap-2 lg:justify-center">
+        <h2 class="mt-8 text-left text-sm font-bold tracking-wide text-white uppercase">Follow</h2>
+        <div class="mt-4 flex justify-start gap-2">
           <a
             href={site.social.facebook}
             rel="noopener"
@@ -216,7 +227,7 @@ const year = new Date().getFullYear();
           © {year} {site.name}. Computer repairs in Brisbane, Logan and Ipswich. ABN details available
           on request.
         </p>
-        <p class="mt-1.5">
+        <p class="mt-1.5 mb-4 sm:mb-0">
           <a
             href={site.creditUrl}
             target="_blank"
@@ -231,6 +242,8 @@ const year = new Date().getFullYear();
         <span>Servicing {site.serviceAreas.join(' · ')}</span>
         <a href="/sitemap/" class="underline underline-offset-2 hover:text-brand-400">Sitemap</a>
         <a href="/rss/" class="underline underline-offset-2 hover:text-brand-400">RSS</a>
+        <a href="/privacy-policy/" class="underline underline-offset-2 hover:text-brand-400">Privacy Policy</a>
+        <a href="/terms/" class="underline underline-offset-2 hover:text-brand-400">Terms and Conditions</a>
       </p>
     </div>
   </div>

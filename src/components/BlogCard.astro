@@ -1,0 +1,88 @@
+---
+/**
+ * A blog post card: lead image, date, title, excerpt.
+ *
+ * Whole card is one link, so the accessible name is the title. The image is
+ * decorative by definition here - the title sits right next to it inside the
+ * same link - so a missing WordPress alt string falls back to an empty alt
+ * rather than inventing a description.
+ */
+import type { Post } from '../data/posts';
+import { formatDate, isoDate, postImage } from '../data/posts';
+
+interface Props {
+  post: Post;
+  /** Year headings are only wanted inside the archive, not on the latest strip. */
+  headingLevel?: 'h3';
+  /**
+   * Opt into the scroll reveal.
+   *
+   * Only safe for cards that are in the document at load. Motion.astro collects
+   * [data-reveal] once and never looks again, so a card mounted later - the
+   * archive is cloned in from a <template> - would never be given .is-in and
+   * would stay invisible. Those pass reveal={false} and simply paint.
+   */
+  reveal?: boolean;
+}
+
+const { post, headingLevel = 'h3', reveal = true } = Astro.props;
+const art = postImage(post);
+const Heading = headingLevel;
+---
+
+<a
+  href={post.path}
+  data-reveal={reveal ? true : undefined}
+  class="group flex flex-col overflow-hidden rounded-card border border-ink-200 bg-white/[0.06] transition duration-200 hover:-translate-y-0.5 hover:border-brand-300/60 hover:shadow-lift"
+>
+  <span class="relative block aspect-16/10 overflow-hidden bg-ink-100">
+    {
+      art ? (
+        <img
+          src={art.src}
+          alt={art.alt}
+          width={640}
+          height={400}
+          loading="lazy"
+          decoding="async"
+          class="h-full w-full object-cover transition duration-300 group-hover:scale-105"
+        />
+      ) : (
+        <span class="flex h-full w-full items-center justify-center bg-brand-500/10" aria-hidden="true">
+          <svg
+            class="size-9 text-brand-300/45"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z" />
+            <path d="M14 3v5h5" />
+            <path d="M9 13h6M9 17h4" />
+          </svg>
+        </span>
+      )
+    }
+  </span>
+
+  <span class="flex flex-1 flex-col p-6">
+    <time class="text-sm text-ink-500" datetime={isoDate(post.date)}>
+      {formatDate(post.date)}
+    </time>
+    <Heading class="mt-2 text-h3 transition group-hover:text-brand-300" data-card-title>
+      {post.title}
+    </Heading>
+    <span class="mt-2.5 line-clamp-3 text-[0.95rem] leading-relaxed text-ink-600">
+      {post.excerpt}
+    </span>
+    <span class="mt-4 inline-flex items-center gap-1.5 text-sm font-bold text-brand-300">
+      Read
+      <svg class="size-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+        <path d="M4 10a1 1 0 0 1 1-1h9.2l-3.6-3.6a1 1 0 1 1 1.4-1.4l5.3 5.3a1 1 0 0 1 0 1.4l-5.3 5.3a1 1 0 1 1-1.4-1.4L14.2 11H5a1 1 0 0 1-1-1Z"
+        ></path>
+      </svg>
+    </span>
+  </span>
+</a>

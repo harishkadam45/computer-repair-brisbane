@@ -1,0 +1,586 @@
+{
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2026/01/diagnosing_computer_hardware_issues_lu1ym.jpg": {
+    "src": "/images/blog/replace-or-repair-computer--diagnosing_computer_hardware_issues_lu1ym.jpg",
+    "alt": "diagnosing computer hardware issues"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2026/01/repair_costs_vs_replacement_decisions_krwgy.jpg": {
+    "src": "/images/blog/replace-or-repair-computer--repair_costs_vs_replacement_decisions_krwgy.jpg",
+    "alt": "repair costs vs replacement decisions"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2026/01/repair_or_replace_decision_3g7s3.jpg": {
+    "src": "/images/blog/replace-or-repair-computer--repair_or_replace_decision_3g7s3.jpg",
+    "alt": "repair or replace decision"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2026/01/time_for_computer_upgrade_ctpn7.jpg": {
+    "src": "/images/blog/replace-or-repair-computer--time_for_computer_upgrade_ctpn7.jpg",
+    "alt": "time for computer upgrade"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2026/01/computer_maintenance_extends_lifespan_6m8ey.jpg": {
+    "src": "/images/blog/replace-or-repair-computer--computer_maintenance_extends_lifespan_6m8ey.jpg",
+    "alt": "computer maintenance extends lifespan"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2025/11/windows_11_performance_issues_gw0nr.jpg": {
+    "src": "/images/blog/why-two-windows-11-services-are-holding-back-pc-speed--windows_11_performance_issues_gw0nr.jpg",
+    "alt": "windows 11 performance issues"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2025/11/optimize_windows_for_performance_npsre.jpg": {
+    "src": "/images/blog/microsoft-windows-11-10-features-slowing-pc-speed--optimize_windows_for_performance_npsre.jpg",
+    "alt": "optimize windows for performance"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2025/10/performance_draining_windows_features_8n55u.jpg": {
+    "src": "/images/blog/microsoft-windows-11-10-features-slow-pc-speed--performance_draining_windows_features_8n55u.jpg",
+    "alt": "performance draining windows features"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2025/09/android_desktop_experience_revolution_0ihex.jpg": {
+    "src": "/images/blog/google-android-comes-to-pcs-challenging-windows-dominance--android_desktop_experience_revolution_0ihex.jpg",
+    "alt": "android desktop experience revolution"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2025/09/microsoft_login_vulnerabilities_increase_5mr4z.jpg": {
+    "src": "/images/blog/microsoft-logins-under-siege-hacks-to-ignore--microsoft_login_vulnerabilities_increase_5mr4z.jpg",
+    "alt": "microsoft login vulnerabilities increase"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2025/09/nostalgic_video_wallpapers_return_0fq11.jpg": {
+    "src": "/images/blog/windows-11-bringing-back-vista-desktop-feature--nostalgic_video_wallpapers_return_0fq11.jpg",
+    "alt": "nostalgic video wallpapers return"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2025/09/edge_s_efficient_ram_management_dbt2p.jpg": {
+    "src": "/images/blog/why-microsoft-edge-devours-ram--edge_s_efficient_ram_management_dbt2p.jpg",
+    "alt": "edge s efficient ram management"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2025/09/chrome_s_dominance_in_browsers_kjhd8.jpg": {
+    "src": "/images/blog/chrome-crushes-competition-unstoppable-rise-beyond-70-percent-market-share--chrome_s_dominance_in_browsers_kjhd8.jpg",
+    "alt": "chrome s dominance in browsers"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2025/09/driver_installation_failures_persist_3wl6t.jpg": {
+    "src": "/images/blog/amd-windows-11-10-chipset-graphics-driver-installation-failures--driver_installation_failures_persist_3wl6t.jpg",
+    "alt": "driver installation failures persist"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2025/09/windows_11_settings_evolution_fvvh7.jpg": {
+    "src": "/images/blog/windows-11-settings-challenging-control-panel-legacy--windows_11_settings_evolution_fvvh7.jpg",
+    "alt": "windows 11 settings evolution"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2025/09/taskbar_integrated_internet_speed_test_v5w3l.jpg": {
+    "src": "/images/blog/windows-11-taskbar-tests-internet-speed--taskbar_integrated_internet_speed_test_v5w3l.jpg",
+    "alt": "taskbar integrated internet speed test"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2025/09/gmail_s_smart_purchase_management_8pzye.jpg": {
+    "src": "/images/blog/gmail-inbox-purchase-tracker-deal-finder--gmail_s_smart_purchase_management_8pzye.jpg",
+    "alt": "gmail s smart purchase management"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2025/09/gmail_password_security_risks_mnwp6.jpg": {
+    "src": "/images/blog/your-gmail-password-security-risk-change-it-immediately--gmail_password_security_risks_mnwp6.jpg",
+    "alt": "gmail password security risks"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2025/09/usb_c_notification_compliance_improvement_xlwe8.jpg": {
+    "src": "/images/blog/why-microsoft-pressuring-oems-fix-usb-type-c-notifications-windows-11--usb_c_notification_compliance_improvement_xlwe8.jpg",
+    "alt": "usb c notification compliance improvement"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2025/09/transformative_keyboard_shortcuts_revealed_zib5v.jpg": {
+    "src": "/images/blog/windows-11-keyboard-shortcuts-transform-workflow--transformative_keyboard_shortcuts_revealed_zib5v.jpg",
+    "alt": "transformative keyboard shortcuts revealed"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2025/09/windows_11_ssd_issues_s5apu.jpg": {
+    "src": "/images/blog/why-windows-11-is-damaging-ssds--windows_11_ssd_issues_s5apu.jpg",
+    "alt": "windows 11 ssd issues"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2025/09/windows_11_update_efficiency_improvements_3oh7f.jpg": {
+    "src": "/images/blog/windows-11-file-explorer-studio-effects-update--windows_11_update_efficiency_improvements_3oh7f.jpg",
+    "alt": "windows 11 update efficiency improvements"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2025/09/connectivity_issues_plague_enterprises_pmc3c.jpg": {
+    "src": "/images/blog/microsoft-employee-admits-windows-11-internet-feature-broken-for-enterprises--connectivity_issues_plague_enterprises_pmc3c.jpg",
+    "alt": "connectivity issues plague enterprises"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2025/09/edge_offers_free_youtube_features_z6xdr.jpg": {
+    "src": "/images/blog/edge-delivers-youtube-premium-features-without-paying--edge_offers_free_youtube_features_z6xdr.jpg",
+    "alt": "edge offers free youtube features"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2025/09/bloatware_burdening_windows_11_sersa.jpg": {
+    "src": "/images/blog/finally-cutting-through-windows-11-bloatware--bloatware_burdening_windows_11_sersa.jpg",
+    "alt": "bloatware burdening windows 11"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2025/09/ssd_data_integrity_concerns_gerdx.jpg": {
+    "src": "/images/blog/windows-11-kb5063878-update-ssd-data-integrity-concerns--ssd_data_integrity_concerns_gerdx.jpg",
+    "alt": "ssd data integrity concerns"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2025/09/windows_11_market_share_surge_r3aj1.jpg": {
+    "src": "/images/blog/windows-11-surpasses-45-percent-market-share--windows_11_market_share_surge_r3aj1.jpg",
+    "alt": "windows 11 market share surge"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2025/08/foldable_first_mobile_experience_zey2m.jpg": {
+    "src": "/images/blog/samsungs-bold-one-ui-shift-foldables-ahead-of-flagship-phones--foldable_first_mobile_experience_zey2m.jpg",
+    "alt": "foldable first mobile experience"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2024/11/increasing_malware_threats_surge.jpg": {
+    "src": "/images/blog/exposed-why-basic-malware-is-more-dangerous-than-you-think--increasing_malware_threats_surge.jpg",
+    "alt": "increasing malware threats surge"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2024/11/secure_your_home_network.jpg": {
+    "src": "/images/blog/exposed-why-basic-malware-is-more-dangerous-than-you-think--secure_your_home_network.jpg",
+    "alt": "secure your home network"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2024/11/universal_threat_awareness_needed.jpg": {
+    "src": "/images/blog/exposed-why-basic-malware-is-more-dangerous-than-you-think--universal_threat_awareness_needed.jpg",
+    "alt": "universal threat awareness needed"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2024/11/increasing_phishing_threats_identified.jpg": {
+    "src": "/images/blog/the-phishing-epidemic-how-one-click-can-destroy-everything--increasing_phishing_threats_identified.jpg",
+    "alt": "increasing phishing threats identified"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2024/11/understanding_contemporary_phishing_techniques.jpg": {
+    "src": "/images/blog/the-phishing-epidemic-how-one-click-can-destroy-everything--understanding_contemporary_phishing_techniques.jpg",
+    "alt": "understanding contemporary phishing techniques"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2024/11/combatting_phishing_threats_effectively.jpg": {
+    "src": "/images/blog/the-phishing-epidemic-how-one-click-can-destroy-everything--combatting_phishing_threats_effectively.jpg",
+    "alt": "combatting phishing threats effectively"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2024/11/monitoring_keystrokes_secretly.jpg": {
+    "src": "/images/blog/keyloggers-the-silent-stalkers-watching-your-every-move--monitoring_keystrokes_secretly.jpg",
+    "alt": "monitoring keystrokes secretly"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2024/11/risks_of_keylogging_software.jpg": {
+    "src": "/images/blog/keyloggers-the-silent-stalkers-watching-your-every-move--risks_of_keylogging_software.jpg",
+    "alt": "risks of keylogging software"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2024/11/defending_against_keylogger_threats.jpg": {
+    "src": "/images/blog/keyloggers-the-silent-stalkers-watching-your-every-move--defending_against_keylogger_threats.jpg",
+    "alt": "defending against keylogger threats"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2024/11/stealthy_online_presence_threat.jpg": {
+    "src": "/images/blog/horror-malware-living-rent-free-in-your-pc-for-years--stealthy_online_presence_threat.jpg",
+    "alt": "stealthy online presence threat"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2024/11/concealment_techniques_in_malware.jpg": {
+    "src": "/images/blog/horror-malware-living-rent-free-in-your-pc-for-years--concealment_techniques_in_malware.jpg",
+    "alt": "concealment techniques in malware"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2024/11/securing_your_online_space.jpg": {
+    "src": "/images/blog/horror-malware-living-rent-free-in-your-pc-for-years--securing_your_online_space.jpg",
+    "alt": "securing your online space"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2024/11/exploring_zero_day_threats.jpg": {
+    "src": "/images/blog/zero-day-attacks-the-invisible-threat-nobody-sees-coming--exploring_zero_day_threats.jpg",
+    "alt": "exploring zero day threats"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2024/11/notorious_zero_day_exploits.jpg": {
+    "src": "/images/blog/zero-day-attacks-the-invisible-threat-nobody-sees-coming--notorious_zero_day_exploits.jpg",
+    "alt": "notorious zero day exploits"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2024/11/evolving_strategies_for_protection.jpg": {
+    "src": "/images/blog/zero-day-attacks-the-invisible-threat-nobody-sees-coming--evolving_strategies_for_protection.jpg",
+    "alt": "evolving strategies for protection"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2024/11/overwhelming_economic_consequences_revealed.jpg": {
+    "src": "/images/blog/the-astronomical-cost-of-ransomware-ceos-are-panicking--overwhelming_economic_consequences_revealed.jpg",
+    "alt": "overwhelming economic consequences revealed"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2024/11/future_global_damage_forecasts.jpg": {
+    "src": "/images/blog/the-astronomical-cost-of-ransomware-ceos-are-panicking--future_global_damage_forecasts.jpg",
+    "alt": "future global damage forecasts"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2024/11/evolving_cyber_threat_landscape.jpg": {
+    "src": "/images/blog/the-astronomical-cost-of-ransomware-ceos-are-panicking--evolving_cyber_threat_landscape.jpg",
+    "alt": "evolving cyber threat landscape"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2024/11/charming_appeal_of_entrepreneurship.jpg": {
+    "src": "/images/blog/hackers-love-business-networks-the-shocking-reason-why--charming_appeal_of_entrepreneurship.jpg",
+    "alt": "charming appeal of entrepreneurship"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2024/11/progressing_towards_greater_goals.jpg": {
+    "src": "/images/blog/hackers-love-business-networks-the-shocking-reason-why--progressing_towards_greater_goals.jpg",
+    "alt": "progressing towards greater goals"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2024/11/networks_as_strategic_weapons.jpg": {
+    "src": "/images/blog/hackers-love-business-networks-the-shocking-reason-why--networks_as_strategic_weapons.jpg",
+    "alt": "networks as strategic weapons"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2024/11/network_security_defense_strategy.jpg": {
+    "src": "/images/blog/revealed-top-secret-corporate-virus-protection-strategies--network_security_defense_strategy.jpg",
+    "alt": "network security defense strategy"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2024/11/essential_for_workforce_development.jpg": {
+    "src": "/images/blog/revealed-top-secret-corporate-virus-protection-strategies--essential_for_workforce_development.jpg",
+    "alt": "essential for workforce development"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2024/11/preemptively_prevent_future_attacks.jpg": {
+    "src": "/images/blog/revealed-top-secret-corporate-virus-protection-strategies--preemptively_prevent_future_attacks.jpg",
+    "alt": "preemptively prevent future attacks"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2024/11/pdf_security_risks_exposed.jpg": {
+    "src": "/images/blog/the-pdf-apocalypse-why-your-documents-are-secret-weapons--pdf_security_risks_exposed.jpg",
+    "alt": "pdf security risks exposed"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2024/11/exploring_pdf_security_issues.jpg": {
+    "src": "/images/blog/the-pdf-apocalypse-why-your-documents-are-secret-weapons--exploring_pdf_security_issues.jpg",
+    "alt": "exploring pdf security issues"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2024/11/protecting_pdf_document_security.jpg": {
+    "src": "/images/blog/the-pdf-apocalypse-why-your-documents-are-secret-weapons--protecting_pdf_document_security.jpg",
+    "alt": "protecting pdf document security"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2024/11/increasing_ransomware_threats_surge.jpg": {
+    "src": "/images/blog/ransomware-horror-how-hackers-hold-your-files-hostage-2--increasing_ransomware_threats_surge.jpg",
+    "alt": "increasing ransomware threats surge"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2024/11/assessing_economic_losses_today.jpg": {
+    "src": "/images/blog/ransomware-horror-how-hackers-hold-your-files-hostage-2--assessing_economic_losses_today.jpg",
+    "alt": "assessing economic losses today"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2024/11/safeguarding_online_financial_resources-1.jpg": {
+    "src": "/images/blog/ransomware-horror-how-hackers-hold-your-files-hostage-2--safeguarding_online_financial_resources-1.jpg",
+    "alt": "safeguarding online financial resources"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2024/11/fundamental_knowledge_acquisition.jpg": {
+    "src": "/images/blog/the-deadly-difference-between-viruses-and-malware-you-wont-believe-4-2--fundamental_knowledge_acquisition.jpg",
+    "alt": "fundamental knowledge acquisition"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2024/11/malware_varies_in_severity.jpg": {
+    "src": "/images/blog/the-deadly-difference-between-viruses-and-malware-you-wont-believe-4-2--malware_varies_in_severity.jpg",
+    "alt": "malware varies in severity"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2024/11/safeguarding_online_personal_information.jpg": {
+    "src": "/images/blog/the-deadly-difference-between-viruses-and-malware-you-wont-believe-4-2--safeguarding_online_personal_information.jpg",
+    "alt": "safeguarding online personal information"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2024/11/unseen_vulnerabilities_in_safeguarding.jpg": {
+    "src": "/images/blog/your-antivirus-is-lying-to-you-heres-what-they-dont-tell-you-2--unseen_vulnerabilities_in_safeguarding.jpg",
+    "alt": "unseen vulnerabilities in safeguarding"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2024/11/unnoticed_cybersecurity_vulnerabilities_exploit.jpg": {
+    "src": "/images/blog/your-antivirus-is-lying-to-you-heres-what-they-dont-tell-you-2--unnoticed_cybersecurity_vulnerabilities_exploit.jpg",
+    "alt": "unnoticed cybersecurity vulnerabilities exploit"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2024/11/cost_analysis_of_services.jpg": {
+    "src": "/images/blog/your-antivirus-is-lying-to-you-heres-what-they-dont-tell-you-2--cost_analysis_of_services.jpg",
+    "alt": "cost analysis of services"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2024/11/viral_replication_process_occurs.jpg": {
+    "src": "/images/blog/the-terrifying-reason-why-viruses-multiply-scientists-are-stunned-2--viral_replication_process_occurs.jpg",
+    "alt": "viral replication process occurs"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2024/11/disrupting_cellular_defense_mechanisms.jpg": {
+    "src": "/images/blog/the-terrifying-reason-why-viruses-multiply-scientists-are-stunned-2--disrupting_cellular_defense_mechanisms.jpg",
+    "alt": "disrupting cellular defense mechanisms"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2024/11/nature_s_ultimate_survival_tool.jpg": {
+    "src": "/images/blog/the-terrifying-reason-why-viruses-multiply-scientists-are-stunned-2--nature_s_ultimate_survival_tool.jpg",
+    "alt": "nature s ultimate survival tool"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2024/11/robust_antivirus_and_security.jpg": {
+    "src": "/images/blog/windows-defender-vs-hackers-the-brutal-truth-revealed-2--robust_antivirus_and_security.jpg",
+    "alt": "robust antivirus and security"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2024/11/identifying_fraudulent_online_activities.jpg": {
+    "src": "/images/blog/windows-defender-vs-hackers-the-brutal-truth-revealed-2--identifying_fraudulent_online_activities.jpg",
+    "alt": "identifying fraudulent online activities"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2024/11/identified_vulnerability_risks.jpg": {
+    "src": "/images/blog/windows-defender-vs-hackers-the-brutal-truth-revealed-2--identified_vulnerability_risks.jpg",
+    "alt": "identified vulnerability risks"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2024/11/leveraging_virustotal_s_analytical_strengths.jpg": {
+    "src": "/images/blog/exposed-the-virustotal-secret-that-could-save-your-computer-2--leveraging_virustotal_s_analytical_strengths.jpg",
+    "alt": "leveraging virustotal s analytical strengths"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2024/11/secure_file_scanning_practices.jpg": {
+    "src": "/images/blog/exposed-the-virustotal-secret-that-could-save-your-computer-2--secure_file_scanning_practices.jpg",
+    "alt": "secure file scanning practices"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2024/11/enhanced_security_through_integration.jpg": {
+    "src": "/images/blog/exposed-the-virustotal-secret-that-could-save-your-computer-2--enhanced_security_through_integration.jpg",
+    "alt": "enhanced security through integration"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2024/11/risks_associated_with_cloud_storage.jpg": {
+    "src": "/images/blog/your-cloud-storage-is-a-ticking-time-bomb-heres-why-2--risks_associated_with_cloud_storage.jpg",
+    "alt": "risks associated with cloud storage"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2024/11/data_security_concerns_rising.jpg": {
+    "src": "/images/blog/your-cloud-storage-is-a-ticking-time-bomb-heres-why-2--data_security_concerns_rising.jpg",
+    "alt": "data security concerns rising"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2024/11/safeguarding_online_financial_resources.jpg": {
+    "src": "/images/blog/your-cloud-storage-is-a-ticking-time-bomb-heres-why-2--safeguarding_online_financial_resources.jpg",
+    "alt": "safeguarding online financial resources"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2024/11/nostalgic_beginnings_of_history.jpg": {
+    "src": "/images/blog/why-computer-viruses-went-underground-the-dark-secret-nobodys-talking-about-2--nostalgic_beginnings_of_history.jpg",
+    "alt": "nostalgic beginnings of history"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2024/11/wealth_transformed_our_lives.jpg": {
+    "src": "/images/blog/why-computer-viruses-went-underground-the-dark-secret-nobodys-talking-about-2--wealth_transformed_our_lives.jpg",
+    "alt": "wealth transformed our lives"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2024/11/contemporary_cybercrime_trading_platforms.jpg": {
+    "src": "/images/blog/why-computer-viruses-went-underground-the-dark-secret-nobodys-talking-about-2--contemporary_cybercrime_trading_platforms.jpg",
+    "alt": "contemporary cybercrime trading platforms"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2024/11/mobile_malware_statistics_analysis.jpg": {
+    "src": "/images/blog/your-phones-worst-nightmare-mobile-viruses-exposed--mobile_malware_statistics_analysis.jpg",
+    "alt": "mobile malware statistics analysis"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2024/11/mobile_cyber_attack_strategies.jpg": {
+    "src": "/images/blog/your-phones-worst-nightmare-mobile-viruses-exposed--mobile_cyber_attack_strategies.jpg",
+    "alt": "mobile cyber attack strategies"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2024/11/smartphones_androids_vs_iphones.jpg": {
+    "src": "/images/blog/your-phones-worst-nightmare-mobile-viruses-exposed--smartphones_androids_vs_iphones.jpg",
+    "alt": "smartphones androids vs iphones"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2024/11/identify_mobile_threat_indicators.jpg": {
+    "src": "/images/blog/your-phones-worst-nightmare-mobile-viruses-exposed--identify_mobile_threat_indicators.jpg",
+    "alt": "identify mobile threat indicators"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2024/11/protecting_your_phone_security.jpg": {
+    "src": "/images/blog/your-phones-worst-nightmare-mobile-viruses-exposed--protecting_your_phone_security.jpg",
+    "alt": "protecting your phone security"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2024/11/escalating_ransomware_threat_landscape.jpg": {
+    "src": "/images/blog/ransomware-horror-how-hackers-hold-your-files-hostage--escalating_ransomware_threat_landscape.jpg",
+    "alt": "escalating ransomware threat landscape"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2024/11/financial_success_and_rewards.jpg": {
+    "src": "/images/blog/ransomware-horror-how-hackers-hold-your-files-hostage--financial_success_and_rewards.jpg",
+    "alt": "financial success and rewards"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2024/11/methods_of_cyber_intrusion.jpg": {
+    "src": "/images/blog/ransomware-horror-how-hackers-hold-your-files-hostage--methods_of_cyber_intrusion.jpg",
+    "alt": "methods of cyber intrusion"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2024/11/rapid_secure_data_protection.jpg": {
+    "src": "/images/blog/ransomware-horror-how-hackers-hold-your-files-hostage--rapid_secure_data_protection.jpg",
+    "alt": "rapid secure data protection"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2024/11/coercive_scheme_for_profit.jpg": {
+    "src": "/images/blog/ransomware-horror-how-hackers-hold-your-files-hostage--coercive_scheme_for_profit.jpg",
+    "alt": "coercive scheme for profit"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2024/11/distinctive_viral_characteristics_explained.jpg": {
+    "src": "/images/blog/the-deadly-difference-between-viruses-and-malware-you-wont-believe-4--distinctive_viral_characteristics_explained.jpg",
+    "alt": "distinctive viral characteristics explained"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2024/11/cyber_threats_and_vulnerabilities.jpg": {
+    "src": "/images/blog/the-deadly-difference-between-viruses-and-malware-you-wont-believe-4--cyber_threats_and_vulnerabilities.jpg",
+    "alt": "cyber threats and vulnerabilities"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2024/11/understanding_infection_transmission_dynamics.jpg": {
+    "src": "/images/blog/the-deadly-difference-between-viruses-and-malware-you-wont-believe-4--understanding_infection_transmission_dynamics.jpg",
+    "alt": "understanding infection transmission dynamics"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2024/11/concealed_economic_consequences.jpg": {
+    "src": "/images/blog/the-deadly-difference-between-viruses-and-malware-you-wont-believe-4--concealed_economic_consequences.jpg",
+    "alt": "concealed economic consequences"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2024/11/conquering_cybersecurity_challenges_together.jpg": {
+    "src": "/images/blog/the-deadly-difference-between-viruses-and-malware-you-wont-believe-4--conquering_cybersecurity_challenges_together.jpg",
+    "alt": "conquering cybersecurity challenges together"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2024/11/unraveling_the_signature_illusion.jpg": {
+    "src": "/images/blog/your-antivirus-is-lying-to-you-heres-what-they-dont-tell-you--unraveling_the_signature_illusion.jpg",
+    "alt": "unraveling the signature illusion"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2024/11/unseen_efficiency_trade_offs.jpg": {
+    "src": "/images/blog/your-antivirus-is-lying-to-you-heres-what-they-dont-tell-you--unseen_efficiency_trade_offs.jpg",
+    "alt": "unseen efficiency trade offs"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2024/11/deceptive_safety_assurances.jpg": {
+    "src": "/images/blog/your-antivirus-is-lying-to-you-heres-what-they-dont-tell-you--deceptive_safety_assurances.jpg",
+    "alt": "deceptive safety assurances"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2024/11/vulnerabilities_in_current_strategies.jpg": {
+    "src": "/images/blog/your-antivirus-is-lying-to-you-heres-what-they-dont-tell-you--vulnerabilities_in_current_strategies.jpg",
+    "alt": "vulnerabilities in current strategies"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2024/11/next_gen_cybersecurity_solutions_emergence.jpg": {
+    "src": "/images/blog/your-antivirus-is-lying-to-you-heres-what-they-dont-tell-you--next_gen_cybersecurity_solutions_emergence.jpg",
+    "alt": "next gen cybersecurity solutions emergence"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2024/11/hidden_world_of_viruses.jpg": {
+    "src": "/images/blog/the-terrifying-reason-why-viruses-multiply-scientists-are-stunned--hidden_world_of_viruses.jpg",
+    "alt": "hidden world of viruses"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2024/11/infiltrating_cellular_barriers.jpg": {
+    "src": "/images/blog/the-terrifying-reason-why-viruses-multiply-scientists-are-stunned--infiltrating_cellular_barriers.jpg",
+    "alt": "infiltrating cellular barriers"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2024/11/uncontrolled_virus_multiplication_event.jpg": {
+    "src": "/images/blog/the-terrifying-reason-why-viruses-multiply-scientists-are-stunned--uncontrolled_virus_multiplication_event.jpg",
+    "alt": "uncontrolled virus multiplication event"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2024/11/creating_engaging_online_communities.jpg": {
+    "src": "/images/blog/the-terrifying-reason-why-viruses-multiply-scientists-are-stunned--creating_engaging_online_communities.jpg",
+    "alt": "creating engaging online communities"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2024/11/ecological_threats_to_biodiversity.jpg": {
+    "src": "/images/blog/the-terrifying-reason-why-viruses-multiply-scientists-are-stunned--ecological_threats_to_biodiversity.jpg",
+    "alt": "ecological threats to biodiversity"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2024/11/combatting_contemporary_security_challenges.jpg": {
+    "src": "/images/blog/windows-defender-vs-hackers-the-brutal-truth-revealed--combatting_contemporary_security_challenges.jpg",
+    "alt": "combatting contemporary security challenges"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2024/11/defensive_strategies_and_tools.jpg": {
+    "src": "/images/blog/windows-defender-vs-hackers-the-brutal-truth-revealed--defensive_strategies_and_tools.jpg",
+    "alt": "defensive strategies and tools"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2024/11/cybersecurity_under_immediate_threat.jpg": {
+    "src": "/images/blog/windows-defender-vs-hackers-the-brutal-truth-revealed--cybersecurity_under_immediate_threat.jpg",
+    "alt": "cybersecurity under immediate threat"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2024/11/understanding_security_vulnerabilities_today.jpg": {
+    "src": "/images/blog/windows-defender-vs-hackers-the-brutal-truth-revealed--understanding_security_vulnerabilities_today.jpg",
+    "alt": "understanding security vulnerabilities today"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2024/11/enhancing_cybersecurity_for_protection.jpg": {
+    "src": "/images/blog/windows-defender-vs-hackers-the-brutal-truth-revealed--enhancing_cybersecurity_for_protection.jpg",
+    "alt": "enhancing cybersecurity for protection"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2024/11/exploring_virustotal_s_functionality.jpg": {
+    "src": "/images/blog/exposed-the-virustotal-secret-that-could-save-your-computer--exploring_virustotal_s_functionality.jpg",
+    "alt": "exploring virustotal s functionality"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2024/11/prevent_malware_infection_effectively.jpg": {
+    "src": "/images/blog/exposed-the-virustotal-secret-that-could-save-your-computer--prevent_malware_infection_effectively.jpg",
+    "alt": "prevent malware infection effectively"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2024/11/comparison_of_service_tiers.jpg": {
+    "src": "/images/blog/exposed-the-virustotal-secret-that-could-save-your-computer--comparison_of_service_tiers.jpg",
+    "alt": "comparison of service tiers"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2024/11/daily_protection_best_practices.jpg": {
+    "src": "/images/blog/exposed-the-virustotal-secret-that-could-save-your-computer--daily_protection_best_practices.jpg",
+    "alt": "daily protection best practices"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2024/11/avoid_these_common_mistakes.jpg": {
+    "src": "/images/blog/exposed-the-virustotal-secret-that-could-save-your-computer--avoid_these_common_mistakes.jpg",
+    "alt": "avoid these common mistakes"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2024/11/concealed_threats_and_hazards.jpg": {
+    "src": "/images/blog/your-cloud-storage-is-a-ticking-time-bomb-heres-why--concealed_threats_and_hazards.jpg",
+    "alt": "concealed threats and hazards"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2024/11/escalating_data_breach_incidents.jpg": {
+    "src": "/images/blog/your-cloud-storage-is-a-ticking-time-bomb-heres-why--escalating_data_breach_incidents.jpg",
+    "alt": "escalating data breach incidents"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2024/11/protect_your_online_privacy.jpg": {
+    "src": "/images/blog/your-cloud-storage-is-a-ticking-time-bomb-heres-why--protect_your_online_privacy.jpg",
+    "alt": "protect your online privacy"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2024/11/hidden_threats_in_systems.jpg": {
+    "src": "/images/blog/your-cloud-storage-is-a-ticking-time-bomb-heres-why--hidden_threats_in_systems.jpg",
+    "alt": "hidden threats in systems"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2024/11/defending_against_cloud_vulnerabilities.jpg": {
+    "src": "/images/blog/your-cloud-storage-is-a-ticking-time-bomb-heres-why--defending_against_cloud_vulnerabilities.jpg",
+    "alt": "defending against cloud vulnerabilities"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2024/11/origins_of_viral_evolution.jpg": {
+    "src": "/images/blog/why-computer-viruses-went-underground-the-dark-secret-nobodys-talking-about--origins_of_viral_evolution.jpg",
+    "alt": "origins of viral evolution"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2024/11/embracing_subtlety_and_elegance.jpg": {
+    "src": "/images/blog/why-computer-viruses-went-underground-the-dark-secret-nobodys-talking-about--embracing_subtlety_and_elegance.jpg",
+    "alt": "embracing subtlety and elegance"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2024/11/contemporary_cyber_threat_landscape.jpg": {
+    "src": "/images/blog/why-computer-viruses-went-underground-the-dark-secret-nobodys-talking-about--contemporary_cyber_threat_landscape.jpg",
+    "alt": "contemporary cyber threat landscape"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2024/11/antivirus_software_losing_relevance.jpg": {
+    "src": "/images/blog/the-truth-about-modern-antivirus-software-that-companies-dont-want-you-to-know--antivirus_software_losing_relevance.jpg",
+    "alt": "antivirus software losing relevance"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2024/11/behavioral_detection_gains_momentum.jpg": {
+    "src": "/images/blog/the-truth-about-modern-antivirus-software-that-companies-dont-want-you-to-know--behavioral_detection_gains_momentum.jpg",
+    "alt": "behavioral detection gains momentum"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2024/11/authenticity_over_promotional_claims.jpg": {
+    "src": "/images/blog/the-truth-about-modern-antivirus-software-that-companies-dont-want-you-to-know--authenticity_over_promotional_claims.jpg",
+    "alt": "authenticity over promotional claims"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2024/11/unseen_expenses_affecting_efficiency.jpg": {
+    "src": "/images/blog/the-truth-about-modern-antivirus-software-that-companies-dont-want-you-to-know--unseen_expenses_affecting_efficiency.jpg",
+    "alt": "unseen expenses affecting efficiency"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2024/11/free_security_vs_premium_solutions.jpg": {
+    "src": "/images/blog/the-truth-about-modern-antivirus-software-that-companies-dont-want-you-to-know--free_security_vs_premium_solutions.jpg",
+    "alt": "free security vs premium solutions"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2024/11/debunking_mobile_security_myths.jpg": {
+    "src": "/images/blog/the-truth-about-modern-antivirus-software-that-companies-dont-want-you-to-know--debunking_mobile_security_myths.jpg",
+    "alt": "debunking mobile security myths"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2024/11/evaluating_cloud_security_effectiveness.jpg": {
+    "src": "/images/blog/the-truth-about-modern-antivirus-software-that-companies-dont-want-you-to-know--evaluating_cloud_security_effectiveness.jpg",
+    "alt": "evaluating cloud security effectiveness"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2024/11/risks_associated_with_downloads.jpg": {
+    "src": "/images/blog/shocking-your-downloads-can-infect-your-pc-without-even-clicking-them--risks_associated_with_downloads.jpg",
+    "alt": "risks associated with downloads"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2024/11/malicious_software_installation_online.jpg": {
+    "src": "/images/blog/shocking-your-downloads-can-infect-your-pc-without-even-clicking-them--malicious_software_installation_online.jpg",
+    "alt": "malicious software installation online"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2024/11/guarding_against_unwanted_downloads.jpg": {
+    "src": "/images/blog/shocking-your-downloads-can-infect-your-pc-without-even-clicking-them--guarding_against_unwanted_downloads.jpg",
+    "alt": "guarding against unwanted downloads"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2024/11/identifying_concealed_download_risks.jpg": {
+    "src": "/images/blog/shocking-your-downloads-can-infect-your-pc-without-even-clicking-them--identifying_concealed_download_risks.jpg",
+    "alt": "identifying concealed download risks"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2024/11/protect_your_digital_assets.jpg": {
+    "src": "/images/blog/shocking-your-downloads-can-infect-your-pc-without-even-clicking-them--protect_your_digital_assets.jpg",
+    "alt": "protect your digital assets"
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2021/04/pexels-plann-4549414.jpg": {
+    "src": "/images/blog/what-are-the-benefits-of-outsourcing-react-native-app-development--pexels-plann-4549414.jpg",
+    "alt": ""
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2021/02/1.jpg": {
+    "src": "/images/blog/how-to-take-a-screenshot-on-lenovo-laptop-2021--1.jpg",
+    "alt": ""
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2021/02/2.jpg": {
+    "src": "/images/blog/how-to-take-a-screenshot-on-lenovo-laptop-2021--2.jpg",
+    "alt": ""
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2020/06/onespy1-1024x820.jpg": {
+    "src": "/images/blog/top-5-features-of-theonespy-cell-phone-spy-app-2020--onespy1-1024x820.jpg",
+    "alt": ""
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2020/04/raymanlegends.jpg": {
+    "src": "/images/blog/rayman-legends-free-pc-game-for-everyone--raymanlegends.jpg",
+    "alt": ""
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2020/02/broadband-150348_640.png": {
+    "src": "/images/blog/different-ways-to-extend-the-coverage-of-your-wifi--broadband-150348_640.png",
+    "alt": ""
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2020/01/client-3691439_640.jpg": {
+    "src": "/images/blog/different-ways-to-prevent-ads-in-chrome--client-3691439_640.jpg",
+    "alt": ""
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2019/12/student-849822_1920-1024x683.jpg": {
+    "src": "/images/blog/5-easy-ways-to-come-up-with-a-good-domain-name-for-your-website--student-849822_1920-1024x683.jpg",
+    "alt": ""
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2018/11/sdfgsdfg.jpg": {
+    "src": "/images/blog/improved-your-website-visitors-through-social-media--sdfgsdfg.jpg",
+    "alt": ""
+  },
+  "https://www.fixmyhomecomputer.com.au/wp-content/uploads/2018/08/pexels-photo-874242-300x200.jpeg": {
+    "src": "/images/blog/why-does-my-windows-pc-keep-restarting-randomly--pexels-photo-874242-300x200.jpeg",
+    "alt": "computer repairs"
+  },
+  "http://www.fixmyhomecomputer.com.au/wp-content/uploads/2017/09/computer-bios-fix-1.jpg": {
+    "src": "/images/blog/why-you-should-have-experts-look-into-your-computers-bios-problems--computer-bios-fix-1.jpg",
+    "alt": "Computer Bios Fix"
+  },
+  "http://www.fixmyhomecomputer.com.au/wp-content/uploads/2017/09/computer-bios-fix-2.jpg": {
+    "src": "/images/blog/why-you-should-have-experts-look-into-your-computers-bios-problems--computer-bios-fix-2.jpg",
+    "alt": "Computer Bios Fix"
+  }
+}

@@ -27,7 +27,7 @@ const server = createServer(async (req, res) => {
 });
 await new Promise((r) => server.listen(PORT, '127.0.0.1', r));
 
-const ROUTES = ['/', '/laptop-repairs/', '/pricing/', '/contact/', '/quote/', '/laptop-repairs-brendale/'];
+const ROUTES = ['/', '/laptop-repairs/', '/pricing/', '/contact/', '/quote/', '/laptop-repairs-brendale/', '/privacy-policy/', '/terms/'];
 
 const browser = await chromium.launch();
 const totals = new Map();
